@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Copy, Check, FileText, ArrowLeftRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,6 +13,7 @@ import {
 } from './logic';
 
 export default function TextDiffPage() {
+  const { t } = useTranslation();
   const [text1, setText1] = useState('');
   const [text2, setText2] = useState('');
   const [mode, setMode] = useState<DiffMode>('lines');

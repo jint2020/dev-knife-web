@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Upload, Download, Eye, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,6 +12,7 @@ import {
 } from './logic';
 
 export default function ColorBlindnessPage() {
+  const { t } = useTranslation();
   const [originalFile, setOriginalFile] = useState<File | null>(null);
   const [originalUrl, setOriginalUrl] = useState('');
   const [filteredImages, setFilteredImages] = useState<Record<ColorBlindnessType, string>>({} as Record<ColorBlindnessType, string>);

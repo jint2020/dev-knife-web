@@ -4,6 +4,7 @@
  */
 
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Copy, RefreshCw, Sparkles, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -14,6 +15,7 @@ import { Separator } from '@/components/ui/separator';
 import { generateUUID, generateBulkUUIDs } from './logic';
 
 export default function UUIDGeneratorPage() {
+  const { t } = useTranslation();
   const [uuid, setUuid] = useState<string>(generateUUID());
   const [bulkCount, setBulkCount] = useState<number>(5);
   const [bulkUUIDs, setBulkUUIDs] = useState<string[]>([]);
@@ -44,9 +46,9 @@ export default function UUIDGeneratorPage() {
     <div className="container mx-auto p-6 space-y-6 max-w-4xl">
       {/* Header */}
       <div className="space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight">UUID Generator</h1>
+        <h1 className="text-3xl font-bold tracking-tight">{t('tools.uuidGenerator.title')}</h1>
         <p className="text-muted-foreground">
-          Generate cryptographically random UUIDs (v4) for unique identifiers in your applications.
+          {t('tools.uuidGenerator.description')}
         </p>
       </div>
 
@@ -55,9 +57,9 @@ export default function UUIDGeneratorPage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Sparkles className="w-5 h-5 text-primary" />
-            Single UUID
+            {t('tools.uuidGenerator.singleUuid')}
           </CardTitle>
-          <CardDescription>Generate one UUID at a time</CardDescription>
+          <CardDescription>{t('tools.uuidGenerator.singleDesc')}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {/* UUID Display */}
@@ -71,7 +73,7 @@ export default function UUIDGeneratorPage() {
               onClick={handleGenerate}
               variant="outline"
               size="icon"
-              title="Generate new UUID"
+              title={t('tools.uuidGenerator.generateNew')}
             >
               <RefreshCw className="w-4 h-4" />
             </Button>
@@ -79,7 +81,7 @@ export default function UUIDGeneratorPage() {
               onClick={() => copyToClipboard(uuid, 'single')}
               variant="default"
               size="icon"
-              title="Copy to clipboard"
+              title={t('common.copy')}
               className="bg-primary text-primary-foreground hover:bg-primary/90"
             >
               {copied === 'single' ? (
@@ -109,15 +111,15 @@ export default function UUIDGeneratorPage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <RefreshCw className="w-5 h-5 text-primary" />
-            Bulk Generator
+            {t('tools.uuidGenerator.bulkGenerate')}
           </CardTitle>
-          <CardDescription>Generate multiple UUIDs at once (max 100)</CardDescription>
+          <CardDescription>{t('tools.uuidGenerator.bulkDesc')}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {/* Count Input */}
           <div className="flex items-end gap-2">
             <div className="flex-1 space-y-2">
-              <Label htmlFor="bulk-count">Number of UUIDs</Label>
+              <Label htmlFor="bulk-count">{t('tools.uuidGenerator.count')}</Label>
               <Input
                 id="bulk-count"
                 type="number"
@@ -132,7 +134,7 @@ export default function UUIDGeneratorPage() {
               onClick={handleBulkGenerate}
               className="bg-primary text-primary-foreground hover:bg-primary/90"
             >
-              Generate {bulkCount} UUIDs
+              {t('common.generate')} {bulkCount} UUIDs
             </Button>
           </div>
 
@@ -140,7 +142,7 @@ export default function UUIDGeneratorPage() {
           {bulkUUIDs.length > 0 && (
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label className="text-sm font-medium">Generated UUIDs</Label>
+                <Label className="text-sm font-medium">{t('tools.uuidGenerator.uuidsGenerated')}</Label>
                 <Button
                   onClick={() => copyToClipboard(bulkUUIDs.join('\n'), 'bulk')}
                   variant="outline"
@@ -150,12 +152,12 @@ export default function UUIDGeneratorPage() {
                   {copied === 'bulk' ? (
                     <>
                       <Check className="w-3 h-3 mr-2" />
-                      Copied!
+                      {t('common.copied')}
                     </>
                   ) : (
                     <>
                       <Copy className="w-3 h-3 mr-2" />
-                      Copy All
+                      {t('common.copy')}
                     </>
                   )}
                 </Button>

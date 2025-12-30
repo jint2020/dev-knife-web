@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Copy, Check, RefreshCw, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -13,6 +14,7 @@ import {
 } from './logic';
 
 export default function LoremIpsumPage() {
+  const { t } = useTranslation();
   const [type, setType] = useState<'words' | 'sentences' | 'paragraphs'>('paragraphs');
   const [count, setCount] = useState(3);
   const [startWithLorem, setStartWithLorem] = useState(true);
@@ -53,8 +55,8 @@ export default function LoremIpsumPage() {
           <div className="flex items-center gap-2">
             <FileText className="h-6 w-6" />
             <div>
-              <CardTitle>Lorem Ipsum Generator</CardTitle>
-              <CardDescription>Generate placeholder text for design and development mockups</CardDescription>
+              <CardTitle>{t('tools.loremGenerator.title')}</CardTitle>
+              <CardDescription>{t('tools.loremGenerator.description')}</CardDescription>
             </div>
           </div>
         </CardHeader>
@@ -64,34 +66,34 @@ export default function LoremIpsumPage() {
           <Card>
             <CardContent className="pt-6 space-y-4">
               <div className="space-y-2">
-                <Label>Generate</Label>
+                <Label>{t('common.generate')}</Label>
                 <div className="flex gap-2">
                   <Badge
                     variant={type === 'paragraphs' ? 'default' : 'outline'}
                     className="cursor-pointer"
                     onClick={() => setType('paragraphs')}
                   >
-                    Paragraphs
+                    {t('tools.loremGenerator.paragraphs')}
                   </Badge>
                   <Badge
                     variant={type === 'sentences' ? 'default' : 'outline'}
                     className="cursor-pointer"
                     onClick={() => setType('sentences')}
                   >
-                    Sentences
+                    {t('tools.loremGenerator.sentences')}
                   </Badge>
                   <Badge
                     variant={type === 'words' ? 'default' : 'outline'}
                     className="cursor-pointer"
                     onClick={() => setType('words')}
                   >
-                    Words
+                    {t('tools.loremGenerator.words')}
                   </Badge>
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label>Count: {count}</Label>
+                <Label>{t('common.count')}: {count}</Label>
                 <input
                   type="range"
                   min="1"
@@ -113,12 +115,12 @@ export default function LoremIpsumPage() {
                   onChange={(e) => setStartWithLorem(e.target.checked)}
                   className="h-4 w-4"
                 />
-                <span className="text-sm">Start with "Lorem ipsum"</span>
+                <span className="text-sm">{t('tools.loremGenerator.startWithLorem')}</span>
               </label>
 
               <Button onClick={handleGenerate} className="w-full">
                 <RefreshCw className="h-4 w-4 mr-2" />
-                Regenerate
+                {t('tools.loremGenerator.regenerate')}
               </Button>
             </CardContent>
           </Card>
@@ -130,19 +132,19 @@ export default function LoremIpsumPage() {
                 <div className="grid grid-cols-4 gap-4 text-center">
                   <div>
                     <div className="text-2xl font-bold">{stats.paragraphs}</div>
-                    <div className="text-sm text-muted-foreground">Paragraphs</div>
+                    <div className="text-sm text-muted-foreground">{t('tools.loremGenerator.paragraphs')}</div>
                   </div>
                   <div>
                     <div className="text-2xl font-bold">{stats.sentences}</div>
-                    <div className="text-sm text-muted-foreground">Sentences</div>
+                    <div className="text-sm text-muted-foreground">{t('tools.loremGenerator.sentences')}</div>
                   </div>
                   <div>
                     <div className="text-2xl font-bold">{stats.words}</div>
-                    <div className="text-sm text-muted-foreground">Words</div>
+                    <div className="text-sm text-muted-foreground">{t('tools.loremGenerator.words')}</div>
                   </div>
                   <div>
                     <div className="text-2xl font-bold">{stats.characters}</div>
-                    <div className="text-sm text-muted-foreground">Characters</div>
+                    <div className="text-sm text-muted-foreground">{t('common.characters')}</div>
                   </div>
                 </div>
               </CardContent>
@@ -152,7 +154,7 @@ export default function LoremIpsumPage() {
           {/* Output */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label>Generated Text</Label>
+              <Label>{t('tools.loremGenerator.generatedText')}</Label>
               <Button
                 size="sm"
                 variant="outline"
@@ -160,7 +162,7 @@ export default function LoremIpsumPage() {
                 disabled={!output}
               >
                 {copied ? <Check className="h-4 w-4 mr-2" /> : <Copy className="h-4 w-4 mr-2" />}
-                Copy
+                {t('common.copy')}
               </Button>
             </div>
             <textarea
@@ -172,11 +174,9 @@ export default function LoremIpsumPage() {
 
           {/* Info */}
           <div className="p-3 rounded-md bg-muted text-sm space-y-1">
-            <div className="font-semibold">About Lorem Ipsum:</div>
+            <div className="font-semibold">{t('tools.loremGenerator.aboutTitle')}:</div>
             <p className="text-muted-foreground">
-              Lorem Ipsum is placeholder text used in the printing and typesetting industry since the 1500s. 
-              It helps designers and developers visualize how actual content will look in their layouts without 
-              being distracted by readable content.
+              {t('tools.loremGenerator.aboutDescription')}
             </p>
           </div>
         </CardContent>

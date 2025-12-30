@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Copy, Check, RefreshCw, Key, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -14,6 +15,7 @@ import {
 } from './logic';
 
 export default function PasswordGeneratorPage() {
+  const { t } = useTranslation();
   const [password, setPassword] = useState('');
   const [passwords, setPasswords] = useState<string[]>([]);
   const [passphrase, setPassphrase] = useState('');
@@ -93,8 +95,8 @@ export default function PasswordGeneratorPage() {
           <div className="flex items-center gap-2">
             <Key className="h-6 w-6" />
             <div>
-              <CardTitle>Password Generator</CardTitle>
-              <CardDescription>Generate secure random passwords with customizable options</CardDescription>
+              <CardTitle>{t('tools.passwordGenerator.title')}</CardTitle>
+              <CardDescription>{t('tools.passwordGenerator.description')}</CardDescription>
             </div>
           </div>
         </CardHeader>
@@ -102,16 +104,16 @@ export default function PasswordGeneratorPage() {
         <CardContent>
           <Tabs defaultValue="single">
             <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="single">Single Password</TabsTrigger>
-              <TabsTrigger value="multiple">Multiple Passwords</TabsTrigger>
-              <TabsTrigger value="passphrase">Passphrase</TabsTrigger>
+              <TabsTrigger value="single">{t('tools.passwordGenerator.singlePassword')}</TabsTrigger>
+              <TabsTrigger value="multiple">{t('tools.passwordGenerator.multiplePasswords')}</TabsTrigger>
+              <TabsTrigger value="passphrase">{t('tools.passwordGenerator.passphrase')}</TabsTrigger>
             </TabsList>
 
             {/* Single Password Tab */}
             <TabsContent value="single" className="space-y-4">
               {/* Generated Password Display */}
               <div className="space-y-2">
-                <Label>Generated Password</Label>
+                <Label>{t('tools.passwordGenerator.generatedPassword')}</Label>
                 <div className="flex gap-2">
                   <input
                     type="text"
@@ -121,7 +123,7 @@ export default function PasswordGeneratorPage() {
                   />
                   <Button onClick={handleGenerate}>
                     <RefreshCw className="h-4 w-4 mr-2" />
-                    Generate
+                    {t('common.generate')}
                   </Button>
                   <Button
                     variant="outline"
@@ -139,7 +141,7 @@ export default function PasswordGeneratorPage() {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <Shield className="h-5 w-5" />
-                        <span className="font-semibold">Password Strength:</span>
+                        <span className="font-semibold">{t('tools.passwordGenerator.passwordStrength')}:</span>
                       </div>
                       <Badge variant="outline" className={`${getStrengthColor(strength.score)} text-white`}>
                         {strength.label}
@@ -171,7 +173,7 @@ export default function PasswordGeneratorPage() {
               {/* Options */}
               <div className="space-y-4 p-4 rounded-md border border-border">
                 <div className="space-y-2">
-                  <Label>Length: {options.length}</Label>
+                  <Label>{t('tools.passwordGenerator.length')}: {options.length}</Label>
                   <input
                     type="range"
                     min="4"
@@ -194,7 +196,7 @@ export default function PasswordGeneratorPage() {
                       onChange={(e) => setOptions({ ...options, includeUppercase: e.target.checked })}
                       className="h-4 w-4"
                     />
-                    <span className="text-sm">Uppercase (A-Z)</span>
+                    <span className="text-sm">{t('tools.passwordGenerator.uppercase')}</span>
                   </label>
 
                   <label className="flex items-center gap-2 cursor-pointer">
@@ -204,7 +206,7 @@ export default function PasswordGeneratorPage() {
                       onChange={(e) => setOptions({ ...options, includeLowercase: e.target.checked })}
                       className="h-4 w-4"
                     />
-                    <span className="text-sm">Lowercase (a-z)</span>
+                    <span className="text-sm">{t('tools.passwordGenerator.lowercase')}</span>
                   </label>
 
                   <label className="flex items-center gap-2 cursor-pointer">
@@ -214,7 +216,7 @@ export default function PasswordGeneratorPage() {
                       onChange={(e) => setOptions({ ...options, includeNumbers: e.target.checked })}
                       className="h-4 w-4"
                     />
-                    <span className="text-sm">Numbers (0-9)</span>
+                    <span className="text-sm">{t('tools.passwordGenerator.numbers')}</span>
                   </label>
 
                   <label className="flex items-center gap-2 cursor-pointer">
@@ -224,7 +226,7 @@ export default function PasswordGeneratorPage() {
                       onChange={(e) => setOptions({ ...options, includeSymbols: e.target.checked })}
                       className="h-4 w-4"
                     />
-                    <span className="text-sm">Symbols (!@#$...)</span>
+                    <span className="text-sm">{t('tools.passwordGenerator.symbols')}</span>
                   </label>
 
                   <label className="flex items-center gap-2 cursor-pointer">
@@ -234,7 +236,7 @@ export default function PasswordGeneratorPage() {
                       onChange={(e) => setOptions({ ...options, excludeSimilar: e.target.checked })}
                       className="h-4 w-4"
                     />
-                    <span className="text-sm">Exclude Similar (i,l,1,L,o,0,O)</span>
+                    <span className="text-sm">{t('tools.passwordGenerator.excludeSimilar')}</span>
                   </label>
 
                   <label className="flex items-center gap-2 cursor-pointer">
@@ -244,7 +246,7 @@ export default function PasswordGeneratorPage() {
                       onChange={(e) => setOptions({ ...options, excludeAmbiguous: e.target.checked })}
                       className="h-4 w-4"
                     />
-                    <span className="text-sm">Exclude Ambiguous ({'{'}[]()/\...)</span>
+                    <span className="text-sm">{t('tools.passwordGenerator.excludeAmbiguous')}</span>
                   </label>
                 </div>
               </div>
@@ -254,19 +256,19 @@ export default function PasswordGeneratorPage() {
             <TabsContent value="multiple" className="space-y-4">
               <div className="flex gap-2">
                 <Button onClick={() => handleGenerateMultiple(5)}>
-                  Generate 5
+                  {t('tools.passwordGenerator.generate5')}
                 </Button>
                 <Button onClick={() => handleGenerateMultiple(10)}>
-                  Generate 10
+                  {t('tools.passwordGenerator.generate10')}
                 </Button>
                 <Button onClick={() => handleGenerateMultiple(20)}>
-                  Generate 20
+                  {t('tools.passwordGenerator.generate20')}
                 </Button>
               </div>
 
               {passwords.length > 0 && (
                 <div className="space-y-2">
-                  <Label>Generated Passwords ({passwords.length})</Label>
+                  <Label>{t('tools.passwordGenerator.generatedPasswords', { count: passwords.length })}</Label>
                   <div className="max-h-[400px] overflow-y-auto space-y-2 p-3 rounded-md border border-border">
                     {passwords.map((pwd, index) => (
                       <div key={index} className="flex items-center gap-2 p-2 rounded-md bg-muted font-mono text-sm">
@@ -291,7 +293,7 @@ export default function PasswordGeneratorPage() {
               {/* Options (same as single) */}
               <div className="space-y-4 p-4 rounded-md border border-border">
                 <div className="space-y-2">
-                  <Label>Length: {options.length}</Label>
+                  <Label>{t('tools.passwordGenerator.length')}: {options.length}</Label>
                   <input
                     type="range"
                     min="4"
@@ -310,7 +312,7 @@ export default function PasswordGeneratorPage() {
                       onChange={(e) => setOptions({ ...options, includeUppercase: e.target.checked })}
                       className="h-4 w-4"
                     />
-                    <span className="text-sm">Uppercase (A-Z)</span>
+                    <span className="text-sm">{t('tools.passwordGenerator.uppercase')}</span>
                   </label>
 
                   <label className="flex items-center gap-2 cursor-pointer">
@@ -320,7 +322,7 @@ export default function PasswordGeneratorPage() {
                       onChange={(e) => setOptions({ ...options, includeLowercase: e.target.checked })}
                       className="h-4 w-4"
                     />
-                    <span className="text-sm">Lowercase (a-z)</span>
+                    <span className="text-sm">{t('tools.passwordGenerator.lowercase')}</span>
                   </label>
 
                   <label className="flex items-center gap-2 cursor-pointer">
@@ -330,7 +332,7 @@ export default function PasswordGeneratorPage() {
                       onChange={(e) => setOptions({ ...options, includeNumbers: e.target.checked })}
                       className="h-4 w-4"
                     />
-                    <span className="text-sm">Numbers (0-9)</span>
+                    <span className="text-sm">{t('tools.passwordGenerator.numbers')}</span>
                   </label>
 
                   <label className="flex items-center gap-2 cursor-pointer">
@@ -340,7 +342,7 @@ export default function PasswordGeneratorPage() {
                       onChange={(e) => setOptions({ ...options, includeSymbols: e.target.checked })}
                       className="h-4 w-4"
                     />
-                    <span className="text-sm">Symbols (!@#$...)</span>
+                    <span className="text-sm">{t('tools.passwordGenerator.symbols')}</span>
                   </label>
                 </div>
               </div>
@@ -349,18 +351,18 @@ export default function PasswordGeneratorPage() {
             {/* Passphrase Tab */}
             <TabsContent value="passphrase" className="space-y-4">
               <div className="space-y-2">
-                <Label>Generated Passphrase</Label>
+                <Label>{t('tools.passwordGenerator.generatedPassphrase')}</Label>
                 <div className="flex gap-2">
                   <input
                     type="text"
                     value={passphrase}
                     readOnly
-                    placeholder="Click Generate to create a passphrase"
+                    placeholder={t('tools.passwordGenerator.passphraseplaceholder')}
                     className="flex-1 h-12 px-3 rounded-md border border-border bg-background text-foreground font-mono text-lg focus:outline-none"
                   />
                   <Button onClick={handleGeneratePassphrase}>
                     <RefreshCw className="h-4 w-4 mr-2" />
-                    Generate
+                    {t('common.generate')}
                   </Button>
                   <Button
                     variant="outline"
@@ -374,7 +376,7 @@ export default function PasswordGeneratorPage() {
 
               <div className="space-y-4 p-4 rounded-md border border-border">
                 <div className="space-y-2">
-                  <Label>Number of Words: {passphraseOptions.wordCount}</Label>
+                  <Label>{t('tools.passwordGenerator.numberOfWords')}: {passphraseOptions.wordCount}</Label>
                   <input
                     type="range"
                     min="2"
@@ -390,7 +392,7 @@ export default function PasswordGeneratorPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Separator</Label>
+                  <Label>{t('tools.passwordGenerator.separator')}</Label>
                   <div className="flex gap-2">
                     {['-', '_', '.', ' ', ''].map((sep) => (
                       <Button
@@ -399,7 +401,7 @@ export default function PasswordGeneratorPage() {
                         variant={passphraseOptions.separator === sep ? 'default' : 'outline'}
                         onClick={() => setPassphraseOptions({ ...passphraseOptions, separator: sep })}
                       >
-                        {sep === '' ? 'None' : sep === ' ' ? 'Space' : sep}
+                        {sep === '' ? t('common.none') : sep === ' ' ? t('common.space') : sep}
                       </Button>
                     ))}
                   </div>
@@ -407,10 +409,9 @@ export default function PasswordGeneratorPage() {
               </div>
 
               <div className="p-3 rounded-md bg-muted text-sm">
-                <p className="font-semibold mb-1">About Passphrases:</p>
+                <p className="font-semibold mb-1">{t('tools.passwordGenerator.aboutPassphrases')}:</p>
                 <p className="text-muted-foreground">
-                  Passphrases are easier to remember than random passwords while still being secure. 
-                  A 4-word passphrase provides similar security to a 16-character random password.
+                  {t('tools.passwordGenerator.passphraseInfo')}
                 </p>
               </div>
             </TabsContent>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Download, QrCode as QrCodeIcon, Smartphone, Link as LinkIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -16,6 +17,7 @@ import {
 } from './logic';
 
 export default function QRCodeGeneratorPage() {
+  const { t } = useTranslation();
   const [text, setText] = useState('https://example.com');
   const [qrCode, setQrCode] = useState('');
   const [qrCodeSVG, setQrCodeSVG] = useState('');

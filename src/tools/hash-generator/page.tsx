@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Copy, Check, Upload, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { generateHash, generateFileHash, type HashAlgorithm, compareHashes } from './logic';
 
 export default function HashGeneratorPage() {
+  const { t } = useTranslation();
   const [input, setInput] = useState('');
   const [hashes, setHashes] = useState<Record<HashAlgorithm, string>>({
     'MD5': '',

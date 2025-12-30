@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Upload, Download, Image as ImageIcon, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -15,6 +16,7 @@ import {
 } from './logic';
 
 export default function ImageConverterPage() {
+  const { t } = useTranslation();
   const [result, setResult] = useState<ConversionResult | null>(null);
   const [isConverting, setIsConverting] = useState(false);
   const [error, setError] = useState('');
