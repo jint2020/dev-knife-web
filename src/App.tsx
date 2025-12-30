@@ -1,21 +1,28 @@
 /**
  * DevKnife Web - Main Application
  * 
- * Multi-Tab Layout Architecture:
+ * Multi-Tab Layout Architecture with Keep-Alive:
  * - Left: Sidebar with Logo (h-24) + Navigation
  * - Right: Header (h-14) + TabBar (h-10) + Content Area
+ * 
+ * Keep-Alive Strategy:
+ * - ALL opened tabs are rendered simultaneously
+ * - Only the active tab is visible (CSS: block vs hidden)
+ * - This preserves component state (form inputs, scroll position, etc.)
+ * - Trade-off: Memory usage increases with open tabs (acceptable for tool apps)
  * 
  * Height Alignment (Cross-alignment):
  * Sidebar Logo (h-24) = Header (h-14) + TabBar (h-10)
  * 96px = 56px + 40px ✓
  */
 
-import { Suspense, useEffect } from 'react';
+import { useEffect } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { Sidebar } from './components/layout/Sidebar';
 import { Header } from './components/layout/Header';
 import { TabBar } from './components/layout/TabBar';
-import { registerTools, toolRegistry } from './tools/registry';
+import { ToolRenderer } from './components/layout/ToolRenderer';
+import { registerTools } from './tools/registry';
 import { useAppStore } from './hooks/useAppStore';
 import './styles/globals.css';
 
@@ -34,12 +41,6 @@ function App() {
     root.classList.add(theme);
   }, [theme]);
 
-  // Get active tool component
-  const activeTool = tabs.find((tab) => tab.id === activeTabId);
-  const ActiveComponent = activeTool
-    ? toolRegistry.getAll().find((tool) => tool.id === activeTool.id)?.component
-    : null;
-
   return (
     <BrowserRouter>
       <div className="flex h-screen overflow-hidden">
@@ -56,41 +57,47 @@ function App() {
           {/* Tab Bar - HEIGHT: h-10 (40px) */}
           <TabBar />
 
-          {/* Content Area - Flexible height */}
-          <main className="flex-1 overflow-y-auto bg-background">
-            <Suspense
-              fallback={
-                <div className="flex items-center justify-center h-full">
-                  <div className="text-center space-y-2">
-                    <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                    <p className="text-sm text-muted-foreground">Loading...</p>
-                  </div>
-                </div>
-              }
-            >
-              {ActiveComponent ? (
-                <ActiveComponent />
-              ) : (
-                // Welcome Screen when no tabs are open
-                <div className="flex items-center justify-center h-full">
-                  <div className="text-center space-y-4 max-w-md px-4">
-                    <div className="text-6xl">🔧</div>
-                    <h2 className="text-3xl font-bold">Welcome to DevKnife</h2>
-                    <p className="text-muted-foreground text-lg">
-                      Your all-in-one developer toolbox. Select a tool from the sidebar to get started.
-                    </p>
-                    <div className="pt-4">
-                      <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-muted text-sm">
-                        <kbd className="px-2 py-1 text-xs font-semibold bg-background border border-border rounded">
-                          Click
-                        </kbd>
-                        <span className="text-muted-foreground">any tool on the left</span>
-                      </div>
+          {/* Content Area - Flexible height with Keep-Alive */}
+          <main className="relative flex-1 overflow-hidden bg-background">
+            {tabs.length === 0 ? (
+              // Welcome Screen when no tabs are open
+              <div className="flex items-center justify-center h-full">
+                <div className="text-center space-y-4 max-w-md px-4">
+                  <div className="text-6xl">🔧</div>
+                  <h2 className="text-3xl font-bold">Welcome to DevKnife</h2>
+                  <p className="text-muted-foreground text-lg">
+                    Your all-in-one developer toolbox. Select a tool from the sidebar to get started.
+                  </p>
+                  <div className="pt-4">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-muted text-sm">
+                      <kbd className="px-2 py-1 text-xs font-semibold bg-background border border-border rounded">
+                        Click
+                      </kbd>
+                      <span className="text-muted-foreground">any tool on the left</span>
                     </div>
                   </div>
                 </div>
-              )}
-            </Suspense>
+              </div>
+            ) : (
+              // Render ALL opened tabs (Keep-Alive mode)
+              // Each tool maintains its own state even when hidden
+              <>
+                {tabs.map((tab) => (
+                  <div
+                    key={tab.id}
+                    className="absolute inset-0 overflow-y-auto"
+                    style={{
+                      display: tab.id === activeTabId ? 'block' : 'none'
+                    }}
+                  >
+                    <ToolRenderer
+                      toolId={tab.id}
+                      isActive={tab.id === activeTabId}
+                    />
+                  </div>
+                ))}
+              </>
+            )}
           </main>
         </div>
       </div>
