@@ -32,7 +32,7 @@ export default function SVGCompressorPage() {
     if (!file) return;
 
     if (!file.name.endsWith('.svg')) {
-      setError('Please select a valid SVG file');
+      setError(t('tools.svgCompressor.errors.invalidSVG'));
       return;
     }
 
@@ -42,9 +42,9 @@ export default function SVGCompressorPage() {
 
     try {
       const svgContent = await readFileAsText(file);
-      
+
       if (!isValidSVG(svgContent)) {
-        setError('Invalid SVG file');
+        setError(t('tools.svgCompressor.invalidSVG'));
         setResult(null);
         return;
       }
@@ -52,7 +52,7 @@ export default function SVGCompressorPage() {
       const compressionResult = await compressSVG(svgContent, options);
       setResult(compressionResult);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to compress SVG');
+      setError(err instanceof Error ? err.message : t('tools.svgCompressor.errors.compressionFailed'));
       setResult(null);
     } finally {
       setIsCompressing(false);
@@ -61,14 +61,14 @@ export default function SVGCompressorPage() {
 
   const handleTextCompress = async () => {
     const svgContent = textInputRef.current?.value || '';
-    
+
     if (!svgContent.trim()) {
-      setError('Please enter SVG content');
+      setError(t('tools.svgCompressor.errors.emptySVG'));
       return;
     }
 
     if (!isValidSVG(svgContent)) {
-      setError('Invalid SVG content');
+      setError(t('tools.svgCompressor.errors.invalidSVGContent'));
       return;
     }
 
@@ -80,7 +80,7 @@ export default function SVGCompressorPage() {
       const compressionResult = await compressSVG(svgContent, options);
       setResult(compressionResult);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to compress SVG');
+      setError(err instanceof Error ? err.message : t('tools.svgCompressor.errors.compressionFailed'));
       setResult(null);
     } finally {
       setIsCompressing(false);
@@ -130,8 +130,8 @@ export default function SVGCompressorPage() {
           <div className="flex items-center gap-2">
             <FileCode className="h-6 w-6" />
             <div>
-              <CardTitle>SVG Compressor</CardTitle>
-              <CardDescription>Optimize and compress SVG files to reduce file size</CardDescription>
+              <CardTitle>{t('tools.svgCompressor.title')}</CardTitle>
+              <CardDescription>{t('tools.svgCompressor.description')}</CardDescription>
             </div>
           </div>
         </CardHeader>
@@ -139,8 +139,8 @@ export default function SVGCompressorPage() {
         <CardContent className="space-y-6">
           <Tabs defaultValue="file">
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="file">Upload File</TabsTrigger>
-              <TabsTrigger value="text">Paste SVG</TabsTrigger>
+              <TabsTrigger value="file">{t('tools.svgCompressor.uploadFile')}</TabsTrigger>
+              <TabsTrigger value="text">{t('tools.svgCompressor.pasteCode')}</TabsTrigger>
             </TabsList>
 
             {/* File Upload Tab */}
@@ -159,9 +159,9 @@ export default function SVGCompressorPage() {
                   className="hidden"
                 />
                 <Upload className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                <p className="text-lg font-semibold mb-2">Click to upload or drag and drop</p>
+                <p className="text-lg font-semibold mb-2">{t('tools.svgCompressor.dragAndDrop')}</p>
                 <p className="text-sm text-muted-foreground">
-                  Only SVG files are supported
+                  {t('tools.svgCompressor.onlySVG')}
                 </p>
               </div>
             </TabsContent>
@@ -169,15 +169,15 @@ export default function SVGCompressorPage() {
             {/* Text Input Tab */}
             <TabsContent value="text" className="space-y-4">
               <div className="space-y-2">
-                <Label>SVG Content</Label>
+                <Label>{t('tools.svgCompressor.pasteSVG')}</Label>
                 <textarea
                   ref={textInputRef}
-                  placeholder="Paste your SVG code here..."
+                  placeholder={t('tools.svgCompressor.pastePlaceholder')}
                   className="w-full min-h-[300px] p-3 rounded-md border border-border bg-background text-foreground font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-ring"
                 />
               </div>
               <Button onClick={handleTextCompress} className="w-full">
-                Compress SVG
+                {t('tools.svgCompressor.compressSVG')}
               </Button>
             </TabsContent>
           </Tabs>
@@ -186,16 +186,16 @@ export default function SVGCompressorPage() {
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle className="text-lg">Compression Options</CardTitle>
+                <CardTitle className="text-lg">{t('tools.svgCompressor.options')}</CardTitle>
                 <div className="flex gap-2">
                   <Button size="sm" variant="outline" onClick={() => toggleAllOptions(true)}>
-                    Enable All
+                    {t('tools.svgCompressor.enableAll')}
                   </Button>
                   <Button size="sm" variant="outline" onClick={() => toggleAllOptions(false)}>
-                    Disable All
+                    {t('tools.svgCompressor.disableAll')}
                   </Button>
                   <Button size="sm" variant="outline" onClick={() => setOptions(DEFAULT_OPTIONS)}>
-                    Reset
+                    {t('common.reset')}
                   </Button>
                 </div>
               </div>
@@ -231,7 +231,7 @@ export default function SVGCompressorPage() {
             <div className="flex items-center justify-center p-12">
               <div className="text-center">
                 <div className="animate-spin h-12 w-12 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
-                <p className="text-muted-foreground">Compressing SVG...</p>
+                <p className="text-muted-foreground">{t('tools.svgCompressor.compressing')}</p>
               </div>
             </div>
           )}
@@ -244,23 +244,23 @@ export default function SVGCompressorPage() {
                 <CardContent className="pt-6">
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
                     <div>
-                      <div className="text-sm text-muted-foreground mb-1">Original Size</div>
+                      <div className="text-sm text-muted-foreground mb-1">{t('tools.svgCompressor.originalSize')}</div>
                       <div className="text-xl font-bold">{formatFileSize(result.originalSize)}</div>
                     </div>
                     <div>
-                      <div className="text-sm text-muted-foreground mb-1">Compressed Size</div>
+                      <div className="text-sm text-muted-foreground mb-1">{t('tools.svgCompressor.compressedSize')}</div>
                       <div className="text-xl font-bold text-green-600">
                         {formatFileSize(result.compressedSize)}
                       </div>
                     </div>
                     <div>
-                      <div className="text-sm text-muted-foreground mb-1">Saved</div>
+                      <div className="text-sm text-muted-foreground mb-1">{t('tools.svgCompressor.saved')}</div>
                       <div className="text-xl font-bold text-green-600">
                         {formatFileSize(result.originalSize - result.compressedSize)}
                       </div>
                     </div>
                     <div>
-                      <div className="text-sm text-muted-foreground mb-1">Compression</div>
+                      <div className="text-sm text-muted-foreground mb-1">{t('tools.svgCompressor.compression')}</div>
                       <div className="text-xl font-bold text-green-600">
                         {result.compressionRatio.toFixed(1)}%
                       </div>
@@ -274,15 +274,15 @@ export default function SVGCompressorPage() {
                 <TabsList className="grid w-full grid-cols-3">
                   <TabsTrigger value="preview">
                     <Eye className="h-4 w-4 mr-2" />
-                    Preview
+                    {t('tools.svgCompressor.preview')}
                   </TabsTrigger>
                   <TabsTrigger value="original">
                     <Code className="h-4 w-4 mr-2" />
-                    Original
+                    {t('tools.svgCompressor.originalSVG')}
                   </TabsTrigger>
                   <TabsTrigger value="compressed">
                     <Code className="h-4 w-4 mr-2" />
-                    Compressed
+                    {t('tools.svgCompressor.compressedSVG')}
                   </TabsTrigger>
                 </TabsList>
 
@@ -291,7 +291,7 @@ export default function SVGCompressorPage() {
                     <Card>
                       <CardHeader>
                         <div className="flex items-center justify-between">
-                          <CardTitle className="text-lg">Original</CardTitle>
+                          <CardTitle className="text-lg">{t('tools.svgCompressor.original')}</CardTitle>
                           <Badge variant="outline">{formatFileSize(result.originalSize)}</Badge>
                         </div>
                       </CardHeader>
@@ -306,7 +306,7 @@ export default function SVGCompressorPage() {
                     <Card>
                       <CardHeader>
                         <div className="flex items-center justify-between">
-                          <CardTitle className="text-lg">Compressed</CardTitle>
+                          <CardTitle className="text-lg">{t('tools.svgCompressor.compressed')}</CardTitle>
                           <Badge variant="default" className="bg-green-600">
                             {formatFileSize(result.compressedSize)}
                           </Badge>
@@ -342,7 +342,7 @@ export default function SVGCompressorPage() {
               {/* Download Button */}
               <Button onClick={handleDownload} className="w-full" size="lg">
                 <Download className="h-5 w-5 mr-2" />
-                Download Compressed SVG
+                {t('tools.svgCompressor.downloadCompressed')}
               </Button>
             </div>
           )}
@@ -350,22 +350,21 @@ export default function SVGCompressorPage() {
           {/* Info Card */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">About SVG Optimization</CardTitle>
+              <CardTitle className="text-lg">{t('tools.svgCompressor.aboutTitle')}</CardTitle>
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground space-y-2">
               <p>
-                SVG optimization removes unnecessary data from SVG files without affecting visual quality:
+                {t('tools.svgCompressor.aboutDescription')}
               </p>
               <ul className="list-disc list-inside space-y-1">
-                <li>Removes metadata, comments, and hidden elements</li>
-                <li>Simplifies and merges paths</li>
-                <li>Optimizes numeric values and transforms</li>
-                <li>Cleans up attributes and IDs</li>
-                <li>Minifies styles and converts colors to shorter formats</li>
+                <li>{t('tools.svgCompressor.benefit1')}</li>
+                <li>{t('tools.svgCompressor.benefit2')}</li>
+                <li>{t('tools.svgCompressor.benefit3')}</li>
+                <li>{t('tools.svgCompressor.benefit4')}</li>
+                <li>{t('tools.svgCompressor.benefit5')}</li>
               </ul>
               <p className="mt-2">
-                <strong>Note:</strong> Some optimizations may slightly change the visual appearance. 
-                Always preview the result before using in production.
+                <strong>{t('tools.svgCompressor.noteLabel')}:</strong> {t('tools.svgCompressor.noteText')}
               </p>
             </CardContent>
           </Card>

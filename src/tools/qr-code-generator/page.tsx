@@ -43,7 +43,7 @@ export default function QRCodeGeneratorPage() {
 
   const handleGenerate = async () => {
     if (!text.trim()) {
-      setError('Please enter some text');
+      setError(t('tools.qrGenerator.errors.enterText'));
       return;
     }
 
@@ -58,7 +58,7 @@ export default function QRCodeGeneratorPage() {
       setQrCode(dataUrl);
       setQrCodeSVG(svg);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to generate QR code');
+      setError(err instanceof Error ? err.message : t('tools.qrGenerator.errors.generateFailed'));
       setQrCode('');
       setQrCodeSVG('');
     } finally {
@@ -79,11 +79,11 @@ export default function QRCodeGeneratorPage() {
   };
 
   const presets = [
-    { label: 'URL', value: 'https://example.com', icon: LinkIcon },
-    { label: 'Email', value: 'mailto:example@email.com', icon: LinkIcon },
-    { label: 'Phone', value: 'tel:+1234567890', icon: Smartphone },
-    { label: 'SMS', value: 'sms:+1234567890', icon: Smartphone },
-    { label: 'WiFi', value: 'WIFI:T:WPA;S:MyNetwork;P:MyPassword;;', icon: QrCodeIcon },
+    { label: t('tools.qrGenerator.presetLabels.url'), value: 'https://example.com', icon: LinkIcon },
+    { label: t('tools.qrGenerator.presetLabels.email'), value: 'mailto:example@email.com', icon: LinkIcon },
+    { label: t('tools.qrGenerator.presetLabels.phone'), value: 'tel:+1234567890', icon: Smartphone },
+    { label: t('tools.qrGenerator.presetLabels.sms'), value: 'sms:+1234567890', icon: Smartphone },
+    { label: t('tools.qrGenerator.presetLabels.wifi'), value: 'WIFI:T:WPA;S:MyNetwork;P:MyPassword;;', icon: QrCodeIcon },
   ];
 
   return (
@@ -93,8 +93,8 @@ export default function QRCodeGeneratorPage() {
           <div className="flex items-center gap-2">
             <QrCodeIcon className="h-6 w-6" />
             <div>
-              <CardTitle>QR Code Generator</CardTitle>
-              <CardDescription>Generate QR codes from text, URLs, or other data</CardDescription>
+              <CardTitle>{t('tools.qrGenerator.title')}</CardTitle>
+              <CardDescription>{t('tools.qrGenerator.description')}</CardDescription>
             </div>
           </div>
         </CardHeader>
@@ -105,28 +105,28 @@ export default function QRCodeGeneratorPage() {
             <div className="space-y-4">
               <Tabs defaultValue="text">
                 <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="text">Text/URL</TabsTrigger>
-                  <TabsTrigger value="presets">Presets</TabsTrigger>
+                  <TabsTrigger value="text">{t('tools.qrGenerator.textUrl')}</TabsTrigger>
+                  <TabsTrigger value="presets">{t('tools.qrGenerator.presets')}</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="text" className="space-y-4">
                   <div className="space-y-2">
-                    <Label>Content</Label>
+                    <Label>{t('tools.qrGenerator.content')}</Label>
                     <textarea
                       value={text}
                       onChange={(e) => setText(e.target.value)}
-                      placeholder="Enter text, URL, or data to encode..."
+                      placeholder={t('tools.qrGenerator.enterContent')}
                       className="w-full min-h-[150px] p-3 rounded-md border border-border bg-background text-foreground font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-ring"
                     />
                     <div className="flex items-center justify-between text-xs text-muted-foreground">
-                      <span>{text.length} characters</span>
-                      <span>Max: {capacity.binary} bytes</span>
+                      <span>{text.length} {t('tools.qrGenerator.charactersCount')}</span>
+                      <span>{t('tools.qrGenerator.maxBytes', { count: capacity.binary })}</span>
                     </div>
                   </div>
                 </TabsContent>
 
                 <TabsContent value="presets" className="space-y-2">
-                  <Label>Quick Presets</Label>
+                  <Label>{t('tools.qrGenerator.quickPresets')}</Label>
                   <div className="space-y-2">
                     {presets.map((preset) => (
                       <Button
@@ -141,30 +141,28 @@ export default function QRCodeGeneratorPage() {
                     ))}
                   </div>
                   <div className="p-3 mt-3 rounded-md bg-muted text-xs space-y-1">
-                    <p className="font-semibold">WiFi Format:</p>
-                    <code className="block">WIFI:T:WPA;S:NetworkName;P:Password;;</code>
-                    <p className="text-muted-foreground">
-                      T = Security type (WPA, WEP, or blank for none)
-                      <br />S = Network SSID
-                      <br />P = Password
+                    <p className="font-semibold">{t('tools.qrGenerator.wifiFormat')}</p>
+                    <code className="block">{t('tools.qrGenerator.wifiFormatCode')}</code>
+                    <p className="text-muted-foreground whitespace-pre-line">
+                      {t('tools.qrGenerator.wifiFormatDesc')}
                     </p>
                   </div>
                 </TabsContent>
               </Tabs>
 
               <Button onClick={handleGenerate} disabled={isGenerating || !text} className="w-full">
-                {isGenerating ? 'Generating...' : 'Generate QR Code'}
+                {isGenerating ? t('tools.qrGenerator.generating') : t('tools.qrGenerator.generateQRCode')}
               </Button>
 
               {/* Options */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg">Options</CardTitle>
+                  <CardTitle className="text-lg">{t('tools.qrGenerator.options')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {/* Error Correction Level */}
                   <div className="space-y-2">
-                    <Label>Error Correction Level</Label>
+                    <Label>{t('tools.qrGenerator.errorCorrectionLevel')}</Label>
                     <div className="grid grid-cols-4 gap-2">
                       {(['L', 'M', 'Q', 'H'] as ErrorCorrectionLevel[]).map((level) => (
                         <Button
@@ -178,16 +176,16 @@ export default function QRCodeGeneratorPage() {
                       ))}
                     </div>
                     <p className="text-xs text-muted-foreground">
-                      {options.errorCorrectionLevel === 'L' && 'Low (7% recovery)'}
-                      {options.errorCorrectionLevel === 'M' && 'Medium (15% recovery)'}
-                      {options.errorCorrectionLevel === 'Q' && 'Quartile (25% recovery)'}
-                      {options.errorCorrectionLevel === 'H' && 'High (30% recovery)'}
+                      {options.errorCorrectionLevel === 'L' && t('tools.qrGenerator.lowRecovery')}
+                      {options.errorCorrectionLevel === 'M' && t('tools.qrGenerator.mediumRecovery')}
+                      {options.errorCorrectionLevel === 'Q' && t('tools.qrGenerator.quartileRecovery')}
+                      {options.errorCorrectionLevel === 'H' && t('tools.qrGenerator.highRecovery')}
                     </p>
                   </div>
 
                   {/* Size */}
                   <div className="space-y-2">
-                    <Label>Size: {options.width}px</Label>
+                    <Label>{t('tools.qrGenerator.sizePx', { size: options.width })}</Label>
                     <input
                       type="range"
                       min="128"
@@ -205,7 +203,7 @@ export default function QRCodeGeneratorPage() {
 
                   {/* Margin */}
                   <div className="space-y-2">
-                    <Label>Margin: {options.margin}</Label>
+                    <Label>{t('tools.qrGenerator.marginValue', { margin: options.margin })}</Label>
                     <input
                       type="range"
                       min="0"
@@ -219,7 +217,7 @@ export default function QRCodeGeneratorPage() {
                   {/* Colors */}
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label>Dark Color</Label>
+                      <Label>{t('tools.qrGenerator.darkColor')}</Label>
                       <div className="flex gap-2">
                         <input
                           type="color"
@@ -236,7 +234,7 @@ export default function QRCodeGeneratorPage() {
                       </div>
                     </div>
                     <div className="space-y-2">
-                      <Label>Light Color</Label>
+                      <Label>{t('tools.qrGenerator.lightColor')}</Label>
                       <div className="flex gap-2">
                         <input
                           type="color"
@@ -262,10 +260,10 @@ export default function QRCodeGeneratorPage() {
               <Card>
                 <CardHeader>
                   <div className="flex items-center justify-between">
-                    <CardTitle className="text-lg">Preview</CardTitle>
+                    <CardTitle className="text-lg">{t('tools.qrGenerator.preview')}</CardTitle>
                     {qrCode && (
                       <Badge variant="outline">
-                        {options.width}x{options.width}px
+                        {t('tools.qrGenerator.sizeLabel', { width: options.width, height: options.width })}
                       </Badge>
                     )}
                   </div>
@@ -291,11 +289,11 @@ export default function QRCodeGeneratorPage() {
                       <div className="grid grid-cols-2 gap-2">
                         <Button onClick={handleDownloadPNG} variant="outline">
                           <Download className="h-4 w-4 mr-2" />
-                          Download PNG
+                          {t('tools.qrGenerator.downloadPNG')}
                         </Button>
                         <Button onClick={handleDownloadSVG} variant="outline">
                           <Download className="h-4 w-4 mr-2" />
-                          Download SVG
+                          {t('tools.qrGenerator.downloadSVG')}
                         </Button>
                       </div>
                     </div>
@@ -304,7 +302,7 @@ export default function QRCodeGeneratorPage() {
                   {!qrCode && !error && (
                     <div className="flex flex-col items-center justify-center p-12 text-center text-muted-foreground">
                       <QrCodeIcon className="h-16 w-16 mb-4 opacity-20" />
-                      <p>Enter text and click Generate to create a QR code</p>
+                      <p>{t('tools.qrGenerator.enterTextPrompt')}</p>
                     </div>
                   )}
                 </CardContent>
@@ -313,26 +311,20 @@ export default function QRCodeGeneratorPage() {
               {/* Info Card */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg">About QR Codes</CardTitle>
+                  <CardTitle className="text-lg">{t('tools.qrGenerator.aboutQRCodes')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2 text-sm text-muted-foreground">
+                  <p>{t('tools.qrGenerator.errorCorrectionInfo')}</p>
                   <p>
-                    <strong>Error Correction:</strong> Higher levels allow the QR code to be read 
-                    even if partially damaged, but reduce data capacity.
-                  </p>
-                  <p>
-                    <strong>Capacity (Level {options.errorCorrectionLevel}):</strong>
+                    <strong>{t('tools.qrGenerator.capacityInfo', { level: options.errorCorrectionLevel })}</strong>
                     <br />
-                    Numeric: {capacity.numeric} digits
+                    {t('tools.qrGenerator.numericCapacity', { count: capacity.numeric })}
                     <br />
-                    Alphanumeric: {capacity.alphanumeric} chars
+                    {t('tools.qrGenerator.alphanumericCapacity', { count: capacity.alphanumeric })}
                     <br />
-                    Binary: {capacity.binary} bytes
+                    {t('tools.qrGenerator.binaryCapacity', { count: capacity.binary })}
                   </p>
-                  <p>
-                    <strong>Use Cases:</strong> URLs, contact info, WiFi credentials, payment info, 
-                    event tickets, product tracking, and more.
-                  </p>
+                  <p>{t('tools.qrGenerator.useCases')}</p>
                 </CardContent>
               </Card>
             </div>

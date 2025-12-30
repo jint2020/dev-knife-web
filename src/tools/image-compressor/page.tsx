@@ -34,7 +34,7 @@ export default function ImageCompressorPage() {
     if (!file) return;
 
     if (!file.type.startsWith('image/')) {
-      setError('Please select a valid image file');
+      setError(t('tools.imageCompressor.errors.invalidFile'));
       return;
     }
 
@@ -48,7 +48,7 @@ export default function ImageCompressorPage() {
       const compressionResult = await compressImage(file, options);
       setResult(compressionResult);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to compress image');
+      setError(err instanceof Error ? err.message : t('tools.imageCompressor.errors.compressionFailed'));
       setResult(null);
     } finally {
       setIsCompressing(false);
@@ -91,8 +91,8 @@ export default function ImageCompressorPage() {
           <div className="flex items-center gap-2">
             <ImageDown className="h-6 w-6" />
             <div>
-              <CardTitle>Image Compressor</CardTitle>
-              <CardDescription>Compress images to reduce file size while maintaining quality</CardDescription>
+              <CardTitle>{t('tools.imageCompressor.title')}</CardTitle>
+              <CardDescription>{t('tools.imageCompressor.description')}</CardDescription>
             </div>
           </div>
         </CardHeader>
@@ -113,20 +113,20 @@ export default function ImageCompressorPage() {
               className="hidden"
             />
             <Upload className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-            <p className="text-lg font-semibold mb-2">Click to upload or drag and drop</p>
+            <p className="text-lg font-semibold mb-2">{t('tools.imageCompressor.uploadPrompt')}</p>
             <p className="text-sm text-muted-foreground">
-              Supports: JPG, PNG, WebP, GIF
+              {t('tools.imageCompressor.supportedFormats')}
             </p>
           </div>
 
           {/* Compression Options */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Compression Options</CardTitle>
+              <CardTitle className="text-lg">{t('tools.imageCompressor.compressionOptions')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label>Max File Size: {options.maxSizeMB} MB</Label>
+                <Label>{t('tools.imageCompressor.maxSizeMB', { size: options.maxSizeMB })}</Label>
                 <input
                   type="range"
                   min="0.1"
@@ -143,7 +143,7 @@ export default function ImageCompressorPage() {
               </div>
 
               <div className="space-y-2">
-                <Label>Max Width/Height: {options.maxWidthOrHeight}px</Label>
+                <Label>{t('tools.imageCompressor.maxWidthHeight', { size: options.maxWidthOrHeight })}</Label>
                 <input
                   type="range"
                   min="640"
@@ -160,7 +160,7 @@ export default function ImageCompressorPage() {
               </div>
 
               <div className="space-y-2">
-                <Label>Quality: {Math.round(options.quality * 100)}%</Label>
+                <Label>{t('tools.imageCompressor.quality', { quality: Math.round(options.quality * 100) })}</Label>
                 <input
                   type="range"
                   min="0.1"
@@ -183,7 +183,7 @@ export default function ImageCompressorPage() {
                   onChange={(e) => setOptions({ ...options, useWebWorker: e.target.checked })}
                   className="h-4 w-4"
                 />
-                <span className="text-sm">Use Web Worker (faster compression)</span>
+                <span className="text-sm">{t('tools.imageCompressor.useWebWorker')}</span>
               </label>
             </CardContent>
           </Card>
@@ -200,7 +200,7 @@ export default function ImageCompressorPage() {
             <div className="flex items-center justify-center p-12">
               <div className="text-center">
                 <div className="animate-spin h-12 w-12 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
-                <p className="text-muted-foreground">Compressing image...</p>
+                <p className="text-muted-foreground">{t('tools.imageCompressor.compressing')}</p>
               </div>
             </div>
           )}
@@ -213,21 +213,21 @@ export default function ImageCompressorPage() {
                 <CardContent className="pt-6">
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
                     <div>
-                      <div className="text-sm text-muted-foreground mb-1">Original Size</div>
+                      <div className="text-sm text-muted-foreground mb-1">{t('tools.imageCompressor.originalSize')}</div>
                       <div className="text-xl font-bold">{formatFileSize(result.originalSize)}</div>
                     </div>
                     <div>
-                      <div className="text-sm text-muted-foreground mb-1">Compressed Size</div>
+                      <div className="text-sm text-muted-foreground mb-1">{t('tools.imageCompressor.compressedSize')}</div>
                       <div className="text-xl font-bold text-green-600">{formatFileSize(result.compressedSize)}</div>
                     </div>
                     <div>
-                      <div className="text-sm text-muted-foreground mb-1">Saved</div>
+                      <div className="text-sm text-muted-foreground mb-1">{t('tools.imageCompressor.saved')}</div>
                       <div className="text-xl font-bold text-green-600">
                         {formatFileSize(result.originalSize - result.compressedSize)}
                       </div>
                     </div>
                     <div>
-                      <div className="text-sm text-muted-foreground mb-1">Compression</div>
+                      <div className="text-sm text-muted-foreground mb-1">{t('tools.imageCompressor.compression')}</div>
                       <div className="text-xl font-bold text-green-600">
                         {result.compressionRatio.toFixed(1)}%
                       </div>
@@ -241,7 +241,7 @@ export default function ImageCompressorPage() {
                 <Card>
                   <CardHeader>
                     <div className="flex items-center justify-between">
-                      <CardTitle className="text-lg">Original</CardTitle>
+                      <CardTitle className="text-lg">{t('tools.imageCompressor.original')}</CardTitle>
                       {originalDimensions && (
                         <Badge variant="outline">
                           {originalDimensions.width} × {originalDimensions.height}
@@ -266,7 +266,7 @@ export default function ImageCompressorPage() {
                 <Card>
                   <CardHeader>
                     <div className="flex items-center justify-between">
-                      <CardTitle className="text-lg">Compressed</CardTitle>
+                      <CardTitle className="text-lg">{t('tools.imageCompressor.compressed')}</CardTitle>
                       <Badge variant="default" className="bg-green-600">
                         -{result.compressionRatio.toFixed(0)}%
                       </Badge>
@@ -290,7 +290,7 @@ export default function ImageCompressorPage() {
               {/* Download Button */}
               <Button onClick={handleDownload} className="w-full" size="lg">
                 <Download className="h-5 w-5 mr-2" />
-                Download Compressed Image
+                {t('tools.imageCompressor.downloadCompressedImage')}
               </Button>
             </div>
           )}
@@ -300,19 +300,16 @@ export default function ImageCompressorPage() {
             <CardHeader>
               <CardTitle className="text-lg flex items-center gap-2">
                 <Info className="h-5 w-5" />
-                About Image Compression
+                {t('tools.imageCompressor.aboutCompression')}
               </CardTitle>
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground space-y-2">
-              <p>
-                This tool uses advanced compression algorithms to reduce image file size while 
-                preserving visual quality.
-              </p>
+              <p>{t('tools.imageCompressor.compressionInfo')}</p>
               <ul className="list-disc list-inside space-y-1">
-                <li><strong>Quality:</strong> Lower values = smaller files but less detail</li>
-                <li><strong>Max Size:</strong> Target file size (actual result may vary)</li>
-                <li><strong>Max Dimensions:</strong> Images larger than this will be resized</li>
-                <li><strong>All processing happens in your browser</strong> - images never leave your device</li>
+                <li>{t('tools.imageCompressor.qualityInfo')}</li>
+                <li>{t('tools.imageCompressor.maxSizeInfo')}</li>
+                <li>{t('tools.imageCompressor.maxDimensionsInfo')}</li>
+                <li><strong>{t('tools.imageCompressor.privacyNote')}</strong></li>
               </ul>
             </CardContent>
           </Card>

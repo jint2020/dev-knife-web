@@ -64,8 +64,8 @@ export default function UrlEncoderPage() {
           <div className="flex items-center gap-2">
             <LinkIcon className="h-6 w-6" />
             <div>
-              <CardTitle>URL Encoder/Decoder</CardTitle>
-              <CardDescription>Encode and decode URLs with support for query parameters</CardDescription>
+              <CardTitle>{t('tools.urlEncoder.title')}</CardTitle>
+              <CardDescription>{t('tools.urlEncoder.description')}</CardDescription>
             </div>
           </div>
         </CardHeader>
@@ -73,27 +73,27 @@ export default function UrlEncoderPage() {
         <CardContent>
           <Tabs defaultValue="encode">
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="encode">Encode/Decode</TabsTrigger>
-              <TabsTrigger value="parse">Parse URL</TabsTrigger>
+              <TabsTrigger value="encode">{t('tools.urlEncoder.encodeDecode')}</TabsTrigger>
+              <TabsTrigger value="parse">{t('tools.urlEncoder.parseUrl')}</TabsTrigger>
             </TabsList>
 
             {/* Encode/Decode Tab */}
             <TabsContent value="encode" className="space-y-4">
               <div className="flex items-center gap-2 mb-2">
-                <Label>Mode:</Label>
-                <Badge 
+                <Label>{t('tools.urlEncoder.mode')}:</Label>
+                <Badge
                   variant={mode === 'component' ? 'default' : 'outline'}
                   className="cursor-pointer"
                   onClick={() => setMode('component')}
                 >
-                  Component (encodeURIComponent)
+                  {t('tools.urlEncoder.component')}
                 </Badge>
-                <Badge 
+                <Badge
                   variant={mode === 'full' ? 'default' : 'outline'}
                   className="cursor-pointer"
                   onClick={() => setMode('full')}
                 >
-                  Full URL (encodeURI)
+                  {t('tools.urlEncoder.full')}
                 </Badge>
               </div>
 
@@ -101,23 +101,20 @@ export default function UrlEncoderPage() {
                 {/* Input Section */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <Label>Input</Label>
+                    <Label>{t('tools.urlEncoder.inputLabel')}</Label>
                     <div className="flex gap-2">
                       <Button size="sm" onClick={handleEncode}>
-                        Encode →
+                        {t('common.convert')} →
                       </Button>
                       <Button size="sm" onClick={handleDecode} variant="secondary">
-                        ← Decode
+                        ← {t('tools.base64Encoder.decode')}
                       </Button>
                     </div>
                   </div>
                   <textarea
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
-                    placeholder={mode === 'component' 
-                      ? 'Enter text to encode/decode (e.g., Hello World!)' 
-                      : 'Enter full URL (e.g., https://example.com/path?q=hello world)'
-                    }
+                    placeholder={t('tools.urlEncoder.inputPlaceholder')}
                     className="w-full min-h-[300px] p-3 rounded-md border border-border bg-background text-foreground font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-ring"
                   />
                 </div>
@@ -125,7 +122,7 @@ export default function UrlEncoderPage() {
                 {/* Output Section */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <Label>Output</Label>
+                    <Label>{t('tools.urlEncoder.outputLabel')}</Label>
                     <div className="flex gap-2">
                       <Button
                         size="sm"
@@ -134,7 +131,7 @@ export default function UrlEncoderPage() {
                         disabled={!input || !output}
                       >
                         <ArrowRightLeft className="h-4 w-4 mr-1" />
-                        Swap
+                        {t('tools.urlEncoder.swap')}
                       </Button>
                       <Button
                         size="sm"
@@ -149,7 +146,7 @@ export default function UrlEncoderPage() {
                   <textarea
                     value={output}
                     readOnly
-                    placeholder="Encoded/decoded output will appear here"
+                    placeholder={t('tools.urlEncoder.outputLabel')}
                     className="w-full min-h-[300px] p-3 rounded-md border border-border bg-muted text-foreground font-mono text-sm resize-none focus:outline-none"
                   />
                 </div>
@@ -157,11 +154,10 @@ export default function UrlEncoderPage() {
 
               {/* Info Box */}
               <div className="p-3 rounded-md bg-muted text-sm space-y-1">
-                <div className="font-semibold">Tips:</div>
+                <div className="font-semibold">{t('tools.urlEncoder.tips')}:</div>
                 <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                  <li><strong>Component mode</strong>: Use for encoding query parameters, path segments, or individual text</li>
-                  <li><strong>Full URL mode</strong>: Use for encoding complete URLs while preserving special characters like :, /, ?, #</li>
-                  <li>Characters like spaces become <code className="text-xs bg-background px-1 py-0.5 rounded">%20</code> in component mode or <code className="text-xs bg-background px-1 py-0.5 rounded">%20</code> in full mode</li>
+                  <li><strong>{t('tools.urlEncoder.component')}</strong>: {t('tools.urlEncoder.componentDesc')}</li>
+                  <li><strong>{t('tools.urlEncoder.full')}</strong>: {t('tools.urlEncoder.fullDesc')}</li>
                 </ul>
               </div>
             </TabsContent>
@@ -169,18 +165,18 @@ export default function UrlEncoderPage() {
             {/* Parse URL Tab */}
             <TabsContent value="parse" className="space-y-4">
               <div className="space-y-2">
-                <Label>URL to Parse</Label>
+                <Label>{t('tools.urlEncoder.parseUrl')}</Label>
                 <div className="flex gap-2">
                   <input
                     type="text"
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
-                    placeholder="https://example.com/path?param1=value1&param2=value2#section"
+                    placeholder={t('tools.urlEncoder.inputPlaceholder')}
                     className="flex-1 h-10 px-3 rounded-md border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                   />
                   {input && (
                     <Badge variant={isValidUrl(input) ? 'default' : 'destructive'}>
-                      {isValidUrl(input) ? 'Valid' : 'Invalid'}
+                      {isValidUrl(input) ? t('tools.base64Encoder.validBase64') : t('tools.base64Encoder.invalidBase64')}
                     </Badge>
                   )}
                 </div>
@@ -193,32 +189,32 @@ export default function UrlEncoderPage() {
                     <CardHeader>
                       <CardTitle className="text-lg flex items-center gap-2">
                         <Globe className="h-5 w-5" />
-                        URL Components
+                        {t('tools.urlEncoder.urlInfo')}
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-3">
                       <div className="grid grid-cols-1 gap-3 font-mono text-sm">
                         <div className="flex items-start gap-2">
-                          <span className="font-semibold min-w-[100px]">Protocol:</span>
+                          <span className="font-semibold min-w-[100px]">{t('tools.urlEncoder.protocol')}:</span>
                           <span className="text-muted-foreground break-all">{urlInfo.protocol}</span>
                         </div>
                         <div className="flex items-start gap-2">
-                          <span className="font-semibold min-w-[100px]">Hostname:</span>
+                          <span className="font-semibold min-w-[100px]">{t('tools.urlEncoder.hostname')}:</span>
                           <span className="text-muted-foreground break-all">{urlInfo.hostname}</span>
                         </div>
                         <div className="flex items-start gap-2">
-                          <span className="font-semibold min-w-[100px]">Pathname:</span>
+                          <span className="font-semibold min-w-[100px]">{t('tools.urlEncoder.pathname')}:</span>
                           <span className="text-muted-foreground break-all">{urlInfo.pathname}</span>
                         </div>
                         {urlInfo.search && (
                           <div className="flex items-start gap-2">
-                            <span className="font-semibold min-w-[100px]">Search:</span>
+                            <span className="font-semibold min-w-[100px]">{t('tools.urlEncoder.search')}:</span>
                             <span className="text-muted-foreground break-all">{urlInfo.search}</span>
                           </div>
                         )}
                         {urlInfo.hash && (
                           <div className="flex items-start gap-2">
-                            <span className="font-semibold min-w-[100px]">Hash:</span>
+                            <span className="font-semibold min-w-[100px]">{t('tools.urlEncoder.hash')}:</span>
                             <span className="text-muted-foreground break-all">{urlInfo.hash}</span>
                           </div>
                         )}
@@ -230,7 +226,7 @@ export default function UrlEncoderPage() {
                   {Object.keys(urlInfo.params).length > 0 && (
                     <Card>
                       <CardHeader>
-                        <CardTitle className="text-lg">Query Parameters</CardTitle>
+                        <CardTitle className="text-lg">{t('tools.urlEncoder.queryParams')}</CardTitle>
                       </CardHeader>
                       <CardContent>
                         <div className="space-y-2">
@@ -257,7 +253,7 @@ export default function UrlEncoderPage() {
 
               {!urlInfo && input && (
                 <div className="p-4 rounded-md bg-destructive/10 text-destructive text-sm">
-                  Invalid URL format. Please enter a valid URL starting with http:// or https://
+                  {t('tools.urlEncoder.invalidUrl')}
                 </div>
               )}
             </TabsContent>

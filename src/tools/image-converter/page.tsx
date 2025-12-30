@@ -30,7 +30,7 @@ export default function ImageConverterPage() {
     if (!file) return;
 
     if (!file.type.startsWith('image/')) {
-      setError('Please select a valid image file');
+      setError(t('tools.imageConverter.errors.invalidImage'));
       return;
     }
 
@@ -44,7 +44,7 @@ export default function ImageConverterPage() {
       const conversionResult = await convertImage(file, targetFormat, quality);
       setResult(conversionResult);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to convert image');
+      setError(err instanceof Error ? err.message : t('tools.imageConverter.errors.conversionFailed'));
       setResult(null);
     } finally {
       setIsConverting(false);
@@ -80,9 +80,9 @@ export default function ImageConverterPage() {
   };
 
   const formats: { value: ImageFormat; label: string; description: string }[] = [
-    { value: 'image/png', label: 'PNG', description: 'Lossless, supports transparency' },
-    { value: 'image/jpeg', label: 'JPG', description: 'Lossy, smaller file size' },
-    { value: 'image/webp', label: 'WebP', description: 'Modern format, best compression' },
+    { value: 'image/png', label: t('tools.imageConverter.formatPNG'), description: t('tools.imageConverter.formatPNGDesc') },
+    { value: 'image/jpeg', label: t('tools.imageConverter.formatJPEG'), description: t('tools.imageConverter.formatJPEGDesc') },
+    { value: 'image/webp', label: t('tools.imageConverter.formatWebP'), description: t('tools.imageConverter.formatWebPDesc') },
   ];
 
   return (
@@ -92,8 +92,8 @@ export default function ImageConverterPage() {
           <div className="flex items-center gap-2">
             <ImageIcon className="h-6 w-6" />
             <div>
-              <CardTitle>Image Converter</CardTitle>
-              <CardDescription>Convert images between PNG, JPG, and WebP formats</CardDescription>
+              <CardTitle>{t('tools.imageConverter.title')}</CardTitle>
+              <CardDescription>{t('tools.imageConverter.description')}</CardDescription>
             </div>
           </div>
         </CardHeader>
@@ -114,16 +114,16 @@ export default function ImageConverterPage() {
               className="hidden"
             />
             <Upload className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-            <p className="text-lg font-semibold mb-2">Click to upload or drag and drop</p>
+            <p className="text-lg font-semibold mb-2">{t('tools.imageConverter.dragAndDrop')}</p>
             <p className="text-sm text-muted-foreground">
-              Supports: JPG, PNG, WebP, GIF, and more
+              {t('tools.imageConverter.supportedFormats')}
             </p>
           </div>
 
           {/* Format Selection */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Target Format</CardTitle>
+              <CardTitle className="text-lg">{t('tools.imageConverter.targetFormat')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -146,7 +146,7 @@ export default function ImageConverterPage() {
               </div>
 
               <div className="space-y-2">
-                <Label>Quality: {Math.round(quality * 100)}%</Label>
+                <Label>{t('tools.imageConverter.quality')}: {Math.round(quality * 100)}%</Label>
                 <input
                   type="range"
                   min="0.1"
@@ -163,7 +163,7 @@ export default function ImageConverterPage() {
                 </div>
                 {targetFormat === 'image/png' && (
                   <p className="text-xs text-muted-foreground">
-                    PNG is lossless - quality setting doesn't apply
+                    {t('tools.imageConverter.qualityDesc')}
                   </p>
                 )}
               </div>
@@ -182,7 +182,7 @@ export default function ImageConverterPage() {
             <div className="flex items-center justify-center p-12">
               <div className="text-center">
                 <div className="animate-spin h-12 w-12 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
-                <p className="text-muted-foreground">Converting image...</p>
+                <p className="text-muted-foreground">{t('tools.imageConverter.converting')}</p>
               </div>
             </div>
           )}
@@ -215,7 +215,7 @@ export default function ImageConverterPage() {
                       <>
                         <div className="w-px h-8 bg-border hidden md:block"></div>
                         <div>
-                          <div className="text-sm text-muted-foreground mb-1">Dimensions</div>
+                          <div className="text-sm text-muted-foreground mb-1">{t('tools.imageConverter.dimensions')}</div>
                           <div className="font-semibold">
                             {dimensions.width} × {dimensions.height}
                           </div>
@@ -231,7 +231,7 @@ export default function ImageConverterPage() {
                 <Card>
                   <CardHeader>
                     <div className="flex items-center justify-between">
-                      <CardTitle className="text-lg">Original</CardTitle>
+                      <CardTitle className="text-lg">{t('tools.imageConverter.originalImage')}</CardTitle>
                       <Badge variant="outline">
                         {getFormatName(result.originalFormat)}
                       </Badge>
@@ -241,7 +241,7 @@ export default function ImageConverterPage() {
                     <div className="aspect-video bg-muted rounded-md overflow-hidden flex items-center justify-center">
                       <img
                         src={result.originalUrl}
-                        alt="Original"
+                        alt={t('tools.imageConverter.originalImage')}
                         className="max-w-full max-h-full object-contain"
                       />
                     </div>
@@ -254,7 +254,7 @@ export default function ImageConverterPage() {
                 <Card>
                   <CardHeader>
                     <div className="flex items-center justify-between">
-                      <CardTitle className="text-lg">Converted</CardTitle>
+                      <CardTitle className="text-lg">{t('tools.imageConverter.convertedImage')}</CardTitle>
                       <Badge variant="default">
                         {getFormatName(result.targetFormat)}
                       </Badge>
@@ -264,7 +264,7 @@ export default function ImageConverterPage() {
                     <div className="aspect-video bg-muted rounded-md overflow-hidden flex items-center justify-center">
                       <img
                         src={result.convertedUrl}
-                        alt="Converted"
+                        alt={t('tools.imageConverter.convertedImage')}
                         className="max-w-full max-h-full object-contain"
                       />
                     </div>
@@ -283,7 +283,7 @@ export default function ImageConverterPage() {
               {/* Download Button */}
               <Button onClick={handleDownload} className="w-full" size="lg">
                 <Download className="h-5 w-5 mr-2" />
-                Download Converted Image
+                {t('tools.imageConverter.downloadConverted')}
               </Button>
             </div>
           )}
@@ -291,25 +291,25 @@ export default function ImageConverterPage() {
           {/* Info Card */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Format Comparison</CardTitle>
+              <CardTitle className="text-lg">{t('tools.imageConverter.formatComparison')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3 text-sm">
               <div>
-                <strong className="text-foreground">PNG:</strong>
+                <strong className="text-foreground">{t('tools.imageConverter.formatPNG')}:</strong>
                 <p className="text-muted-foreground">
-                  Lossless compression, perfect for graphics with transparency, larger file size
+                  {t('tools.imageConverter.pngDescription')}
                 </p>
               </div>
               <div>
-                <strong className="text-foreground">JPG:</strong>
+                <strong className="text-foreground">{t('tools.imageConverter.formatJPEG')}:</strong>
                 <p className="text-muted-foreground">
-                  Lossy compression, best for photos, smaller file size, no transparency support
+                  {t('tools.imageConverter.jpgDescription')}
                 </p>
               </div>
               <div>
-                <strong className="text-foreground">WebP:</strong>
+                <strong className="text-foreground">{t('tools.imageConverter.formatWebP')}:</strong>
                 <p className="text-muted-foreground">
-                  Modern format with superior compression, supports both lossy and lossless, with transparency
+                  {t('tools.imageConverter.webpDescription')}
                 </p>
               </div>
             </CardContent>

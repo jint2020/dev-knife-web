@@ -31,18 +31,18 @@ export default function CaseConverterPage() {
   const [copied, setCopied] = useState('');
 
   const conversions: ConversionOption[] = [
-    { label: 'UPPERCASE', description: 'ALL CHARACTERS TO UPPERCASE', convert: toUpperCase },
-    { label: 'lowercase', description: 'all characters to lowercase', convert: toLowerCase },
-    { label: 'Title Case', description: 'Capitalize First Letter Of Each Word', convert: toTitleCase },
-    { label: 'Sentence case', description: 'Capitalize first letter only', convert: toSentenceCase },
-    { label: 'camelCase', description: 'noCapsWithFirstLetterLowercase', convert: toCamelCase },
-    { label: 'PascalCase', description: 'CapitalizeFirstLetterOfEachWord', convert: toPascalCase },
-    { label: 'snake_case', description: 'lowercase_with_underscores', convert: toSnakeCase },
-    { label: 'kebab-case', description: 'lowercase-with-dashes', convert: toKebabCase },
-    { label: 'CONSTANT_CASE', description: 'UPPERCASE_WITH_UNDERSCORES', convert: toConstantCase },
-    { label: 'dot.case', description: 'lowercase.with.dots', convert: toDotCase },
-    { label: 'InVeRt CaSe', description: 'sWaP uPpEr aNd LoWeR', convert: toInvertCase },
-    { label: 'aLtErNaTiNg cAsE', description: 'AlTeRnAtE eVeRy ChArAcTeR', convert: toAlternatingCase },
+    { label: t('tools.caseConverter.uppercase'), description: t('tools.caseConverter.uppercaseDesc'), convert: toUpperCase },
+    { label: t('tools.caseConverter.lowercase'), description: t('tools.caseConverter.lowercaseDesc'), convert: toLowerCase },
+    { label: t('tools.caseConverter.titleCase'), description: t('tools.caseConverter.titleCaseDesc'), convert: toTitleCase },
+    { label: t('tools.caseConverter.sentenceCase'), description: t('tools.caseConverter.sentenceCaseDesc'), convert: toSentenceCase },
+    { label: t('tools.caseConverter.camelCase'), description: t('tools.caseConverter.camelCaseDesc'), convert: toCamelCase },
+    { label: t('tools.caseConverter.pascalCase'), description: t('tools.caseConverter.pascalCaseDesc'), convert: toPascalCase },
+    { label: t('tools.caseConverter.snakeCase'), description: t('tools.caseConverter.snakeCaseDesc'), convert: toSnakeCase },
+    { label: t('tools.caseConverter.kebabCase'), description: t('tools.caseConverter.kebabCaseDesc'), convert: toKebabCase },
+    { label: t('tools.caseConverter.constantCase'), description: t('tools.caseConverter.constantCaseDesc'), convert: toConstantCase },
+    { label: t('tools.caseConverter.dotCase'), description: t('tools.caseConverter.dotCaseDesc'), convert: toDotCase },
+    { label: t('tools.caseConverter.invertCase'), description: t('tools.caseConverter.invertCaseDesc'), convert: toInvertCase },
+    { label: t('tools.caseConverter.alternatingCase'), description: t('tools.caseConverter.alternatingCaseDesc'), convert: toAlternatingCase },
   ];
 
   const copyToClipboard = async (text: string, id: string) => {
@@ -62,8 +62,8 @@ export default function CaseConverterPage() {
           <div className="flex items-center gap-2">
             <Type className="h-6 w-6" />
             <div>
-              <CardTitle>Case Converter</CardTitle>
-              <CardDescription>Convert text between different cases</CardDescription>
+              <CardTitle>{t('tools.caseConverter.title')}</CardTitle>
+              <CardDescription>{t('tools.caseConverter.description')}</CardDescription>
             </div>
           </div>
         </CardHeader>
@@ -71,21 +71,21 @@ export default function CaseConverterPage() {
         <CardContent className="space-y-4">
           {/* Input */}
           <div className="space-y-2">
-            <Label>Input Text</Label>
+            <Label>{t('tools.caseConverter.inputLabel')}</Label>
             <textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Enter your text here..."
+              placeholder={t('tools.caseConverter.inputPlaceholder')}
               className="w-full min-h-[150px] p-3 rounded-md border border-border bg-background text-foreground font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-ring"
             />
             <div className="text-xs text-muted-foreground">
-              {input.length} characters, {input.split(/\s+/).filter(Boolean).length} words
+              {input.length} {t('tools.caseConverter.charactersCount')}, {input.split(/\s+/).filter(Boolean).length} {t('tools.caseConverter.wordsCount')}
             </div>
           </div>
 
           {/* Conversions Grid */}
           <div className="space-y-2">
-            <Label>Conversions</Label>
+            <Label>{t('tools.caseConverter.results')}</Label>
             <div className="grid grid-cols-1 gap-3">
               {conversions.map((conversion, index) => {
                 const result = input ? conversion.convert(input) : '';
@@ -112,7 +112,7 @@ export default function CaseConverterPage() {
                           </Button>
                         </div>
                         <div className="p-3 rounded-md bg-muted font-mono text-sm break-all min-h-[40px]">
-                          {result || <span className="text-muted-foreground">Enter text to convert...</span>}
+                          {result || <span className="text-muted-foreground">{t('tools.caseConverter.emptyResult')}</span>}
                         </div>
                       </div>
                     </CardContent>
@@ -124,13 +124,13 @@ export default function CaseConverterPage() {
 
           {/* Info */}
           <div className="p-3 rounded-md bg-muted text-sm space-y-1">
-            <div className="font-semibold">Common Use Cases:</div>
+            <div className="font-semibold">{t('tools.caseConverter.commonUseCases')}</div>
             <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-              <li><strong>camelCase, PascalCase:</strong> JavaScript/TypeScript variable and function names</li>
-              <li><strong>snake_case:</strong> Python, Ruby variable names, database columns</li>
-              <li><strong>kebab-case:</strong> URLs, CSS classes, file names</li>
-              <li><strong>CONSTANT_CASE:</strong> Constants and environment variables</li>
-              <li><strong>Title Case:</strong> Headings, titles, proper names</li>
+              <li>{t('tools.caseConverter.useCaseJS')}</li>
+              <li>{t('tools.caseConverter.useCasePython')}</li>
+              <li>{t('tools.caseConverter.useCaseURL')}</li>
+              <li>{t('tools.caseConverter.useCaseConstants')}</li>
+              <li>{t('tools.caseConverter.useCaseHeadings')}</li>
             </ul>
           </div>
         </CardContent>

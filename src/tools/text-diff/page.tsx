@@ -46,8 +46,8 @@ export default function TextDiffPage() {
           <div className="flex items-center gap-2">
             <FileText className="h-6 w-6" />
             <div>
-              <CardTitle>Text Diff Viewer</CardTitle>
-              <CardDescription>Compare and visualize differences between two text blocks</CardDescription>
+              <CardTitle>{t('tools.textDiff.title')}</CardTitle>
+              <CardDescription>{t('tools.textDiff.description')}</CardDescription>
             </div>
           </div>
         </CardHeader>
@@ -55,27 +55,27 @@ export default function TextDiffPage() {
         <CardContent className="space-y-4">
           {/* Mode Selection */}
           <div className="flex items-center gap-2">
-            <Label>Compare by:</Label>
+            <Label>{t('tools.textDiff.compareBy')}</Label>
             <Badge
               variant={mode === 'lines' ? 'default' : 'outline'}
               className="cursor-pointer"
               onClick={() => setMode('lines')}
             >
-              Lines
+              {t('tools.textDiff.lines')}
             </Badge>
             <Badge
               variant={mode === 'words' ? 'default' : 'outline'}
               className="cursor-pointer"
               onClick={() => setMode('words')}
             >
-              Words
+              {t('tools.textDiff.words')}
             </Badge>
             <Badge
               variant={mode === 'chars' ? 'default' : 'outline'}
               className="cursor-pointer"
               onClick={() => setMode('chars')}
             >
-              Characters
+              {t('tools.textDiff.characters')}
             </Badge>
             <Button
               size="sm"
@@ -85,28 +85,28 @@ export default function TextDiffPage() {
               disabled={!text1 && !text2}
             >
               <ArrowLeftRight className="h-4 w-4 mr-2" />
-              Swap
+              {t('tools.textDiff.swap')}
             </Button>
           </div>
 
           {/* Input Panels */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>Original Text</Label>
+              <Label>{t('tools.textDiff.text1Label')}</Label>
               <textarea
                 value={text1}
                 onChange={(e) => setText1(e.target.value)}
-                placeholder="Paste original text here..."
+                placeholder={t('tools.textDiff.text1Placeholder')}
                 className="w-full min-h-[300px] p-3 rounded-md border border-border bg-background text-foreground font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-ring"
               />
             </div>
 
             <div className="space-y-2">
-              <Label>Modified Text</Label>
+              <Label>{t('tools.textDiff.text2Label')}</Label>
               <textarea
                 value={text2}
                 onChange={(e) => setText2(e.target.value)}
-                placeholder="Paste modified text here..."
+                placeholder={t('tools.textDiff.text2Placeholder')}
                 className="w-full min-h-[300px] p-3 rounded-md border border-border bg-background text-foreground font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-ring"
               />
             </div>
@@ -123,15 +123,15 @@ export default function TextDiffPage() {
                   </div>
                   <div>
                     <div className="text-2xl font-bold text-green-600">{stats.added}</div>
-                    <div className="text-sm text-muted-foreground">Added</div>
+                    <div className="text-sm text-muted-foreground">{t('tools.textDiff.additions')}</div>
                   </div>
                   <div>
                     <div className="text-2xl font-bold text-red-600">{stats.removed}</div>
-                    <div className="text-sm text-muted-foreground">Removed</div>
+                    <div className="text-sm text-muted-foreground">{t('tools.textDiff.deletions')}</div>
                   </div>
                   <div>
                     <div className="text-2xl font-bold text-muted-foreground">{stats.unchanged}</div>
-                    <div className="text-sm text-muted-foreground">Unchanged</div>
+                    <div className="text-sm text-muted-foreground">{t('tools.textDiff.unchanged')}</div>
                   </div>
                 </div>
               </CardContent>
@@ -142,19 +142,19 @@ export default function TextDiffPage() {
           {diff.length > 0 && (
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label>Visual Diff</Label>
+                <Label>{t('tools.textDiff.diffResult')}</Label>
                 <div className="flex gap-2">
                   <div className="flex items-center gap-2 text-xs">
                     <div className="w-3 h-3 bg-red-100 border border-red-300 rounded"></div>
-                    <span className="text-muted-foreground">Removed</span>
+                    <span className="text-muted-foreground">{t('tools.textDiff.deletions')}</span>
                   </div>
                   <div className="flex items-center gap-2 text-xs">
                     <div className="w-3 h-3 bg-green-100 border border-green-300 rounded"></div>
-                    <span className="text-muted-foreground">Added</span>
+                    <span className="text-muted-foreground">{t('tools.textDiff.additions')}</span>
                   </div>
                 </div>
               </div>
-              
+
               <div className="p-4 rounded-md border border-border bg-background overflow-auto max-h-[400px]">
                 <div className="font-mono text-sm whitespace-pre-wrap">
                   {diff.map((part, index) => {
@@ -164,7 +164,7 @@ export default function TextDiffPage() {
                     } else if (part.removed) {
                       className = 'bg-red-100 text-red-900 dark:bg-red-900 dark:text-red-100';
                     }
-                    
+
                     return (
                       <span key={index} className={className}>
                         {part.value}
@@ -180,14 +180,14 @@ export default function TextDiffPage() {
           {unifiedDiff && diff.length > 0 && (
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label>Unified Diff Format</Label>
+                <Label>{t('tools.textDiff.unifiedDiff')}</Label>
                 <Button
                   size="sm"
                   variant="outline"
                   onClick={() => copyToClipboard(unifiedDiff)}
                 >
                   {copied ? <Check className="h-4 w-4 mr-2" /> : <Copy className="h-4 w-4 mr-2" />}
-                  Copy
+                  {t('common.copy')}
                 </Button>
               </div>
               <textarea
@@ -201,7 +201,7 @@ export default function TextDiffPage() {
           {!text1 && !text2 && (
             <div className="flex flex-col items-center justify-center p-12 text-center text-muted-foreground">
               <FileText className="h-16 w-16 mb-4 opacity-20" />
-              <p>Enter text in both panels to see the differences</p>
+              <p>{t('tools.textDiff.emptyState')}</p>
             </div>
           )}
         </CardContent>

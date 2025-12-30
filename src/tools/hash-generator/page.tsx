@@ -97,33 +97,33 @@ export default function HashGeneratorPage() {
     <div className="container mx-auto p-6 space-y-6 max-w-5xl">
       {/* Header */}
       <div className="space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight">Hash Generator</h1>
+        <h1 className="text-3xl font-bold tracking-tight">{t('tools.hashGenerator.title')}</h1>
         <p className="text-muted-foreground">
-          Generate cryptographic hashes (MD5, SHA-1, SHA-256, SHA-384, SHA-512) for text and files.
+          {t('tools.hashGenerator.description')}
         </p>
       </div>
 
       <Tabs defaultValue="text" className="w-full">
         <TabsList className="grid w-full max-w-md grid-cols-2">
-          <TabsTrigger value="text">Text</TabsTrigger>
-          <TabsTrigger value="file">File</TabsTrigger>
+          <TabsTrigger value="text">{t('tools.hashGenerator.text')}</TabsTrigger>
+          <TabsTrigger value="file">{t('tools.hashGenerator.file')}</TabsTrigger>
         </TabsList>
 
         {/* Text Tab */}
         <TabsContent value="text" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Generate Hash from Text</CardTitle>
-              <CardDescription>Enter text to generate cryptographic hashes</CardDescription>
+              <CardTitle>{t('tools.hashGenerator.generateFromText')}</CardTitle>
+              <CardDescription>{t('tools.hashGenerator.enterText')}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="text-input">Input Text</Label>
+                <Label htmlFor="text-input">{t('tools.hashGenerator.inputLabel')}</Label>
                 <textarea
                   id="text-input"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  placeholder="Enter text to hash..."
+                  placeholder={t('tools.hashGenerator.inputPlaceholder')}
                   className="w-full min-h-[120px] p-3 rounded-md border border-border bg-background text-foreground font-mono text-sm resize-y focus:outline-none focus:ring-2 focus:ring-ring"
                 />
               </div>
@@ -133,7 +133,7 @@ export default function HashGeneratorPage() {
                 disabled={!input || loading}
                 className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
               >
-                {loading ? 'Generating...' : 'Generate Hashes'}
+                {loading ? t('common.loading') : t('tools.hashGenerator.generateHashes')}
               </Button>
             </CardContent>
           </Card>
@@ -143,8 +143,8 @@ export default function HashGeneratorPage() {
         <TabsContent value="file" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Generate Hash from File</CardTitle>
-              <CardDescription>Upload a file to calculate its checksum</CardDescription>
+              <CardTitle>{t('tools.hashGenerator.generateFromFile')}</CardTitle>
+              <CardDescription>{t('tools.hashGenerator.uploadFileDesc')}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-center w-full">
@@ -155,9 +155,9 @@ export default function HashGeneratorPage() {
                   <div className="flex flex-col items-center justify-center pt-5 pb-6">
                     <Upload className="w-8 h-8 mb-2 text-muted-foreground" />
                     <p className="mb-2 text-sm text-muted-foreground">
-                      <span className="font-semibold">Click to upload</span> or drag and drop
+                      <span className="font-semibold">{t('tools.base64Encoder.clickToUpload')}</span> {t('tools.base64Encoder.orDragAndDrop')}
                     </p>
-                    <p className="text-xs text-muted-foreground">Any file type supported</p>
+                    <p className="text-xs text-muted-foreground">{t('tools.base64Encoder.anyFileTypeSupported')}</p>
                   </div>
                   <input
                     id="file-upload"
@@ -172,7 +172,7 @@ export default function HashGeneratorPage() {
                 <div className="p-3 rounded-md bg-accent text-accent-foreground">
                   <p className="font-medium">{fileInfo.name}</p>
                   <p className="text-sm text-muted-foreground">
-                    Size: {(fileInfo.size / 1024).toFixed(2)} KB
+                    {t('tools.hashGenerator.fileSize')}: {(fileInfo.size / 1024).toFixed(2)} KB
                   </p>
                 </div>
               )}
@@ -187,9 +187,9 @@ export default function HashGeneratorPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Shield className="w-5 h-5 text-primary" />
-              Hash Results
+              {t('tools.hashGenerator.hashes')}
             </CardTitle>
-            <CardDescription>Cryptographic hash values for your input</CardDescription>
+            <CardDescription>{t('tools.hashGenerator.hashResults')}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             {algorithms.map((algorithm) => (
@@ -205,7 +205,7 @@ export default function HashGeneratorPage() {
                         variant={isHashMatch(algorithm) ? 'default' : 'destructive'}
                         className="text-xs"
                       >
-                        {isHashMatch(algorithm) ? '✓ Match' : '✗ No Match'}
+                        {isHashMatch(algorithm) ? `✓ ${t('tools.hashGenerator.match')}` : `✗ ${t('tools.hashGenerator.noMatch')}`}
                       </Badge>
                     )}
                     <Button
@@ -221,7 +221,7 @@ export default function HashGeneratorPage() {
                       ) : (
                         <>
                           <Copy className="w-3 h-3 mr-2" />
-                          Copy
+                          {t('common.copy')}
                         </>
                       )}
                     </Button>
@@ -242,12 +242,12 @@ export default function HashGeneratorPage() {
       {Object.values(hashes).some(h => h) && (
         <Card>
           <CardHeader>
-            <CardTitle>Compare Hash</CardTitle>
-            <CardDescription>Verify a hash matches your input</CardDescription>
+            <CardTitle>{t('tools.hashGenerator.compare')}</CardTitle>
+            <CardDescription>{t('tools.hashGenerator.verifyHash')}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="compare-algorithm">Algorithm</Label>
+              <Label htmlFor="compare-algorithm">{t('tools.hashGenerator.algorithm')}</Label>
               <select
                 id="compare-algorithm"
                 value={compareAlgorithm}
@@ -263,13 +263,13 @@ export default function HashGeneratorPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="compare-hash">Hash to Compare</Label>
+              <Label htmlFor="compare-hash">{t('tools.hashGenerator.compareHash')}</Label>
               <input
                 id="compare-hash"
                 type="text"
                 value={compareHash}
                 onChange={(e) => setCompareHash(e.target.value)}
-                placeholder="Paste hash to verify..."
+                placeholder={t('tools.hashGenerator.compareHashPlaceholder')}
                 className="w-full px-3 py-2 rounded-md border border-border bg-background font-mono text-sm focus:outline-none focus:ring-2 focus:ring-ring"
               />
             </div>
@@ -284,8 +284,8 @@ export default function HashGeneratorPage() {
               >
                 <p className="font-medium">
                   {isHashMatch(compareAlgorithm)
-                    ? '✓ Hashes match! The data is identical.'
-                    : '✗ Hashes do not match! The data is different.'}
+                    ? `✓ ${t('tools.hashGenerator.hashesMatch')}`
+                    : `✗ ${t('tools.hashGenerator.hashesNoMatch')}`}
                 </p>
               </div>
             )}
@@ -296,28 +296,28 @@ export default function HashGeneratorPage() {
       {/* Info Card */}
       <Card className="border-border bg-muted/50">
         <CardHeader>
-          <CardTitle className="text-base">Hash Algorithms</CardTitle>
+          <CardTitle className="text-base">{t('tools.hashGenerator.aboutTitle')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
             <div>
-              <h3 className="font-semibold text-foreground mb-2">Security Levels</h3>
+              <h3 className="font-semibold text-foreground mb-2">{t('tools.hashGenerator.securityLevels')}</h3>
               <ul className="space-y-1 text-muted-foreground">
-                <li><strong>MD5:</strong> 128-bit (deprecated, not secure)</li>
-                <li><strong>SHA-1:</strong> 160-bit (deprecated)</li>
-                <li><strong>SHA-256:</strong> 256-bit (recommended)</li>
-                <li><strong>SHA-384:</strong> 384-bit (high security)</li>
-                <li><strong>SHA-512:</strong> 512-bit (highest security)</li>
+                <li><strong>MD5:</strong> {t('tools.hashGenerator.md5Desc')}</li>
+                <li><strong>SHA-1:</strong> {t('tools.hashGenerator.sha1Desc')}</li>
+                <li><strong>SHA-256:</strong> {t('tools.hashGenerator.sha256Desc')}</li>
+                <li><strong>SHA-384:</strong> {t('tools.hashGenerator.sha384Desc')}</li>
+                <li><strong>SHA-512:</strong> {t('tools.hashGenerator.sha512Desc')}</li>
               </ul>
             </div>
             <div>
-              <h3 className="font-semibold text-foreground mb-2">Common Use Cases</h3>
+              <h3 className="font-semibold text-foreground mb-2">{t('tools.hashGenerator.commonUseCases')}</h3>
               <ul className="space-y-1 text-muted-foreground">
-                <li>File integrity verification</li>
-                <li>Password storage (with salt)</li>
-                <li>Digital signatures</li>
-                <li>Data deduplication</li>
-                <li>Blockchain transactions</li>
+                <li>{t('tools.hashGenerator.useCase1')}</li>
+                <li>{t('tools.hashGenerator.useCase2')}</li>
+                <li>{t('tools.hashGenerator.useCase3')}</li>
+                <li>{t('tools.hashGenerator.useCase4')}</li>
+                <li>{t('tools.hashGenerator.useCase5')}</li>
               </ul>
             </div>
           </div>

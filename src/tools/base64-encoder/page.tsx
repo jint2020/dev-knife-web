@@ -28,7 +28,7 @@ export default function Base64EncoderPage() {
         setOutput(result);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Processing failed');
+      setError(err instanceof Error ? err.message : t('tools.base64Encoder.errors.processingFailed'));
       setOutput('');
     }
   };
@@ -53,7 +53,7 @@ export default function Base64EncoderPage() {
       setOutput(base64);
       setMode('encode');
     } catch {
-      setError('Failed to read file');
+      setError(t('tools.base64Encoder.errors.failedToReadFile'));
       setFileInfo(null);
     }
   };
@@ -86,16 +86,16 @@ export default function Base64EncoderPage() {
     <div className="container mx-auto p-6 space-y-6 max-w-5xl">
       {/* Header */}
       <div className="space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight">Base64 Encoder/Decoder</h1>
+        <h1 className="text-3xl font-bold tracking-tight">{t('tools.base64Encoder.title')}</h1>
         <p className="text-muted-foreground">
-          Encode text or files to Base64, or decode Base64 strings back to readable text.
+          {t('tools.base64Encoder.description')}
         </p>
       </div>
 
       <Tabs defaultValue="text" className="w-full">
         <TabsList className="grid w-full max-w-md grid-cols-2">
-          <TabsTrigger value="text">Text</TabsTrigger>
-          <TabsTrigger value="file">File</TabsTrigger>
+          <TabsTrigger value="text">{t('tools.base64Encoder.text')}</TabsTrigger>
+          <TabsTrigger value="file">{t('tools.base64Encoder.file')}</TabsTrigger>
         </TabsList>
 
         {/* Text Tab */}
@@ -105,19 +105,19 @@ export default function Base64EncoderPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <CardTitle>
-                    {mode === 'encode' ? 'Encode Text' : 'Decode Base64'}
+                    {mode === 'encode' ? t('tools.base64Encoder.encodeText') : t('tools.base64Encoder.decodeBase64')}
                   </CardTitle>
                   <CardDescription>
                     {mode === 'encode'
-                      ? 'Convert text to Base64 encoding'
-                      : 'Convert Base64 to readable text'}
+                      ? t('tools.base64Encoder.encodeTextDesc')
+                      : t('tools.base64Encoder.decodeTextDesc')}
                   </CardDescription>
                 </div>
                 <Button
                   variant="outline"
                   size="icon"
                   onClick={handleSwapMode}
-                  title="Swap encode/decode"
+                  title={t('tools.base64Encoder.swapMode')}
                   disabled={!input && !output}
                 >
                   <ArrowRightLeft className="h-4 w-4" />
@@ -129,11 +129,11 @@ export default function Base64EncoderPage() {
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="input">
-                    {mode === 'encode' ? 'Plain Text' : 'Base64 String'}
+                    {mode === 'encode' ? t('tools.base64Encoder.plainText') : t('tools.base64Encoder.base64String')}
                   </Label>
                   {mode === 'decode' && input && (
                     <Badge variant={isValidInput ? 'default' : 'destructive'} className="text-xs">
-                      {isValidInput ? 'Valid Base64' : 'Invalid Base64'}
+                      {isValidInput ? t('tools.base64Encoder.validBase64') : t('tools.base64Encoder.invalidBase64')}
                     </Badge>
                   )}
                 </div>
@@ -143,8 +143,8 @@ export default function Base64EncoderPage() {
                   onChange={(e) => setInput(e.target.value)}
                   placeholder={
                     mode === 'encode'
-                      ? 'Enter text to encode...'
-                      : 'Enter Base64 string to decode...'
+                      ? t('tools.base64Encoder.enterTextToEncode')
+                      : t('tools.base64Encoder.enterBase64ToDecode')
                   }
                   className="w-full min-h-[150px] p-3 rounded-md border border-border bg-background text-foreground font-mono text-sm resize-y focus:outline-none focus:ring-2 focus:ring-ring"
                 />
@@ -156,7 +156,7 @@ export default function Base64EncoderPage() {
                 disabled={!input}
                 className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
               >
-                {mode === 'encode' ? 'Encode to Base64' : 'Decode from Base64'}
+                {mode === 'encode' ? t('tools.base64Encoder.encodeToBase64') : t('tools.base64Encoder.decodeFromBase64')}
               </Button>
 
               {/* Error */}
@@ -171,7 +171,7 @@ export default function Base64EncoderPage() {
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <Label htmlFor="output">
-                      {mode === 'encode' ? 'Base64 Output' : 'Decoded Text'}
+                      {mode === 'encode' ? t('tools.base64Encoder.base64Output') : t('tools.base64Encoder.decodedText')}
                     </Label>
                     <div className="flex gap-2">
                       <Button
@@ -182,18 +182,18 @@ export default function Base64EncoderPage() {
                         {copied ? (
                           <>
                             <Check className="w-3 h-3 mr-2" />
-                            Copied
+                            {t('common.copied')}
                           </>
                         ) : (
                           <>
                             <Copy className="w-3 h-3 mr-2" />
-                            Copy
+                            {t('common.copy')}
                           </>
                         )}
                       </Button>
                       <Button variant="outline" size="sm" onClick={downloadAsFile}>
                         <Download className="w-3 h-3 mr-2" />
-                        Download
+                        {t('common.download')}
                       </Button>
                     </div>
                   </div>
@@ -203,7 +203,7 @@ export default function Base64EncoderPage() {
                     </pre>
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    Length: {output.length} characters
+                    {t('tools.base64Encoder.length')}: {output.length} {t('common.characters')}
                   </p>
                 </div>
               )}
@@ -215,9 +215,9 @@ export default function Base64EncoderPage() {
         <TabsContent value="file" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Encode File to Base64</CardTitle>
+              <CardTitle>{t('tools.base64Encoder.encodeFileToBase64')}</CardTitle>
               <CardDescription>
-                Upload any file to convert it to Base64 encoding
+                {t('tools.base64Encoder.uploadFileDesc')}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -229,9 +229,9 @@ export default function Base64EncoderPage() {
                   <div className="flex flex-col items-center justify-center pt-5 pb-6">
                     <Upload className="w-8 h-8 mb-2 text-muted-foreground" />
                     <p className="mb-2 text-sm text-muted-foreground">
-                      <span className="font-semibold">Click to upload</span> or drag and drop
+                      <span className="font-semibold">{t('tools.base64Encoder.clickToUpload')}</span> {t('tools.base64Encoder.orDragAndDrop')}
                     </p>
-                    <p className="text-xs text-muted-foreground">Any file type supported</p>
+                    <p className="text-xs text-muted-foreground">{t('tools.base64Encoder.anyFileTypeSupported')}</p>
                   </div>
                   <input
                     id="file-upload"
@@ -246,7 +246,7 @@ export default function Base64EncoderPage() {
                 <div className="p-3 rounded-md bg-accent text-accent-foreground">
                   <p className="font-medium">{fileInfo.name}</p>
                   <p className="text-sm text-muted-foreground">
-                    Size: {(fileInfo.size / 1024).toFixed(2)} KB
+                    {t('tools.base64Encoder.size')}: {(fileInfo.size / 1024).toFixed(2)} KB
                   </p>
                 </div>
               )}
@@ -254,7 +254,7 @@ export default function Base64EncoderPage() {
               {output && (
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <Label>Base64 Output</Label>
+                    <Label>{t('tools.base64Encoder.base64Output')}</Label>
                     <div className="flex gap-2">
                       <Button
                         variant="outline"
@@ -264,18 +264,18 @@ export default function Base64EncoderPage() {
                         {copied ? (
                           <>
                             <Check className="w-3 h-3 mr-2" />
-                            Copied
+                            {t('common.copied')}
                           </>
                         ) : (
                           <>
                             <Copy className="w-3 h-3 mr-2" />
-                            Copy
+                            {t('common.copy')}
                           </>
                         )}
                       </Button>
                       <Button variant="outline" size="sm" onClick={downloadAsFile}>
                         <Download className="w-3 h-3 mr-2" />
-                        Download
+                        {t('common.download')}
                       </Button>
                     </div>
                   </div>
@@ -285,8 +285,8 @@ export default function Base64EncoderPage() {
                     </pre>
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    Length: {output.length} characters (
-                    {(output.length * 0.75 / 1024).toFixed(2)} KB approximate decoded size)
+                    {t('tools.base64Encoder.length')}: {output.length} {t('common.characters')} (
+                    {(output.length * 0.75 / 1024).toFixed(2)} KB {t('tools.base64Encoder.approximateDecodedSize')})
                   </p>
                 </div>
               )}
@@ -298,19 +298,18 @@ export default function Base64EncoderPage() {
       {/* Info Card */}
       <Card className="border-border bg-muted/50">
         <CardHeader>
-          <CardTitle className="text-base">About Base64</CardTitle>
+          <CardTitle className="text-base">{t('tools.base64Encoder.aboutBase64')}</CardTitle>
         </CardHeader>
         <CardContent className="text-sm text-muted-foreground space-y-2">
           <p>
-            Base64 is a binary-to-text encoding scheme that represents binary data in ASCII string format.
-            It's commonly used for encoding images, files, and data in URLs or JSON.
+            {t('tools.base64Encoder.aboutDescription')}
           </p>
-          <p className="font-medium text-foreground">Common Use Cases:</p>
+          <p className="font-medium text-foreground">{t('tools.base64Encoder.commonUseCases')}:</p>
           <ul className="list-disc list-inside space-y-1 ml-2">
-            <li>Embedding images in HTML/CSS (Data URLs)</li>
-            <li>Encoding binary data in JSON/XML</li>
-            <li>Email attachments (MIME)</li>
-            <li>JWT tokens and authentication</li>
+            <li>{t('tools.base64Encoder.useCase1')}</li>
+            <li>{t('tools.base64Encoder.useCase2')}</li>
+            <li>{t('tools.base64Encoder.useCase3')}</li>
+            <li>{t('tools.base64Encoder.useCase4')}</li>
           </ul>
         </CardContent>
       </Card>

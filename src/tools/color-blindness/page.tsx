@@ -26,7 +26,7 @@ export default function ColorBlindnessPage() {
     if (!file) return;
 
     if (!file.type.startsWith('image/')) {
-      setError('Please select a valid image file');
+      setError(t('tools.colorBlindness.errors.invalidFile'));
       return;
     }
 
@@ -46,7 +46,7 @@ export default function ColorBlindnessPage() {
 
       setFilteredImages(results);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to process image');
+      setError(err instanceof Error ? err.message : t('tools.colorBlindness.errors.processingFailed'));
     } finally {
       setIsProcessing(false);
     }
@@ -91,10 +91,8 @@ export default function ColorBlindnessPage() {
           <div className="flex items-center gap-2">
             <Eye className="h-6 w-6" />
             <div>
-              <CardTitle>Color Blindness Simulator</CardTitle>
-              <CardDescription>
-                Simulate how images appear to people with different types of color blindness
-              </CardDescription>
+              <CardTitle>{t('tools.colorBlindness.title')}</CardTitle>
+              <CardDescription>{t('tools.colorBlindness.description')}</CardDescription>
             </div>
           </div>
         </CardHeader>
@@ -115,10 +113,8 @@ export default function ColorBlindnessPage() {
               className="hidden"
             />
             <Upload className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-            <p className="text-lg font-semibold mb-2">Click to upload or drag and drop</p>
-            <p className="text-sm text-muted-foreground">
-              Upload an image to see how it appears with different types of color blindness
-            </p>
+            <p className="text-lg font-semibold mb-2">{t('tools.colorBlindness.uploadPrompt')}</p>
+            <p className="text-sm text-muted-foreground">{t('tools.colorBlindness.uploadDesc')}</p>
           </div>
 
           {/* Error Display */}
@@ -133,7 +129,7 @@ export default function ColorBlindnessPage() {
             <div className="flex items-center justify-center p-12">
               <div className="text-center">
                 <div className="animate-spin h-12 w-12 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
-                <p className="text-muted-foreground">Processing image with color blindness filters...</p>
+                <p className="text-muted-foreground">{t('tools.colorBlindness.processing')}</p>
               </div>
             </div>
           )}
@@ -144,7 +140,7 @@ export default function ColorBlindnessPage() {
               {/* Filter Type Selector */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg">Select Color Blindness Type</CardTitle>
+                  <CardTitle className="text-lg">{t('tools.colorBlindness.selectType')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
@@ -172,8 +168,8 @@ export default function ColorBlindnessPage() {
                 <Card>
                   <CardHeader>
                     <div className="flex items-center justify-between">
-                      <CardTitle className="text-lg">Normal Vision</CardTitle>
-                      <Badge variant="outline">Original</Badge>
+                      <CardTitle className="text-lg">{t('tools.colorBlindness.normalVision')}</CardTitle>
+                      <Badge variant="outline">{t('tools.colorBlindness.originalLabel')}</Badge>
                     </div>
                   </CardHeader>
                   <CardContent>
@@ -200,7 +196,7 @@ export default function ColorBlindnessPage() {
                         onClick={() => handleDownload(selectedType)}
                       >
                         <Download className="h-4 w-4 mr-2" />
-                        Download
+                        {t('common.download')}
                       </Button>
                     </div>
                     <p className="text-xs text-muted-foreground mt-1">
@@ -222,7 +218,7 @@ export default function ColorBlindnessPage() {
               {/* Grid View of All Types */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg">All Color Blindness Types</CardTitle>
+                  <CardTitle className="text-lg">{t('tools.colorBlindness.allTypes')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -257,37 +253,25 @@ export default function ColorBlindnessPage() {
             <CardHeader>
               <CardTitle className="text-lg flex items-center gap-2">
                 <Info className="h-5 w-5" />
-                About Color Blindness
+                {t('tools.colorBlindness.aboutColorBlindness')}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3 text-sm">
               <div>
-                <strong className="text-foreground">Red-Green Color Blindness:</strong>
-                <p className="text-muted-foreground">
-                  The most common type, affecting about 8% of males and 0.5% of females. 
-                  Includes Protanopia (red-blind) and Deuteranopia (green-blind).
-                </p>
+                <strong className="text-foreground">{t('tools.colorBlindness.redGreenTitle')}</strong>
+                <p className="text-muted-foreground">{t('tools.colorBlindness.redGreenDesc')}</p>
               </div>
               <div>
-                <strong className="text-foreground">Blue-Yellow Color Blindness:</strong>
-                <p className="text-muted-foreground">
-                  Rare type called Tritanopia, affecting less than 1% of the population. 
-                  Difficulty distinguishing blue and yellow colors.
-                </p>
+                <strong className="text-foreground">{t('tools.colorBlindness.blueYellowTitle')}</strong>
+                <p className="text-muted-foreground">{t('tools.colorBlindness.blueYellowDesc')}</p>
               </div>
               <div>
-                <strong className="text-foreground">Total Color Blindness:</strong>
-                <p className="text-muted-foreground">
-                  Extremely rare Achromatopsia where people see only in grayscale. 
-                  Affects about 1 in 30,000 people.
-                </p>
+                <strong className="text-foreground">{t('tools.colorBlindness.totalTitle')}</strong>
+                <p className="text-muted-foreground">{t('tools.colorBlindness.totalDesc')}</p>
               </div>
               <div>
-                <strong className="text-foreground">Why This Matters:</strong>
-                <p className="text-muted-foreground">
-                  Use this tool to ensure your designs, websites, and graphics are accessible 
-                  to people with color vision deficiencies. Test color combinations and contrast.
-                </p>
+                <strong className="text-foreground">{t('tools.colorBlindness.whyMattersTitle')}</strong>
+                <p className="text-muted-foreground">{t('tools.colorBlindness.whyMattersDesc')}</p>
               </div>
             </CardContent>
           </Card>
