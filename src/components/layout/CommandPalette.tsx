@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Search } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import {
   CommandDialog,
   CommandEmpty,
@@ -16,6 +17,7 @@ import { useAppStore } from '@/hooks/useAppStore';
 export function CommandPalette() {
   const [open, setOpen] = useState(false);
   const openTool = useAppStore((state) => state.openTool);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -53,17 +55,17 @@ export function CommandPalette() {
         onClick={() => setOpen(true)}
       >
         <Search className="mr-2 h-4 w-4" />
-        <span className="hidden lg:inline-flex">Search tools...</span>
-        <span className="inline-flex lg:hidden">Search...</span>
+        <span className="hidden lg:inline-flex">{t('nav.search')}</span>
+        <span className="inline-flex lg:hidden">{t('nav.search')}</span>
         <kbd className="pointer-events-none absolute right-1.5 top-1.5 hidden h-6 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
           <span className="text-xs">⌘</span>K
         </kbd>
       </Button>
 
       <CommandDialog open={open} onOpenChange={setOpen}>
-        <CommandInput placeholder="Type a command or search..." />
+        <CommandInput placeholder={t('nav.searchPlaceholder')} />
         <CommandList>
-          <CommandEmpty>No results found.</CommandEmpty>
+          <CommandEmpty>{t('nav.noResults')}</CommandEmpty>
           {categories.map((category) => {
             const categoryTools = toolRegistry.getByCategory(category);
             if (categoryTools.length === 0) return null;

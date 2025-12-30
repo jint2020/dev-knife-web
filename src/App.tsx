@@ -18,6 +18,7 @@
 
 import { useEffect } from 'react';
 import { BrowserRouter } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Sidebar } from './components/layout/Sidebar';
 import { Header } from './components/layout/Header';
 import { TabBar } from './components/layout/TabBar';
@@ -33,6 +34,7 @@ function App() {
   const theme = useAppStore((state) => state.theme);
   const tabs = useAppStore((state) => state.tabs);
   const activeTabId = useAppStore((state) => state.activeTabId);
+  const { t } = useTranslation();
 
   // Apply theme to document root
   useEffect(() => {
@@ -64,16 +66,16 @@ function App() {
               <div className="flex items-center justify-center h-full">
                 <div className="text-center space-y-4 max-w-md px-4">
                   <div className="text-6xl">🔧</div>
-                  <h2 className="text-3xl font-bold">Welcome to DevKnife</h2>
+                  <h2 className="text-3xl font-bold">{t('welcome.title')}</h2>
                   <p className="text-muted-foreground text-lg">
-                    Your all-in-one developer toolbox. Select a tool from the sidebar to get started.
+                    {t('welcome.description')}
                   </p>
                   <div className="pt-4">
                     <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-muted text-sm">
                       <kbd className="px-2 py-1 text-xs font-semibold bg-background border border-border rounded">
-                        Click
+                        {t('sidebar.click')}
                       </kbd>
-                      <span className="text-muted-foreground">any tool on the left</span>
+                      <span className="text-muted-foreground">{t('sidebar.anyToolOnTheLeft')}</span>
                     </div>
                   </div>
                 </div>

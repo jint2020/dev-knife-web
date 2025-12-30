@@ -10,11 +10,15 @@
  */
 
 import { Github } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { CommandPalette } from './CommandPalette';
 import { ThemeToggle } from './ThemeToggle';
+import { LanguageSwitcher } from './LanguageSwitcher';
 import { Button } from '@/components/ui/button';
 
 export function Header() {
+  const { t } = useTranslation();
+
   return (
     // HEIGHT: h-14 (56px) - CRITICAL for alignment with Sidebar Logo area
     <header className="h-14 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex-shrink-0">
@@ -35,11 +39,12 @@ export function Header() {
               href="https://github.com"
               target="_blank"
               rel="noopener noreferrer"
-              title="View on GitHub"
+              title={t('common.viewOnGithub')}
             >
               <Github className="h-5 w-5" />
             </a>
           </Button>
+          <LanguageSwitcher />
           <ThemeToggle />
         </div>
       </div>
