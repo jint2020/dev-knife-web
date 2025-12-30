@@ -213,21 +213,27 @@ export default function JsonFormatterPage() {
                   {t("tools.jsonFormatter.indent")}:
                 </Label>
                 <Select
-                  id="indent"
-                  value={indent}
-                  onChange={(e) => setIndent(Number(e.target.value))}
-                  className="px-2 py-1 rounded-md border border-border bg-background text-sm"
+                  value={indent.toString()}
+                  onValueChange={(value) => setIndent(Number(value))}
                 >
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select a fruit" />
+                  <SelectTrigger className="w-[180px] px-2 py-1 rounded-md border border-border bg-background text-sm">
+                    <SelectValue placeholder="Select indentation" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectLabel>Fruits</SelectLabel>
-                      <SelectItem value={2}>2 {t("tools.jsonFormatter.spaces")}</SelectItem>
-                      <SelectItem value={4}>4 {t("tools.jsonFormatter.spaces")}</SelectItem>
-                      <SelectItem value={1}>4 {t("tools.jsonFormatter.spaces")}</SelectItem>
-                      <SelectItem value={0}>{t("tools.jsonFormatter.tab")}</SelectItem>
+                      <SelectLabel>{t("tools.jsonFormatter.jsonIndentPlaceholder")}</SelectLabel>
+                      <SelectItem value="2">
+                        2 {t("tools.jsonFormatter.spaces")}
+                      </SelectItem>
+                      <SelectItem value="4">
+                        4 {t("tools.jsonFormatter.spaces")}
+                      </SelectItem>
+                      <SelectItem value="1">
+                        1 {t("tools.jsonFormatter.spaces")}
+                      </SelectItem>
+                      <SelectItem value="0">
+                        {t("tools.jsonFormatter.tab")}
+                      </SelectItem>
                     </SelectGroup>
                   </SelectContent>
                 </Select>

@@ -372,6 +372,7 @@ export const zh = {
         keys: '键',
         arrays: '数组',
         objects: '对象',
+        jsonIndentPlaceholder: '选择缩进格式',
       },
 
       // 文本对比

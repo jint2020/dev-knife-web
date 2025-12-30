@@ -372,6 +372,7 @@ export const en = {
         keys: 'Keys',
         arrays: 'Arrays',
         objects: 'Objects',
+        jsonIndentPlaceholder: 'Select indentation',
       },
 
       // Text Diff

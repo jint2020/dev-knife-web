@@ -115,21 +115,25 @@ export default function PasswordGeneratorPage() {
               <div className="space-y-2">
                 <Label>{t('tools.passwordGenerator.generatedPassword')}</Label>
                 <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={password}
-                    readOnly
-                    className="flex-1 h-12 px-3 rounded-md border border-border bg-background text-foreground font-mono text-lg focus:outline-none"
-                  />
+                  <div className="relative flex-1">
+                    <input
+                      type="text"
+                      value={password}
+                      readOnly
+                      className="w-full h-12 pl-3 pr-12 rounded-md border border-border bg-background text-foreground font-mono text-lg focus:outline-none"
+                    />
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => copyToClipboard(password, 'single')}
+                      className="absolute right-1 top-1/2 -translate-y-1/2 h-9 w-9 p-0"
+                    >
+                      {copied === 'single' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                    </Button>
+                  </div>
                   <Button onClick={handleGenerate}>
                     <RefreshCw className="h-4 w-4 mr-2" />
                     {t('common.generate')}
-                  </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => copyToClipboard(password, 'single')}
-                  >
-                    {copied === 'single' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                   </Button>
                 </div>
               </div>
@@ -353,23 +357,27 @@ export default function PasswordGeneratorPage() {
               <div className="space-y-2">
                 <Label>{t('tools.passwordGenerator.generatedPassphrase')}</Label>
                 <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={passphrase}
-                    readOnly
-                    placeholder={t('tools.passwordGenerator.passphraseplaceholder')}
-                    className="flex-1 h-12 px-3 rounded-md border border-border bg-background text-foreground font-mono text-lg focus:outline-none"
-                  />
+                  <div className="relative flex-1">
+                    <input
+                      type="text"
+                      value={passphrase}
+                      readOnly
+                      placeholder={t('tools.passwordGenerator.passphraseplaceholder')}
+                      className="w-full h-12 pl-3 pr-12 rounded-md border border-border bg-background text-foreground font-mono text-lg focus:outline-none"
+                    />
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => copyToClipboard(passphrase, 'passphrase')}
+                      disabled={!passphrase}
+                      className="absolute right-1 top-1/2 -translate-y-1/2 h-9 w-9 p-0"
+                    >
+                      {copied === 'passphrase' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                    </Button>
+                  </div>
                   <Button onClick={handleGeneratePassphrase}>
                     <RefreshCw className="h-4 w-4 mr-2" />
                     {t('common.generate')}
-                  </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => copyToClipboard(passphrase, 'passphrase')}
-                    disabled={!passphrase}
-                  >
-                    {copied === 'passphrase' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                   </Button>
                 </div>
               </div>
