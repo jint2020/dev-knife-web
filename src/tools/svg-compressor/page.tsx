@@ -295,7 +295,7 @@ export default function SVGCompressorPage() {
                       </CardHeader>
                       <CardContent>
                         <div
-                          className="aspect-square bg-white dark:bg-gray-900 rounded-md border flex items-center justify-center p-6"
+                          className="min-h-[200px] max-h-[70vh] bg-white dark:bg-gray-900 rounded-md border flex items-center justify-center p-6 overflow-auto [&>svg]:w-full [&>svg]:h-auto [&>svg]:max-w-full"
                           dangerouslySetInnerHTML={{ __html: result.originalSvg }}
                         />
                       </CardContent>
@@ -312,7 +312,7 @@ export default function SVGCompressorPage() {
                       </CardHeader>
                       <CardContent>
                         <div
-                          className="aspect-square bg-white dark:bg-gray-900 rounded-md border flex items-center justify-center p-6"
+                          className="min-h-[200px] max-h-[70vh] bg-white dark:bg-gray-900 rounded-md border flex items-center justify-center p-6 overflow-auto [&>svg]:w-full [&>svg]:h-auto [&>svg]:max-w-full"
                           dangerouslySetInnerHTML={{ __html: result.compressedSvg }}
                         />
                       </CardContent>
