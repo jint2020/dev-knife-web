@@ -37,6 +37,7 @@ export function CommandPalette() {
       openTool({
         id: tool.id,
         title: tool.title,
+        locales: tool.locales,
         icon: tool.icon,
         path: tool.path,
       });
