@@ -3,7 +3,7 @@
  * @Author: Jin Tang
  * @Date: 2025-12-30 14:18:52
  * @LastEditors: Jin Tang
- * @LastEditTime: 2025-12-31 09:46:55
+ * @LastEditTime: 2025-12-31 10:16:01
  */
 /*
  * @Description: 
@@ -506,6 +506,15 @@ export const en = {
         jpgDesc: 'Lossy compression, best for photos, smaller file size, no transparency support',
         webpTitle: 'WebP:',
         webpDesc: 'Modern format with superior compression, supports both lossy and lossless, with transparency',
+        dragAndDrop: 'Click to upload or drag and drop',
+        formatPNG: 'PNG Format',
+        formatPNGDesc: 'PNG is a lossless format, ideal for images requiring transparency and sharp details.',
+        formatJPEG: 'JPEG Format',
+        formatJPEGDesc: 'JPEG uses lossy compression, making it suitable for photographs where smaller file size is desired.',
+        formatWebP: 'WebP Format',
+        formatWebPDesc: 'WebP offers better compression than JPG and PNG, with support for both lossy and lossless modes, plus transparency.',
+        quality: 'Quality',
+        qualityDesc: 'Adjust the quality of the output image (only applies to lossy formats like JPG and WebP)',
         errors: {
           invalidFile: 'Please select a valid image file',
           conversionFailed: 'Failed to convert image',

@@ -297,19 +297,19 @@ export default function ImageConverterPage() {
               <div>
                 <strong className="text-foreground">{t('tools.imageConverter.formatPNG')}:</strong>
                 <p className="text-muted-foreground">
-                  {t('tools.imageConverter.pngDescription')}
+                  {t('tools.imageConverter.formatPNGDesc')}
                 </p>
               </div>
               <div>
                 <strong className="text-foreground">{t('tools.imageConverter.formatJPEG')}:</strong>
                 <p className="text-muted-foreground">
-                  {t('tools.imageConverter.jpgDescription')}
+                  {t('tools.imageConverter.formatJPEGDesc')}
                 </p>
               </div>
               <div>
                 <strong className="text-foreground">{t('tools.imageConverter.formatWebP')}:</strong>
                 <p className="text-muted-foreground">
-                  {t('tools.imageConverter.webpDescription')}
+                  {t('tools.imageConverter.formatWebPDesc')}
                 </p>
               </div>
             </CardContent>
