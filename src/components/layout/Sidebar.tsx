@@ -1,20 +1,22 @@
 /**
  * Sidebar Component
- * 
+ *
  * Navigation sidebar with tool categories
  * - Logo area: h-24 (96px) - CRITICAL for alignment
  * - Clicking tools opens them in tabs instead of routing
  */
 
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
-import { Badge } from '@/components/ui/badge';
-import { toolRegistry } from '@/tools/registry';
-import { Wrench } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { useAppStore } from '@/hooks/useAppStore';
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
+import { toolRegistry } from "@/tools/registry";
+import { Wrench } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useAppStore } from "@/hooks/useAppStore";
+import { useTranslation } from "react-i18next";
 
 export function Sidebar() {
+  const { t } = useTranslation();
   const tools = toolRegistry.getAll();
   const categories = Array.from(new Set(tools.map((t) => t.category)));
   const activeTabId = useAppStore((state) => state.activeTabId);
@@ -47,7 +49,7 @@ export function Sidebar() {
             return (
               <div key={category} className="space-y-2">
                 <h3 className="px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  {category}
+                  {t(`categories.${category}`)}
                 </h3>
                 <nav className="space-y-1">
                   {categoryTools.map((tool) => {
@@ -61,19 +63,22 @@ export function Sidebar() {
                           openTool({
                             id: tool.id,
                             title: tool.title,
+                            locales: tool.locales,
                             icon: tool.icon,
                             path: tool.path,
                           })
                         }
                         className={cn(
-                          'w-full flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors',
+                          "w-full flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
                           isActive
-                            ? 'bg-primary text-primary-foreground'
-                            : 'text-foreground hover:bg-accent hover:text-accent-foreground'
+                            ? "bg-primary text-primary-foreground"
+                            : "text-foreground hover:bg-accent hover:text-accent-foreground"
                         )}
                       >
                         <Icon className="h-4 w-4" />
-                        <span className="flex-1 text-left">{tool.title}</span>
+                        <span className="flex-1 text-left">
+                          {t(`tools.${tool.locales}.title`)}
+                        </span>
                       </button>
                     );
                   })}

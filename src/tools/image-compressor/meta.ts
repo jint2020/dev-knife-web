@@ -4,6 +4,7 @@ import type { ToolMeta } from '@/types/tool';
 export const imageCompressorMeta: ToolMeta = {
   id: 'image-compressor',
   title: 'Image Compressor',
+  locales: 'imageCompressor',
   description: 'Compress images to reduce file size while maintaining quality',
   icon: ImageDown,
   path: '/tools/image-compressor',

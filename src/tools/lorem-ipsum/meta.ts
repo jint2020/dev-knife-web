@@ -4,6 +4,7 @@ import type { ToolMeta } from '@/types/tool';
 export const loremIpsumMeta: ToolMeta = {
   id: 'lorem-ipsum',
   title: 'Lorem Ipsum Generator',
+  locales: 'loremGenerator',
   description: 'Generate placeholder text for design and development mockups',
   icon: FileText,
   path: '/tools/lorem-ipsum',

@@ -4,6 +4,7 @@ import type { ToolMeta } from '@/types/tool';
 export const textDiffMeta: ToolMeta = {
   id: 'text-diff',
   title: 'Text Diff Viewer',
+  locales: 'textDiff',
   description: 'Compare and visualize differences between two text blocks',
   icon: FileText,
   path: '/tools/text-diff',

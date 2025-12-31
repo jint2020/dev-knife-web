@@ -10,6 +10,8 @@ export interface Tab {
   id: string;
   /** Tool display title */
   title: string;
+  /** i18n path */
+  locales: string;
   /** Tool icon */
   icon: LucideIcon;
   /** Tool path for routing */

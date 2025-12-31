@@ -4,6 +4,7 @@ import type { ToolMeta } from '@/types/tool';
 export const uuidGeneratorMeta: ToolMeta = {
   id: 'uuid-generator',
   title: 'UUID Generator',
+  locales: 'uuidGenerator',
   description: 'Generate random UUIDs (v4) for unique identifiers',
   icon: Fingerprint,
   path: '/tools/uuid-generator',

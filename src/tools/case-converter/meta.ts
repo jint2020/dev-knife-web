@@ -4,6 +4,7 @@ import type { ToolMeta } from '@/types/tool';
 export const caseConverterMeta: ToolMeta = {
   id: 'case-converter',
   title: 'Case Converter',
+  locales: 'caseConverter',
   description: 'Convert text between different cases: upper, lower, title, camel, snake, etc.',
   icon: Type,
   path: '/tools/case-converter',

@@ -4,6 +4,7 @@ import type { ToolMeta } from '@/types/tool';
 export const imageConverterMeta: ToolMeta = {
   id: 'image-converter',
   title: 'Image Converter',
+  locales: 'imageConverter',
   description: 'Convert images between PNG, JPG, and WebP formats',
   icon: ImageIcon,
   path: '/tools/image-converter',

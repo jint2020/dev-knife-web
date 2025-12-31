@@ -24,6 +24,8 @@ export interface ToolMeta {
   id: string;
   /** Display title */
   title: string;
+  // i18n path
+  locales: string;
   /** Short description */
   description: string;
   /** Icon component from lucide-react */

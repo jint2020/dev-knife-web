@@ -13,8 +13,10 @@ import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useAppStore } from '@/hooks/useAppStore';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { useTranslation } from "react-i18next";
 
 export function TabBar() {
+  const { t } = useTranslation();
   const tabs = useAppStore((state) => state.tabs);
   const activeTabId = useAppStore((state) => state.activeTabId);
   const setActiveTab = useAppStore((state) => state.setActiveTab);
@@ -115,7 +117,8 @@ export function TabBar() {
               
               {/* Tab Title */}
               <span className="text-sm font-medium whitespace-nowrap max-w-[160px] truncate">
-                {tab.title}
+                {/* {tab.title} */}
+                {t(`tools.${tab.locales}.title`)}
               </span>
 
               {/* Close Button - Shows on hover */}

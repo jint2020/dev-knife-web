@@ -1,3 +1,17 @@
+/*
+ * @Description: 
+ * @Author: Jin Tang
+ * @Date: 2025-12-30 14:18:52
+ * @LastEditors: Jin Tang
+ * @LastEditTime: 2025-12-31 09:46:55
+ */
+/*
+ * @Description: 
+ * @Author: Jin Tang
+ * @Date: 2025-12-30 14:18:52
+ * @LastEditors: Jin Tang
+ * @LastEditTime: 2025-12-31 09:46:18
+ */
 /**
  * English Translation Resources
  * 

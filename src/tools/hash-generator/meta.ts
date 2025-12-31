@@ -4,6 +4,7 @@ import type { ToolMeta } from '@/types/tool';
 export const hashGeneratorMeta: ToolMeta = {
   id: 'hash-generator',
   title: 'Hash Generator',
+  locales: 'hashGenerator',
   description: 'Generate MD5, SHA-1, SHA-256, SHA-512 hashes for text and files',
   icon: Hash,
   path: '/tools/hash-generator',

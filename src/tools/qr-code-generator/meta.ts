@@ -4,6 +4,7 @@ import type { ToolMeta } from '@/types/tool';
 export const qrCodeGeneratorMeta: ToolMeta = {
   id: 'qr-code-generator',
   title: 'QR Code Generator',
+  locales: 'qrGenerator',
   description: 'Generate QR codes from text, URLs, or other data',
   icon: QrCode,
   path: '/tools/qr-code-generator',
