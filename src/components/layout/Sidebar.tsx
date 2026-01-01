@@ -2,7 +2,7 @@
  * Sidebar Component
  *
  * Navigation sidebar with collapsible tool categories
- * - Logo area: h-24 (96px) - CRITICAL for alignment
+ * - Positioned below the Header in the new layout
  * - Collapsible menu groups with smooth animations
  * - Global collapse/expand toggle
  * - Clicking tools opens them in tabs instead of routing
@@ -23,7 +23,6 @@ import {
 } from "@/components/ui/tooltip";
 import { toolRegistry } from "@/tools/registry";
 import {
-  Wrench,
   ChevronDown,
   PanelLeftClose,
   PanelLeftOpen,
@@ -193,48 +192,10 @@ export function Sidebar() {
   return (
     <div
       className={cn(
-        "flex flex-col h-screen border-r border-border bg-card transition-all duration-300 ease-in-out",
+        "flex flex-col h-full border-r border-border bg-card transition-all duration-300 ease-in-out",
         isSidebarCollapsed ? "w-16" : "w-64"
       )}
     >
-        {/* Logo Area - HEIGHT: h-24 (96px) - CRITICAL for alignment */}
-        <div
-          className={cn(
-            "h-24 flex items-center flex-shrink-0 transition-all duration-300",
-            isSidebarCollapsed ? "justify-center px-2" : "px-6"
-          )}
-        >
-          {isSidebarCollapsed ? (
-            <Tooltip delayDuration={0}>
-              <TooltipTrigger asChild>
-                <div className="flex h-10 w-10 items-center justify-center rounded-md bg-primary text-primary-foreground cursor-default">
-                  <Wrench className="h-5 w-5" />
-                </div>
-              </TooltipTrigger>
-              <TooltipContent side="right" sideOffset={8}>
-                <p className="font-bold">DevKnife</p>
-                <p className="text-xs text-muted-foreground">Developer Tools</p>
-              </TooltipContent>
-            </Tooltip>
-          ) : (
-            <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
-                <Wrench className="h-5 w-5" />
-              </div>
-              <div className="overflow-hidden">
-                <h1 className="text-lg font-bold whitespace-nowrap">
-                  DevKnife
-                </h1>
-                <p className="text-xs text-muted-foreground whitespace-nowrap">
-                  Developer Tools
-                </p>
-              </div>
-            </div>
-          )}
-        </div>
-
-        <Separator />
-
         {/* Navigation */}
         <ScrollArea className="flex-1">
           <div

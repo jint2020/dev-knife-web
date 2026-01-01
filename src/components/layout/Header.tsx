@@ -11,6 +11,7 @@
 
 import { Github } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { Logo } from './Logo';
 import { CommandPalette } from './CommandPalette';
 import { ThemeToggle } from './ThemeToggle';
 import { LanguageSwitcher } from './LanguageSwitcher';
@@ -22,11 +23,19 @@ export function Header() {
   return (
     // HEIGHT: h-14 (56px) - CRITICAL for alignment with Sidebar Logo area
     <header className="h-14 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex-shrink-0">
-      <div className="flex h-full items-center justify-between px-4">
-        {/* Search - Left Side */}
+      <div className="flex h-full items-center justify-between px-4 gap-4">
+        {/* Logo - Left Side */}
+        <div className="flex-shrink-0">
+          <Logo />
+        </div>
+
+        {/* Search - Center/Left */}
         <div className="flex-shrink-0">
           <CommandPalette />
         </div>
+
+        {/* Spacer to push actions to the right */}
+        <div className="flex-1" />
 
         {/* Actions - Right Side */}
         <div className="flex items-center gap-2">
