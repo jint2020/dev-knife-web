@@ -10,7 +10,7 @@
 
 import { useRef, useState, useEffect } from 'react';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
-import { useAppStore } from '@/hooks/useAppStore';
+import { useAppStore } from '@/store';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from "react-i18next";

@@ -7,12 +7,21 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { encodeBase64, decodeBase64, encodeFileToBase64, isValidBase64 } from './logic';
+import { useToolPersistence } from '@/hooks/useToolPersistence';
 
 export default function Base64EncoderPage() {
   const { t } = useTranslation();
-  const [input, setInput] = useState('');
-  const [output, setOutput] = useState('');
-  const [mode, setMode] = useState<'encode' | 'decode'>('encode');
+
+  // Use persistence hook for input, output, and mode
+  const [persistedState, updatePersistedState] = useToolPersistence('base64-encoder', {
+    input: '',
+    output: '',
+    mode: 'encode' as 'encode' | 'decode',
+  });
+
+  const { input, output, mode } = persistedState;
+
+  // Local-only states (not persisted)
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState('');
   const [fileInfo, setFileInfo] = useState<{ name: string; size: number } | null>(null);
@@ -22,21 +31,23 @@ export default function Base64EncoderPage() {
     try {
       if (mode === 'encode') {
         const result = encodeBase64(input);
-        setOutput(result);
+        updatePersistedState({ output: result });
       } else {
         const result = decodeBase64(input);
-        setOutput(result);
+        updatePersistedState({ output: result });
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : t('tools.base64Encoder.errors.processingFailed'));
-      setOutput('');
+      updatePersistedState({ output: '' });
     }
   };
 
   const handleSwapMode = () => {
-    setMode(mode === 'encode' ? 'decode' : 'encode');
-    setInput(output);
-    setOutput(input);
+    updatePersistedState({
+      mode: mode === 'encode' ? 'decode' : 'encode',
+      input: output,
+      output: input,
+    });
     setError('');
   };
 
@@ -49,9 +60,11 @@ export default function Base64EncoderPage() {
 
     try {
       const base64 = await encodeFileToBase64(file);
-      setInput(base64);
-      setOutput(base64);
-      setMode('encode');
+      updatePersistedState({
+        input: base64,
+        output: base64,
+        mode: 'encode',
+      });
     } catch {
       setError(t('tools.base64Encoder.errors.failedToReadFile'));
       setFileInfo(null);
@@ -140,7 +153,7 @@ export default function Base64EncoderPage() {
                 <textarea
                   id="input"
                   value={input}
-                  onChange={(e) => setInput(e.target.value)}
+                  onChange={(e) => updatePersistedState({ input: e.target.value })}
                   placeholder={
                     mode === 'encode'
                       ? t('tools.base64Encoder.enterTextToEncode')

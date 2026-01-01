@@ -29,7 +29,7 @@ import {
   PanelLeftOpen,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useAppStore } from "@/hooks/useAppStore";
+import { useAppStore } from "@/store";
 import { useTranslation } from "react-i18next";
 import type { Tool } from "@/types/tool";
 

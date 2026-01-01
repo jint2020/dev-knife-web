@@ -12,7 +12,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { toolRegistry } from '@/tools/registry';
 import { useEffect } from 'react';
-import { useAppStore } from '@/hooks/useAppStore';
+import { useAppStore } from '@/store';
 
 export function CommandPalette() {
   const [open, setOpen] = useState(false);
