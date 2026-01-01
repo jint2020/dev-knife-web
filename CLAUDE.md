@@ -68,8 +68,9 @@ Each tool follows a three-file structure in `src/tools/<tool-name>/`:
 
    export const myToolMeta: ToolMeta = {
      id: 'my-tool',              // Unique identifier
-     title: 'My Tool',           // Display name
-     description: 'Brief desc',  // Shown in sidebar/search
+     title: 'My Tool',           // Display name (fallback)
+     locales: 'tools.myTool',    // i18n namespace for translations
+     description: 'Brief desc',  // Shown in sidebar/search (fallback)
      icon: IconName,             // Lucide icon component
      path: '/tools/my-tool',     // URL path
      category: 'generators',     // For filtering (crypto|converters|formatters|generators|image|text)
@@ -149,3 +150,31 @@ The [ToolRenderer](src/components/layout/ToolRenderer.tsx) component handles:
 - Error boundaries for missing tools
 - Keep-Alive visibility management
 - Loading states
+
+### Internationalization (i18n)
+
+The app uses **i18next** with offline-first TypeScript translation resources:
+
+- **Config**: [src/i18n/config.ts](src/i18n/config.ts) - Initializes i18next with language detection
+- **Locales**: [src/i18n/locales/](src/i18n/locales/) - Translation files (`en.ts`, `zh.ts`)
+- **Supported Languages**: English (`en`), Chinese (`zh`)
+- **Storage**: Language preference persisted to `localStorage` under key `devknife-language`
+
+When adding a new tool, add translations to both locale files under the `tools.<toolId>` namespace:
+```typescript
+// In src/i18n/locales/en.ts and zh.ts
+tools: {
+  myTool: {
+    title: 'My Tool',
+    description: 'What it does',
+    // Tool-specific UI strings...
+  }
+}
+```
+
+Usage in components:
+```typescript
+import { useTranslation } from 'react-i18next';
+const { t } = useTranslation();
+// t('tools.myTool.title')
+```
