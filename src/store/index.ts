@@ -21,8 +21,9 @@ export const useAppStore = create<AppState>()(
         theme: state.theme,
         isSidebarCollapsed: state.isSidebarCollapsed,
         expandedCategories: state.expandedCategories,
-        tabs: state.tabs,
-        activeTabId: state.activeTabId,
+        // Don't persist tabs - they contain non-serializable icon components
+        // tabs: state.tabs,
+        // activeTabId: state.activeTabId,
         toolStates: state.toolStates,
       }),
     }

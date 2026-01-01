@@ -20,7 +20,7 @@ import { useEffect } from 'react';
 import { TooltipProvider } from './components/ui/tooltip';
 import { AppRouter } from './router';
 import { registerTools } from './tools/registry';
-import { useAppStore } from './hooks/useAppStore';
+import { useAppStore } from './store';
 import './styles/globals.css';
 
 // Register all tools on app initialization
