@@ -1,9 +1,15 @@
 /**
  * ToolRenderer Component
- * 
+ *
  * Renders a tool component with proper lazy loading and error handling.
  * Used in Keep-Alive mode to preserve tool state when switching tabs.
- * 
+ *
+ * Features:
+ * - Lazy loading with Suspense
+ * - Error boundary for crash isolation
+ * - Keep-Alive state preservation
+ * - Automatic error recovery on tab switch
+ *
  * @param toolId - The unique identifier of the tool to render
  * @param isActive - Whether this tool is currently visible
  */
@@ -11,6 +17,8 @@
 import { Suspense, type ComponentType } from 'react';
 import { toolRegistry } from '@/tools/registry';
 import { cn } from '@/lib/utils';
+import { ErrorBoundary } from '@/components/common/error-boundary';
+import { ErrorState } from '@/components/ui/error-state';
 
 interface ToolRendererProps {
   toolId: string;
@@ -50,20 +58,48 @@ export function ToolRenderer({ toolId, isActive }: ToolRendererProps) {
       )}
       data-tool-id={toolId}
     >
-      <Suspense
-        fallback={
-          <div className="flex items-center justify-center h-full">
-            <div className="text-center space-y-2">
-              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-              <p className="text-sm text-muted-foreground">
-                Loading {tool.title}...
-              </p>
-            </div>
-          </div>
-        }
+      {/*
+        ErrorBoundary with key={toolId} ensures:
+        1. Each tool has isolated error state
+        2. Switching tabs resets error boundaries
+        3. A crashed tool doesn't affect other tools
+      */}
+      <ErrorBoundary
+        key={toolId}
+        fallbackRender={({ error, reset }) => (
+          <ErrorState
+            title={`${tool.title} crashed`}
+            description={
+              process.env.NODE_ENV === 'development'
+                ? error.message
+                : 'This tool encountered an error. Try refreshing or switching to another tool.'
+            }
+            onRetry={reset}
+            variant="full"
+          />
+        )}
+        onError={(error) => {
+          // Log errors in development
+          if (process.env.NODE_ENV === 'development') {
+            console.error(`Tool "${tool.title}" (${toolId}) crashed:`, error);
+          }
+        }}
       >
-        <ToolComponent />
-      </Suspense>
+        <Suspense
+          fallback={
+            <div className="flex items-center justify-center h-full">
+              <div className="text-center space-y-2">
+                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                <p className="text-sm text-muted-foreground">
+                  Loading {tool.title}...
+                </p>
+              </div>
+            </div>
+          }
+        >
+          <ToolComponent />
+        </Suspense>
+      </ErrorBoundary>
     </div>
   );
 }

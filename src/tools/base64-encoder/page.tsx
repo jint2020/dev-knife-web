@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ArrowRightLeft, Copy, Check, Upload, Download } from 'lucide-react';
+import { ArrowRightLeft, Copy, Check, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { encodeBase64, decodeBase64, encodeFileToBase64, isValidBase64 } from './logic';
 import { useToolPersistence } from '@/hooks/useToolPersistence';
+import { FileDropZone } from '@/components/common/file-drop-zone';
 
 export default function Base64EncoderPage() {
   const { t } = useTranslation();
@@ -51,10 +52,7 @@ export default function Base64EncoderPage() {
     setError('');
   };
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
+  const handleFileUpload = async (file: File) => {
     setError('');
     setFileInfo({ name: file.name, size: file.size });
 
@@ -234,26 +232,12 @@ export default function Base64EncoderPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex items-center justify-center w-full">
-                <label
-                  htmlFor="file-upload"
-                  className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-border rounded-lg cursor-pointer bg-muted/50 hover:bg-muted transition-colors"
-                >
-                  <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                    <Upload className="w-8 h-8 mb-2 text-muted-foreground" />
-                    <p className="mb-2 text-sm text-muted-foreground">
-                      <span className="font-semibold">{t('tools.base64Encoder.clickToUpload')}</span> {t('tools.base64Encoder.orDragAndDrop')}
-                    </p>
-                    <p className="text-xs text-muted-foreground">{t('tools.base64Encoder.anyFileTypeSupported')}</p>
-                  </div>
-                  <input
-                    id="file-upload"
-                    type="file"
-                    className="hidden"
-                    onChange={handleFileUpload}
-                  />
-                </label>
-              </div>
+              <FileDropZone
+                onFileSelect={handleFileUpload}
+                title={t('tools.base64Encoder.clickToUpload')}
+                description={t('tools.base64Encoder.uploadFileDesc')}
+                maxSize={10 * 1024 * 1024} // 10MB limit
+              />
 
               {fileInfo && (
                 <div className="p-3 rounded-md bg-accent text-accent-foreground">
