@@ -10,7 +10,7 @@ import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 import { TabBar } from './TabBar';
 import { ToolRenderer } from './ToolRenderer';
-import { useAppStore } from '@/hooks/useAppStore';
+import { useAppStore } from '@/store';
 
 export function AppLayout() {
   const { t } = useTranslation();
