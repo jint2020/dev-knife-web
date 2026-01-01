@@ -72,6 +72,8 @@ export const zh = {
       noToolsOpen: '未打开工具 - 从侧边栏选择一个工具开始使用',
       click: '点击',
       anyToolOnTheLeft: '左侧的任意工具',
+      collapse: '收起侧边栏',
+      expand: '展开侧边栏',
     },
 
     // 工具分类

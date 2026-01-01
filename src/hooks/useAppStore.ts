@@ -24,6 +24,20 @@ interface AppState {
   toggleTheme: () => void;
   setTheme: (theme: 'light' | 'dark') => void;
 
+  // Sidebar
+  /** Whether the sidebar is collapsed (icon-only mode) */
+  isSidebarCollapsed: boolean;
+  /** Toggle sidebar collapsed state */
+  toggleSidebar: () => void;
+  /** Set sidebar collapsed state */
+  setSidebarCollapsed: (collapsed: boolean) => void;
+  /** Currently expanded menu category IDs */
+  expandedCategories: string[];
+  /** Toggle a category's expanded state */
+  toggleCategory: (categoryId: string) => void;
+  /** Collapse all categories (used when sidebar collapses) */
+  collapseAllCategories: () => void;
+
   // Tabs Management
   /** Array of opened tool tabs */
   tabs: Tab[];
@@ -50,6 +64,38 @@ export const useAppStore = create<AppState>()(
           theme: state.theme === 'light' ? 'dark' : 'light',
         })),
       setTheme: (theme) => set({ theme }),
+
+      // Sidebar
+      isSidebarCollapsed: false,
+      toggleSidebar: () => {
+        const { isSidebarCollapsed } = get();
+        if (!isSidebarCollapsed) {
+          // When collapsing, also collapse all categories
+          set({ isSidebarCollapsed: true, expandedCategories: [] });
+        } else {
+          set({ isSidebarCollapsed: false });
+        }
+      },
+      setSidebarCollapsed: (collapsed) => {
+        if (collapsed) {
+          set({ isSidebarCollapsed: true, expandedCategories: [] });
+        } else {
+          set({ isSidebarCollapsed: false });
+        }
+      },
+      expandedCategories: [],
+      toggleCategory: (categoryId: string) => {
+        const { expandedCategories, isSidebarCollapsed } = get();
+        // Don't allow expanding when sidebar is collapsed
+        if (isSidebarCollapsed) return;
+
+        if (expandedCategories.includes(categoryId)) {
+          set({ expandedCategories: expandedCategories.filter((id) => id !== categoryId) });
+        } else {
+          set({ expandedCategories: [...expandedCategories, categoryId] });
+        }
+      },
+      collapseAllCategories: () => set({ expandedCategories: [] }),
 
       // Tabs
       tabs: [],

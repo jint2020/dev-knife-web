@@ -86,6 +86,8 @@ export const en = {
       noToolsOpen: 'No tools open - Click a tool from sidebar to get started',
       click: 'Click',
       anyToolOnTheLeft: 'any tool on the left',
+      collapse: 'Collapse Sidebar',
+      expand: 'Expand Sidebar',
     },
 
     // Tool Categories
