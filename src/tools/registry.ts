@@ -32,6 +32,9 @@ import { imageCompressorMeta } from './image-compressor/meta';
 import { imageConverterMeta } from './image-converter/meta';
 import { colorBlindnessMeta } from './color-blindness/meta';
 import { svgCompressorMeta } from './svg-compressor/meta';
+import { tokenCounterMeta } from './token-counter/meta';
+import { apiCostCalculatorMeta } from './api-cost-calculator/meta';
+import { aiApiDebuggerMeta } from './ai-api-debugger/meta';
 
 /**
  * Register all tools
@@ -111,6 +114,22 @@ export function registerTools(): void {
   toolRegistry.register(
     svgCompressorMeta,
     '/src/tools/svg-compressor/page.tsx'
+  );
+
+  // AI Utilities
+  toolRegistry.register(
+    tokenCounterMeta,
+    '/src/tools/token-counter/page.tsx'
+  );
+
+  toolRegistry.register(
+    apiCostCalculatorMeta,
+    '/src/tools/api-cost-calculator/page.tsx'
+  );
+
+  toolRegistry.register(
+    aiApiDebuggerMeta,
+    '/src/tools/ai-api-debugger/page.tsx'
   );
 
   // Add more tools here as you develop them:
