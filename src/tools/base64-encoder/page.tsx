@@ -15,11 +15,18 @@ export default function Base64EncoderPage() {
   const { t } = useTranslation();
 
   // Use persistence hook for input, output, and mode
-  const [persistedState, updatePersistedState] = useToolPersistence('base64-encoder', {
-    input: '',
-    output: '',
-    mode: 'encode' as 'encode' | 'decode',
-  });
+  // Note: Large files (>1MB) will not be persisted to avoid localStorage quota issues
+  const [persistedState, updatePersistedState] = useToolPersistence(
+    'base64-encoder',
+    {
+      input: '',
+      output: '',
+      mode: 'encode' as 'encode' | 'decode',
+    },
+    {
+      maxSize: 1024 * 1024, // Skip persistence if state exceeds 1MB
+    }
+  );
 
   const { input, output, mode } = persistedState;
 
