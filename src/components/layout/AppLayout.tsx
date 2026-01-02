@@ -9,6 +9,7 @@
  * - Below: Sidebar (left) + Main Content (right)
  */
 
+import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
@@ -21,6 +22,46 @@ export function AppLayout() {
   const tabs = useAppStore((state) => state.tabs);
   const activeTabId = useAppStore((state) => state.activeTabId);
   const isSidebarCollapsed = useAppStore((state) => state.isSidebarCollapsed);
+  const sidebarWidth = useAppStore((state) => state.sidebarWidth);
+  const setSidebarWidth = useAppStore((state) => state.setSidebarWidth);
+
+  const [isResizing, setIsResizing] = useState(false);
+  const sidebarRef = useRef<HTMLDivElement>(null);
+  const resizeHandleRef = useRef<HTMLDivElement>(null);
+
+  // Handle mouse events for resizing
+  useEffect(() => {
+    if (!isResizing) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (sidebarRef.current) {
+        const containerRect = sidebarRef.current.parentElement?.getBoundingClientRect();
+        if (containerRect) {
+          const newWidth = e.clientX - containerRect.left;
+          setSidebarWidth(newWidth);
+        }
+      }
+    };
+
+    const handleMouseUp = () => {
+      setIsResizing(false);
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isResizing, setSidebarWidth]);
+
+  // Set initial sidebar width from store
+  useEffect(() => {
+    if (sidebarRef.current && !isSidebarCollapsed) {
+      sidebarRef.current.style.width = `${sidebarWidth}px`;
+    }
+  }, [sidebarWidth, isSidebarCollapsed]);
 
   return (
     <div className="flex flex-col h-screen overflow-hidden">
@@ -31,12 +72,26 @@ export function AppLayout() {
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar - Left Panel (dynamic width based on collapse state) */}
         <aside
+          ref={sidebarRef}
           className={`flex-shrink-0 hidden lg:block transition-all duration-300 ease-in-out ${
-            isSidebarCollapsed ? 'w-16' : 'w-64'
+            isSidebarCollapsed ? 'w-16' : 'w-[--sidebar-width]'
           }`}
+          style={{
+            '--sidebar-width': isSidebarCollapsed ? undefined : `${sidebarWidth}px`,
+          } as React.CSSProperties}
         >
           <Sidebar />
         </aside>
+
+        {/* Resize Handle */}
+        {!isSidebarCollapsed && (
+          <div
+            ref={resizeHandleRef}
+            className="hidden lg:block w-1 bg-border cursor-col-resize hover:bg-primary/20 transition-colors -ml-px z-10"
+            onMouseDown={() => setIsResizing(true)}
+            style={{ height: 'calc(100vh - 3.5rem)' }} // Account for header height (h-14 = 3.5rem)
+          />
+        )}
 
         {/* Main Content - Right Panel */}
         <div className="flex-1 flex flex-col overflow-hidden">

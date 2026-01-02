@@ -191,10 +191,7 @@ export function Sidebar() {
 
   return (
     <div
-      className={cn(
-        "flex flex-col h-full border-r border-border bg-card transition-all duration-300 ease-in-out",
-        isSidebarCollapsed ? "w-16" : "w-64"
-      )}
+      className="flex flex-col h-full border-r border-border bg-card transition-all duration-300 ease-in-out w-full"
     >
         {/* Navigation */}
         <ScrollArea className="flex-1">

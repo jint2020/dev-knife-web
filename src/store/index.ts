@@ -43,6 +43,7 @@ const createSizeAwareStorage = () => {
                   theme: parsed.state?.theme,
                   isSidebarCollapsed: parsed.state?.isSidebarCollapsed,
                   expandedCategories: parsed.state?.expandedCategories,
+                  sidebarWidth: parsed.state?.sidebarWidth,
                   toolStates: {}, // Clear all tool states to free space
                 },
                 version: parsed.version,
@@ -84,6 +85,7 @@ export const useAppStore = create<AppState>()(
         theme: state.theme,
         isSidebarCollapsed: state.isSidebarCollapsed,
         expandedCategories: state.expandedCategories,
+        sidebarWidth: state.sidebarWidth,
         // Don't persist tabs - they contain non-serializable icon components
         // tabs: state.tabs,
         // activeTabId: state.activeTabId,

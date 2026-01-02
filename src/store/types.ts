@@ -10,10 +10,15 @@ export interface ThemeSlice {
 export interface SidebarSlice {
   isSidebarCollapsed: boolean;
   expandedCategories: string[];
+  sidebarWidth: number;
+  minSidebarWidth: number;
+  maxSidebarWidth: number;
   toggleSidebar: () => void;
   setSidebarCollapsed: (collapsed: boolean) => void;
   toggleCategory: (categoryId: string) => void;
   collapseAllCategories: () => void;
+  setSidebarWidth: (width: number) => void;
+  resetSidebarWidth: () => void;
 }
 
 export interface Tab {
