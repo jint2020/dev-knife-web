@@ -84,6 +84,7 @@ export const zh = {
       converters: '转换工具',
       text: '文本工具',
       image: '图像工具',
+      ai: 'AI 工具',
       all: '所有工具',
     },
 

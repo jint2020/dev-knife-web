@@ -98,6 +98,7 @@ export const en = {
       converters: 'Converters',
       text: 'Text Tools',
       image: 'Image Tools',
+      ai: 'AI Tools',
       all: 'All Tools',
     },
 

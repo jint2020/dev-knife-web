@@ -7,6 +7,7 @@ import type { ComponentType } from 'react';
  * Used to organize tools in the sidebar navigation
  */
 export type ToolCategory =
+  | 'ai'
   | 'crypto'
   | 'converters'
   | 'formatters'
