@@ -86,25 +86,42 @@ Each tool follows a three-file structure in `src/tools/<tool-name>/`:
    }
    ```
 
-3. **page.tsx** - React UI component:
+3. **page.tsx** - React UI component (use standard components for consistency):
    ```typescript
-   import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+   import { ToolPage, ToolSection } from '@/components/tool-ui';
+   import { CopyButton } from '@/components/common/copy-button';
 
    export default function MyToolPage() {
      return (
-       <div className="container mx-auto p-6">
-         <Card>
-           <CardHeader>
-             <CardTitle>My Tool</CardTitle>
-           </CardHeader>
-           <CardContent>
-             {/* Tool UI */}
-           </CardContent>
-         </Card>
-       </div>
+       <ToolPage
+         title={t('tools.myTool.title')}
+         description={t('tools.myTool.description')}
+       >
+         <ToolSection
+           title="Input"
+           description="Enter your data"
+           contentClassName="space-y-4"
+         >
+           {/* Tool UI */}
+         </ToolSection>
+
+         <ToolSection
+           title="Output"
+           actions={<CopyButton value={output} />}
+         >
+           <pre>{output}</pre>
+         </ToolSection>
+       </ToolPage>
      );
    }
    ```
+
+   **Standard Components**:
+   - `<ToolPage>`: Page container with title/description
+   - `<ToolSection>`: Content sections (replaces Card)
+   - `<CopyButton>`: Copy-to-clipboard with automatic feedback
+
+   See [REFACTORING_GUIDE.md](REFACTORING_GUIDE.md) for detailed usage patterns.
 
 4. **Register in [src/tools/registry.ts](src/tools/registry.ts)**:
    ```typescript

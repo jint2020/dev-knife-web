@@ -4,9 +4,9 @@ import { cn } from '@/lib/utils';
 
 export interface ToolSectionProps {
   /**
-   * Optional section title (displays in the header)
+   * Optional section title (displays in the header) - can be string or ReactNode for flexibility
    */
-  title?: string;
+  title?: ReactNode;
   /**
    * Optional description text (displays below title)
    */
