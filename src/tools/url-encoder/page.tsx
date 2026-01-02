@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Copy, Check, ArrowRightLeft, Link as LinkIcon, Globe } from 'lucide-react';
+import { ArrowRightLeft, Link as LinkIcon, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -14,13 +13,14 @@ import {
   parseUrl,
   isValidUrl,
 } from './logic';
+import { CopyButton } from '@/components/common/copy-button';
+import { ToolPage, ToolSection } from '@/components/tool-ui';
 
 export default function UrlEncoderPage() {
   const { t } = useTranslation();
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
   const [mode, setMode] = useState<'component' | 'full'>('component');
-  const [copied, setCopied] = useState(false);
 
   const handleEncode = () => {
     try {
@@ -45,33 +45,15 @@ export default function UrlEncoderPage() {
     setOutput(input);
   };
 
-  const copyToClipboard = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy:', err);
-    }
-  };
 
   const urlInfo = input && isValidUrl(input) ? parseUrl(input) : null;
 
   return (
-    <div className="container mx-auto p-6 max-w-6xl">
-      <Card>
-        <CardHeader>
-          <div className="flex items-center gap-2">
-            <LinkIcon className="h-6 w-6" />
-            <div>
-              <CardTitle>{t('tools.urlEncoder.title')}</CardTitle>
-              <CardDescription>{t('tools.urlEncoder.description')}</CardDescription>
-            </div>
-          </div>
-        </CardHeader>
-
-        <CardContent>
-          <Tabs defaultValue="encode">
+    <ToolPage
+      title={t('tools.urlEncoder.title')}
+      description={t('tools.urlEncoder.description')}
+    >
+      <Tabs defaultValue="encode">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="encode">{t('tools.urlEncoder.encodeDecode')}</TabsTrigger>
               <TabsTrigger value="parse">{t('tools.urlEncoder.parseUrl')}</TabsTrigger>
@@ -133,14 +115,12 @@ export default function UrlEncoderPage() {
                         <ArrowRightLeft className="h-4 w-4 mr-1" />
                         {t('tools.urlEncoder.swap')}
                       </Button>
-                      <Button
-                        size="sm"
+                      <CopyButton
+                        value={output}
                         variant="outline"
-                        onClick={() => copyToClipboard(output)}
+                        size="sm"
                         disabled={!output}
-                      >
-                        {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                      </Button>
+                      />
                     </div>
                   </div>
                   <textarea
@@ -152,14 +132,17 @@ export default function UrlEncoderPage() {
                 </div>
               </div>
 
-              {/* Info Box */}
-              <div className="p-3 rounded-md bg-muted text-sm space-y-1">
+              {/* Info Section */}
+              <ToolSection
+                className="border-border bg-muted/50"
+                contentClassName="text-sm space-y-1"
+              >
                 <div className="font-semibold">{t('tools.urlEncoder.tips')}:</div>
                 <ul className="list-disc list-inside space-y-1 text-muted-foreground">
                   <li><strong>{t('tools.urlEncoder.component')}</strong>: {t('tools.urlEncoder.componentDesc')}</li>
                   <li><strong>{t('tools.urlEncoder.full')}</strong>: {t('tools.urlEncoder.fullDesc')}</li>
                 </ul>
-              </div>
+              </ToolSection>
             </TabsContent>
 
             {/* Parse URL Tab */}
@@ -185,68 +168,63 @@ export default function UrlEncoderPage() {
               {urlInfo && (
                 <div className="space-y-4">
                   {/* URL Components */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-lg flex items-center gap-2">
+                  <ToolSection
+                    title={
+                      <div className="flex items-center gap-2">
                         <Globe className="h-5 w-5" />
                         {t('tools.urlEncoder.urlInfo')}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-3">
-                      <div className="grid grid-cols-1 gap-3 font-mono text-sm">
-                        <div className="flex items-start gap-2">
-                          <span className="font-semibold min-w-[100px]">{t('tools.urlEncoder.protocol')}:</span>
-                          <span className="text-muted-foreground break-all">{urlInfo.protocol}</span>
-                        </div>
-                        <div className="flex items-start gap-2">
-                          <span className="font-semibold min-w-[100px]">{t('tools.urlEncoder.hostname')}:</span>
-                          <span className="text-muted-foreground break-all">{urlInfo.hostname}</span>
-                        </div>
-                        <div className="flex items-start gap-2">
-                          <span className="font-semibold min-w-[100px]">{t('tools.urlEncoder.pathname')}:</span>
-                          <span className="text-muted-foreground break-all">{urlInfo.pathname}</span>
-                        </div>
-                        {urlInfo.search && (
-                          <div className="flex items-start gap-2">
-                            <span className="font-semibold min-w-[100px]">{t('tools.urlEncoder.search')}:</span>
-                            <span className="text-muted-foreground break-all">{urlInfo.search}</span>
-                          </div>
-                        )}
-                        {urlInfo.hash && (
-                          <div className="flex items-start gap-2">
-                            <span className="font-semibold min-w-[100px]">{t('tools.urlEncoder.hash')}:</span>
-                            <span className="text-muted-foreground break-all">{urlInfo.hash}</span>
-                          </div>
-                        )}
                       </div>
-                    </CardContent>
-                  </Card>
+                    }
+                    contentClassName="space-y-3"
+                  >
+                    <div className="grid grid-cols-1 gap-3 font-mono text-sm">
+                      <div className="flex items-start gap-2">
+                        <span className="font-semibold min-w-[100px]">{t('tools.urlEncoder.protocol')}:</span>
+                        <span className="text-muted-foreground break-all">{urlInfo.protocol}</span>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <span className="font-semibold min-w-[100px]">{t('tools.urlEncoder.hostname')}:</span>
+                        <span className="text-muted-foreground break-all">{urlInfo.hostname}</span>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <span className="font-semibold min-w-[100px]">{t('tools.urlEncoder.pathname')}:</span>
+                        <span className="text-muted-foreground break-all">{urlInfo.pathname}</span>
+                      </div>
+                      {urlInfo.search && (
+                        <div className="flex items-start gap-2">
+                          <span className="font-semibold min-w-[100px]">{t('tools.urlEncoder.search')}:</span>
+                          <span className="text-muted-foreground break-all">{urlInfo.search}</span>
+                        </div>
+                      )}
+                      {urlInfo.hash && (
+                        <div className="flex items-start gap-2">
+                          <span className="font-semibold min-w-[100px]">{t('tools.urlEncoder.hash')}:</span>
+                          <span className="text-muted-foreground break-all">{urlInfo.hash}</span>
+                        </div>
+                      )}
+                    </div>
+                  </ToolSection>
 
                   {/* Query Parameters */}
                   {Object.keys(urlInfo.params).length > 0 && (
-                    <Card>
-                      <CardHeader>
-                        <CardTitle className="text-lg">{t('tools.urlEncoder.queryParams')}</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-2">
-                          {Object.entries(urlInfo.params).map(([key, value]) => (
-                            <div key={key} className="flex items-start gap-2 p-2 rounded-md bg-muted font-mono text-sm">
-                              <span className="font-semibold">{key}:</span>
-                              <span className="text-muted-foreground break-all">{value}</span>
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                className="ml-auto h-6 w-6 p-0"
-                                onClick={() => copyToClipboard(value)}
-                              >
-                                <Copy className="h-3 w-3" />
-                              </Button>
-                            </div>
-                          ))}
+                    <ToolSection
+                      title={t('tools.urlEncoder.queryParams')}
+                      contentClassName="space-y-2"
+                    >
+                      {Object.entries(urlInfo.params).map(([key, value]) => (
+                        <div key={key} className="flex items-start gap-2 p-2 rounded-md bg-muted font-mono text-sm">
+                          <span className="font-semibold">{key}:</span>
+                          <span className="text-muted-foreground break-all">{value}</span>
+                          <CopyButton
+                            value={value}
+                            mode="icon-only"
+                            variant="ghost"
+                            size="sm"
+                            className="ml-auto h-6 w-6 p-0"
+                          />
                         </div>
-                      </CardContent>
-                    </Card>
+                      ))}
+                    </ToolSection>
                   )}
                 </div>
               )}
@@ -258,8 +236,6 @@ export default function UrlEncoderPage() {
               )}
             </TabsContent>
           </Tabs>
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
+        </ToolPage>
+      );
+    }

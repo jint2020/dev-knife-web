@@ -2,7 +2,6 @@ import { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Upload, Download, FileCode, Code, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -16,6 +15,7 @@ import {
   type CompressionOptions,
   type CompressionResult,
 } from './logic';
+import { ToolPage, ToolSection } from '@/components/tool-ui';
 
 export default function SVGCompressorPage() {
   const { t } = useTranslation();
@@ -124,20 +124,11 @@ export default function SVGCompressorPage() {
   };
 
   return (
-    <div className="container mx-auto p-6 max-w-7xl">
-      <Card>
-        <CardHeader>
-          <div className="flex items-center gap-2">
-            <FileCode className="h-6 w-6" />
-            <div>
-              <CardTitle>{t('tools.svgCompressor.title')}</CardTitle>
-              <CardDescription>{t('tools.svgCompressor.description')}</CardDescription>
-            </div>
-          </div>
-        </CardHeader>
-
-        <CardContent className="space-y-6">
-          <Tabs defaultValue="file">
+    <ToolPage
+      title={t('tools.svgCompressor.title')}
+      description={t('tools.svgCompressor.description')}
+    >
+      <Tabs defaultValue="file">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="file">{t('tools.svgCompressor.uploadFile')}</TabsTrigger>
               <TabsTrigger value="text">{t('tools.svgCompressor.pasteCode')}</TabsTrigger>
@@ -183,10 +174,10 @@ export default function SVGCompressorPage() {
           </Tabs>
 
           {/* Compression Options */}
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-lg">{t('tools.svgCompressor.options')}</CardTitle>
+          <ToolSection
+            title={
+              <div className="flex items-center justify-between w-full">
+                <span>{t('tools.svgCompressor.options')}</span>
                 <div className="flex gap-2">
                   <Button size="sm" variant="outline" onClick={() => toggleAllOptions(true)}>
                     {t('tools.svgCompressor.enableAll')}
@@ -199,25 +190,23 @@ export default function SVGCompressorPage() {
                   </Button>
                 </div>
               </div>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 max-h-[400px] overflow-y-auto">
-                {(Object.keys(options) as Array<keyof CompressionOptions>).map((key) => (
-                  <label key={key} className="flex items-center gap-2 cursor-pointer text-sm">
-                    <input
-                      type="checkbox"
-                      checked={options[key]}
-                      onChange={(e) => setOptions({ ...options, [key]: e.target.checked })}
-                      className="h-4 w-4"
-                    />
-                    <span className="text-xs">
-                      {key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase())}
-                    </span>
-                  </label>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+            }
+            contentClassName="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 max-h-[400px] overflow-y-auto"
+          >
+            {(Object.keys(options) as Array<keyof CompressionOptions>).map((key) => (
+              <label key={key} className="flex items-center gap-2 cursor-pointer text-sm">
+                <input
+                  type="checkbox"
+                  checked={options[key]}
+                  onChange={(e) => setOptions({ ...options, [key]: e.target.checked })}
+                  className="h-4 w-4"
+                />
+                <span className="text-xs">
+                  {key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase())}
+                </span>
+              </label>
+            ))}
+          </ToolSection>
 
           {/* Error Display */}
           {error && (
@@ -240,34 +229,35 @@ export default function SVGCompressorPage() {
           {result && !isCompressing && (
             <div className="space-y-4">
               {/* Stats */}
-              <Card className="border-2 border-green-500/20 bg-green-50/50 dark:bg-green-950/20">
-                <CardContent className="pt-6">
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-                    <div>
-                      <div className="text-sm text-muted-foreground mb-1">{t('tools.svgCompressor.originalSize')}</div>
-                      <div className="text-xl font-bold">{formatFileSize(result.originalSize)}</div>
-                    </div>
-                    <div>
-                      <div className="text-sm text-muted-foreground mb-1">{t('tools.svgCompressor.compressedSize')}</div>
-                      <div className="text-xl font-bold text-green-600">
-                        {formatFileSize(result.compressedSize)}
-                      </div>
-                    </div>
-                    <div>
-                      <div className="text-sm text-muted-foreground mb-1">{t('tools.svgCompressor.saved')}</div>
-                      <div className="text-xl font-bold text-green-600">
-                        {formatFileSize(result.originalSize - result.compressedSize)}
-                      </div>
-                    </div>
-                    <div>
-                      <div className="text-sm text-muted-foreground mb-1">{t('tools.svgCompressor.compression')}</div>
-                      <div className="text-xl font-bold text-green-600">
-                        {result.compressionRatio.toFixed(1)}%
-                      </div>
+              <ToolSection
+                className="border-2 border-green-500/20 bg-green-50/50 dark:bg-green-950/20"
+                contentClassName="pt-6"
+              >
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                  <div>
+                    <div className="text-sm text-muted-foreground mb-1">{t('tools.svgCompressor.originalSize')}</div>
+                    <div className="text-xl font-bold">{formatFileSize(result.originalSize)}</div>
+                  </div>
+                  <div>
+                    <div className="text-sm text-muted-foreground mb-1">{t('tools.svgCompressor.compressedSize')}</div>
+                    <div className="text-xl font-bold text-green-600">
+                      {formatFileSize(result.compressedSize)}
                     </div>
                   </div>
-                </CardContent>
-              </Card>
+                  <div>
+                    <div className="text-sm text-muted-foreground mb-1">{t('tools.svgCompressor.saved')}</div>
+                    <div className="text-xl font-bold text-green-600">
+                      {formatFileSize(result.originalSize - result.compressedSize)}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-sm text-muted-foreground mb-1">{t('tools.svgCompressor.compression')}</div>
+                    <div className="text-xl font-bold text-green-600">
+                      {result.compressionRatio.toFixed(1)}%
+                    </div>
+                  </div>
+                </div>
+              </ToolSection>
 
               {/* SVG Preview and Code */}
               <Tabs defaultValue="preview">
@@ -288,37 +278,35 @@ export default function SVGCompressorPage() {
 
                 <TabsContent value="preview" className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Card>
-                      <CardHeader>
-                        <div className="flex items-center justify-between">
-                          <CardTitle className="text-lg">{t('tools.svgCompressor.original')}</CardTitle>
+                    <ToolSection
+                      title={
+                        <div className="flex items-center justify-between w-full">
+                          <span>{t('tools.svgCompressor.original')}</span>
                           <Badge variant="outline">{formatFileSize(result.originalSize)}</Badge>
                         </div>
-                      </CardHeader>
-                      <CardContent>
-                        <div
-                          className="min-h-[200px] max-h-[70vh] bg-white dark:bg-gray-900 rounded-md border flex items-center justify-center p-6 overflow-auto [&>svg]:w-full [&>svg]:h-auto [&>svg]:max-w-full"
-                          dangerouslySetInnerHTML={{ __html: result.originalSvg }}
-                        />
-                      </CardContent>
-                    </Card>
+                      }
+                    >
+                      <div
+                        className="min-h-[200px] max-h-[70vh] bg-white dark:bg-gray-900 rounded-md border flex items-center justify-center p-6 overflow-auto [&>svg]:w-full [&>svg]:h-auto [&>svg]:max-w-full"
+                        dangerouslySetInnerHTML={{ __html: result.originalSvg }}
+                      />
+                    </ToolSection>
 
-                    <Card>
-                      <CardHeader>
-                        <div className="flex items-center justify-between">
-                          <CardTitle className="text-lg">{t('tools.svgCompressor.compressed')}</CardTitle>
+                    <ToolSection
+                      title={
+                        <div className="flex items-center justify-between w-full">
+                          <span>{t('tools.svgCompressor.compressed')}</span>
                           <Badge variant="default" className="bg-green-600">
                             {formatFileSize(result.compressedSize)}
                           </Badge>
                         </div>
-                      </CardHeader>
-                      <CardContent>
-                        <div
-                          className="min-h-[200px] max-h-[70vh] bg-white dark:bg-gray-900 rounded-md border flex items-center justify-center p-6 overflow-auto [&>svg]:w-full [&>svg]:h-auto [&>svg]:max-w-full"
-                          dangerouslySetInnerHTML={{ __html: result.compressedSvg }}
-                        />
-                      </CardContent>
-                    </Card>
+                      }
+                    >
+                      <div
+                        className="min-h-[200px] max-h-[70vh] bg-white dark:bg-gray-900 rounded-md border flex items-center justify-center p-6 overflow-auto [&>svg]:w-full [&>svg]:h-auto [&>svg]:max-w-full"
+                        dangerouslySetInnerHTML={{ __html: result.compressedSvg }}
+                      />
+                    </ToolSection>
                   </div>
                 </TabsContent>
 
@@ -347,29 +335,26 @@ export default function SVGCompressorPage() {
             </div>
           )}
 
-          {/* Info Card */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">{t('tools.svgCompressor.aboutTitle')}</CardTitle>
-            </CardHeader>
-            <CardContent className="text-sm text-muted-foreground space-y-2">
-              <p>
-                {t('tools.svgCompressor.aboutDescription')}
-              </p>
-              <ul className="list-disc list-inside space-y-1">
-                <li>{t('tools.svgCompressor.benefit1')}</li>
-                <li>{t('tools.svgCompressor.benefit2')}</li>
-                <li>{t('tools.svgCompressor.benefit3')}</li>
-                <li>{t('tools.svgCompressor.benefit4')}</li>
-                <li>{t('tools.svgCompressor.benefit5')}</li>
-              </ul>
-              <p className="mt-2">
-                <strong>{t('tools.svgCompressor.noteLabel')}:</strong> {t('tools.svgCompressor.noteText')}
-              </p>
-            </CardContent>
-          </Card>
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
+          {/* Info Section */}
+          <ToolSection
+            title={t('tools.svgCompressor.aboutTitle')}
+            className="border-border bg-muted/50"
+            contentClassName="text-sm text-muted-foreground space-y-2"
+          >
+            <p>
+              {t('tools.svgCompressor.aboutDescription')}
+            </p>
+            <ul className="list-disc list-inside space-y-1">
+              <li>{t('tools.svgCompressor.benefit1')}</li>
+              <li>{t('tools.svgCompressor.benefit2')}</li>
+              <li>{t('tools.svgCompressor.benefit3')}</li>
+              <li>{t('tools.svgCompressor.benefit4')}</li>
+              <li>{t('tools.svgCompressor.benefit5')}</li>
+            </ul>
+            <p className="mt-2">
+              <strong>{t('tools.svgCompressor.noteLabel')}:</strong> {t('tools.svgCompressor.noteText')}
+            </p>
+          </ToolSection>
+        </ToolPage>
+      );
+    }

@@ -1,21 +1,12 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  Copy,
-  Check,
   Download,
   Minimize2,
   Maximize2,
   ArrowUpDown,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -34,6 +25,8 @@ import {
   sortJsonKeys,
   getJsonStats,
 } from "./logic";
+import { CopyButton } from '@/components/common/copy-button';
+import { ToolPage, ToolSection } from '@/components/tool-ui';
 
 export default function JsonFormatterPage() {
   const { t } = useTranslation();
@@ -41,7 +34,6 @@ export default function JsonFormatterPage() {
   const [output, setOutput] = useState("");
   const [indent, setIndent] = useState(2);
   const [operationError, setOperationError] = useState("");
-  const [copied, setCopied] = useState(false);
 
   // Compute validation on input change
   const validation = input.trim() ? validateJson(input) : { valid: false };
@@ -86,15 +78,6 @@ export default function JsonFormatterPage() {
     }
   };
 
-  const copyToClipboard = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error("Failed to copy:", err);
-    }
-  };
 
   const downloadAsFile = () => {
     const blob = new Blob([output], { type: "application/json" });
@@ -125,27 +108,20 @@ export default function JsonFormatterPage() {
   };
 
   return (
-    <div className="container mx-auto p-6 space-y-6 max-w-7xl">
-      {/* Header */}
-      <div className="space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight">
-          {t("tools.jsonFormatter.title")}
-        </h1>
-        <p className="text-muted-foreground">
-          {t("tools.jsonFormatter.description")}
-        </p>
-      </div>
-
+    <ToolPage
+      title={t("tools.jsonFormatter.title")}
+      description={t("tools.jsonFormatter.description")}
+    >
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Input Panel */}
-        <Card className="flex flex-col">
-          <CardHeader>
-            <div className="flex items-center justify-between">
+        <ToolSection
+          title={
+            <div className="flex items-center justify-between w-full">
               <div>
-                <CardTitle>{t("tools.jsonFormatter.inputLabel")}</CardTitle>
-                <CardDescription>
+                <span>{t("tools.jsonFormatter.inputLabel")}</span>
+                <p className="text-sm text-muted-foreground font-normal">
                   {t("tools.jsonFormatter.pasteJson")}
-                </CardDescription>
+                </p>
               </div>
               <div className="flex items-center gap-2">
                 {input && (
@@ -160,147 +136,131 @@ export default function JsonFormatterPage() {
                 </Button>
               </div>
             </div>
-          </CardHeader>
-          <CardContent className="flex-1 flex flex-col space-y-4">
-            <textarea
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder='{"key": "value"}'
-              className="flex-1 min-h-[400px] p-3 rounded-md border border-border bg-background text-foreground font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-ring"
-            />
+          }
+          contentClassName="flex-1 flex flex-col space-y-4"
+        >
+          <textarea
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder='{"key": "value"}'
+            className="flex-1 min-h-[400px] p-3 rounded-md border border-border bg-background text-foreground font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-ring"
+          />
 
-            {/* Error Display */}
-            {(validationError || operationError) && (
-              <div className="p-3 rounded-md bg-destructive/10 text-destructive text-sm font-mono">
-                {validationError || operationError}
-              </div>
-            )}
+          {/* Error Display */}
+          {(validationError || operationError) && (
+            <div className="p-3 rounded-md bg-destructive/10 text-destructive text-sm font-mono">
+              {validationError || operationError}
+            </div>
+          )}
 
-            {/* Stats */}
-            {stats && (
-              <div className="grid grid-cols-3 gap-2 text-xs">
-                <div className="p-2 rounded-md bg-muted text-center">
-                  <div className="font-semibold text-foreground">
-                    {stats.size}
-                  </div>
-                  <div className="text-muted-foreground">
-                    {t("tools.jsonFormatter.size")}
-                  </div>
+          {/* Stats */}
+          {stats && (
+            <div className="grid grid-cols-3 gap-2 text-xs">
+              <div className="p-2 rounded-md bg-muted text-center">
+                <div className="font-semibold text-foreground">
+                  {stats.size}
                 </div>
-                <div className="p-2 rounded-md bg-muted text-center">
-                  <div className="font-semibold text-foreground">
-                    {stats.keys}
-                  </div>
-                  <div className="text-muted-foreground">
-                    {t("tools.jsonFormatter.keys")}
-                  </div>
-                </div>
-                <div className="p-2 rounded-md bg-muted text-center">
-                  <div className="font-semibold text-foreground">
-                    {stats.depth}
-                  </div>
-                  <div className="text-muted-foreground">
-                    {t("tools.jsonFormatter.depth")}
-                  </div>
+                <div className="text-muted-foreground">
+                  {t("tools.jsonFormatter.size")}
                 </div>
               </div>
-            )}
-
-            {/* Actions */}
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <Label htmlFor="indent" className="text-sm">
-                  {t("tools.jsonFormatter.indent")}:
-                </Label>
-                <Select
-                  value={indent.toString()}
-                  onValueChange={(value) => setIndent(Number(value))}
-                >
-                  <SelectTrigger className="w-[180px] px-2 py-1 rounded-md border border-border bg-background text-sm">
-                    <SelectValue placeholder="Select indentation" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>{t("tools.jsonFormatter.jsonIndentPlaceholder")}</SelectLabel>
-                      <SelectItem value="2">
-                        2 {t("tools.jsonFormatter.spaces")}
-                      </SelectItem>
-                      <SelectItem value="4">
-                        4 {t("tools.jsonFormatter.spaces")}
-                      </SelectItem>
-                      <SelectItem value="1">
-                        1 {t("tools.jsonFormatter.spaces")}
-                      </SelectItem>
-                      <SelectItem value="0">
-                        {t("tools.jsonFormatter.tab")}
-                      </SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+              <div className="p-2 rounded-md bg-muted text-center">
+                <div className="font-semibold text-foreground">
+                  {stats.keys}
+                </div>
+                <div className="text-muted-foreground">
+                  {t("tools.jsonFormatter.keys")}
+                </div>
               </div>
-
-              <div className="grid grid-cols-3 gap-2">
-                <Button
-                  onClick={handleFormat}
-                  disabled={!isValid}
-                  className="bg-primary text-primary-foreground hover:bg-primary/90"
-                  size="sm"
-                >
-                  <Maximize2 className="w-3 h-3 mr-2" />
-                  {t("common.format")}
-                </Button>
-                <Button
-                  onClick={handleMinify}
-                  disabled={!isValid}
-                  variant="secondary"
-                  size="sm"
-                >
-                  <Minimize2 className="w-3 h-3 mr-2" />
-                  {t("tools.jsonFormatter.minify")}
-                </Button>
-                <Button
-                  onClick={handleSort}
-                  disabled={!isValid}
-                  variant="outline"
-                  size="sm"
-                >
-                  <ArrowUpDown className="w-3 h-3 mr-2" />
-                  {t("tools.jsonFormatter.sort")}
-                </Button>
+              <div className="p-2 rounded-md bg-muted text-center">
+                <div className="font-semibold text-foreground">
+                  {stats.depth}
+                </div>
+                <div className="text-muted-foreground">
+                  {t("tools.jsonFormatter.depth")}
+                </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          )}
+
+          {/* Actions */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <Label htmlFor="indent" className="text-sm">
+                {t("tools.jsonFormatter.indent")}:
+              </Label>
+              <Select
+                value={indent.toString()}
+                onValueChange={(value) => setIndent(Number(value))}
+              >
+                <SelectTrigger className="w-[180px] px-2 py-1 rounded-md border border-border bg-background text-sm">
+                  <SelectValue placeholder="Select indentation" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>{t("tools.jsonFormatter.jsonIndentPlaceholder")}</SelectLabel>
+                    <SelectItem value="2">
+                      2 {t("tools.jsonFormatter.spaces")}
+                    </SelectItem>
+                    <SelectItem value="4">
+                      4 {t("tools.jsonFormatter.spaces")}
+                    </SelectItem>
+                    <SelectItem value="1">
+                      1 {t("tools.jsonFormatter.spaces")}
+                    </SelectItem>
+                    <SelectItem value="0">
+                      {t("tools.jsonFormatter.tab")}
+                    </SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="grid grid-cols-3 gap-2">
+              <Button
+                onClick={handleFormat}
+                disabled={!isValid}
+                className="bg-primary text-primary-foreground hover:bg-primary/90"
+                size="sm"
+              >
+                <Maximize2 className="w-3 h-3 mr-2" />
+                {t("common.format")}
+              </Button>
+              <Button
+                onClick={handleMinify}
+                disabled={!isValid}
+                variant="secondary"
+                size="sm"
+              >
+                <Minimize2 className="w-3 h-3 mr-2" />
+                {t("tools.jsonFormatter.minify")}
+              </Button>
+              <Button
+                onClick={handleSort}
+                disabled={!isValid}
+                variant="outline"
+                size="sm"
+              >
+                <ArrowUpDown className="w-3 h-3 mr-2" />
+                {t("tools.jsonFormatter.sort")}
+              </Button>
+            </div>
+          </div>
+        </ToolSection>
 
         {/* Output Panel */}
-        <Card className="flex flex-col">
-          <CardHeader>
-            <div className="flex items-center justify-between">
+        <ToolSection
+          title={
+            <div className="flex items-center justify-between w-full">
               <div>
-                <CardTitle>{t("tools.jsonFormatter.outputLabel")}</CardTitle>
-                <CardDescription>
+                <span>{t("tools.jsonFormatter.outputLabel")}</span>
+                <p className="text-sm text-muted-foreground font-normal">
                   {t("tools.jsonFormatter.formattedResult")}
-                </CardDescription>
+                </p>
               </div>
               {output && (
                 <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => copyToClipboard(output)}
-                  >
-                    {copied ? (
-                      <>
-                        <Check className="w-3 h-3 mr-2" />
-                        {t("common.copied")}
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="w-3 h-3 mr-2" />
-                        {t("common.copy")}
-                      </>
-                    )}
-                  </Button>
+                  <CopyButton value={output} variant="outline" size="sm" />
                   <Button variant="outline" size="sm" onClick={downloadAsFile}>
                     <Download className="w-3 h-3 mr-2" />
                     {t("common.download")}
@@ -308,65 +268,62 @@ export default function JsonFormatterPage() {
                 </div>
               )}
             </div>
-          </CardHeader>
-          <CardContent className="flex-1">
-            {output ? (
-              <div className="h-[400px] p-3 rounded-md border border-border bg-muted overflow-auto scrollbar-thin">
-                <pre className="font-mono text-sm text-foreground whitespace-pre">
-                  {output}
-                </pre>
+          }
+          contentClassName="flex-1"
+        >
+          {output ? (
+            <div className="h-[400px] p-3 rounded-md border border-border bg-muted overflow-auto scrollbar-thin">
+              <pre className="font-mono text-sm text-foreground whitespace-pre">
+                {output}
+              </pre>
+            </div>
+          ) : (
+            <div className="h-[400px] flex items-center justify-center border border-dashed border-border rounded-md">
+              <div className="text-center space-y-2">
+                <p className="text-muted-foreground">
+                  {isValid
+                    ? t("tools.jsonFormatter.clickToProcess")
+                    : t("tools.jsonFormatter.enterValidJson")}
+                </p>
               </div>
-            ) : (
-              <div className="h-[400px] flex items-center justify-center border border-dashed border-border rounded-md">
-                <div className="text-center space-y-2">
-                  <p className="text-muted-foreground">
-                    {isValid
-                      ? t("tools.jsonFormatter.clickToProcess")
-                      : t("tools.jsonFormatter.enterValidJson")}
-                  </p>
-                </div>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+            </div>
+          )}
+        </ToolSection>
       </div>
 
-      {/* Info Card */}
-      <Card className="border-border bg-muted/50">
-        <CardHeader>
-          <CardTitle className="text-base">
-            {t("tools.jsonFormatter.featuresTitle")}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-            <div>
-              <h3 className="font-semibold text-foreground mb-2">
-                {t("common.format")}
-              </h3>
-              <p className="text-muted-foreground">
-                {t("tools.jsonFormatter.formatDesc")}
-              </p>
-            </div>
-            <div>
-              <h3 className="font-semibold text-foreground mb-2">
-                {t("tools.jsonFormatter.minify")}
-              </h3>
-              <p className="text-muted-foreground">
-                {t("tools.jsonFormatter.minifyDesc")}
-              </p>
-            </div>
-            <div>
-              <h3 className="font-semibold text-foreground mb-2">
-                {t("tools.jsonFormatter.sortKeys")}
-              </h3>
-              <p className="text-muted-foreground">
-                {t("tools.jsonFormatter.sortDesc")}
-              </p>
-            </div>
+      {/* Info Section */}
+      <ToolSection
+        title={t("tools.jsonFormatter.featuresTitle")}
+        className="border-border bg-muted/50"
+        contentClassName="text-sm"
+      >
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <h3 className="font-semibold text-foreground mb-2">
+              {t("common.format")}
+            </h3>
+            <p className="text-muted-foreground">
+              {t("tools.jsonFormatter.formatDesc")}
+            </p>
           </div>
-        </CardContent>
-      </Card>
-    </div>
+          <div>
+            <h3 className="font-semibold text-foreground mb-2">
+              {t("tools.jsonFormatter.minify")}
+            </h3>
+            <p className="text-muted-foreground">
+              {t("tools.jsonFormatter.minifyDesc")}
+            </p>
+          </div>
+          <div>
+            <h3 className="font-semibold text-foreground mb-2">
+              {t("tools.jsonFormatter.sortKeys")}
+            </h3>
+            <p className="text-muted-foreground">
+              {t("tools.jsonFormatter.sortDesc")}
+            </p>
+          </div>
+        </div>
+      </ToolSection>
+    </ToolPage>
   );
 }

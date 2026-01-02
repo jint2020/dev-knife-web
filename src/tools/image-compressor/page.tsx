@@ -2,7 +2,6 @@ import { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Upload, Download, ImageDown, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -13,6 +12,7 @@ import {
   type CompressionOptions,
   type CompressionResult,
 } from './logic';
+import { ToolPage, ToolSection } from '@/components/tool-ui';
 
 export default function ImageCompressorPage() {
   const { t } = useTranslation();
@@ -85,19 +85,10 @@ export default function ImageCompressorPage() {
   };
 
   return (
-    <div className="container mx-auto p-6 max-w-6xl">
-      <Card>
-        <CardHeader>
-          <div className="flex items-center gap-2">
-            <ImageDown className="h-6 w-6" />
-            <div>
-              <CardTitle>{t('tools.imageCompressor.title')}</CardTitle>
-              <CardDescription>{t('tools.imageCompressor.description')}</CardDescription>
-            </div>
-          </div>
-        </CardHeader>
-
-        <CardContent className="space-y-6">
+    <ToolPage
+      title={t('tools.imageCompressor.title')}
+      description={t('tools.imageCompressor.description')}
+    >
           {/* Upload Area */}
           <div
             onDragOver={handleDragOver}
@@ -120,73 +111,71 @@ export default function ImageCompressorPage() {
           </div>
 
           {/* Compression Options */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">{t('tools.imageCompressor.compressionOptions')}</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label>{t('tools.imageCompressor.maxSizeMB', { size: options.maxSizeMB })}</Label>
-                <input
-                  type="range"
-                  min="0.1"
-                  max="10"
-                  step="0.1"
-                  value={options.maxSizeMB}
-                  onChange={(e) => setOptions({ ...options, maxSizeMB: parseFloat(e.target.value) })}
-                  className="w-full"
-                />
-                <div className="flex justify-between text-xs text-muted-foreground">
-                  <span>0.1 MB</span>
-                  <span>10 MB</span>
-                </div>
+          <ToolSection
+            title={t('tools.imageCompressor.compressionOptions')}
+            contentClassName="space-y-4"
+          >
+            <div className="space-y-2">
+              <Label>{t('tools.imageCompressor.maxSizeMB', { size: options.maxSizeMB })}</Label>
+              <input
+                type="range"
+                min="0.1"
+                max="10"
+                step="0.1"
+                value={options.maxSizeMB}
+                onChange={(e) => setOptions({ ...options, maxSizeMB: parseFloat(e.target.value) })}
+                className="w-full"
+              />
+              <div className="flex justify-between text-xs text-muted-foreground">
+                <span>0.1 MB</span>
+                <span>10 MB</span>
               </div>
+            </div>
 
-              <div className="space-y-2">
-                <Label>{t('tools.imageCompressor.maxWidthHeight', { size: options.maxWidthOrHeight })}</Label>
-                <input
-                  type="range"
-                  min="640"
-                  max="4096"
-                  step="128"
-                  value={options.maxWidthOrHeight}
-                  onChange={(e) => setOptions({ ...options, maxWidthOrHeight: parseInt(e.target.value) })}
-                  className="w-full"
-                />
-                <div className="flex justify-between text-xs text-muted-foreground">
-                  <span>640px</span>
-                  <span>4096px</span>
-                </div>
+            <div className="space-y-2">
+              <Label>{t('tools.imageCompressor.maxWidthHeight', { size: options.maxWidthOrHeight })}</Label>
+              <input
+                type="range"
+                min="640"
+                max="4096"
+                step="128"
+                value={options.maxWidthOrHeight}
+                onChange={(e) => setOptions({ ...options, maxWidthOrHeight: parseInt(e.target.value) })}
+                className="w-full"
+              />
+              <div className="flex justify-between text-xs text-muted-foreground">
+                <span>640px</span>
+                <span>4096px</span>
               </div>
+            </div>
 
-              <div className="space-y-2">
-                <Label>{t('tools.imageCompressor.quality', { quality: Math.round(options.quality * 100) })}</Label>
-                <input
-                  type="range"
-                  min="0.1"
-                  max="1"
-                  step="0.05"
-                  value={options.quality}
-                  onChange={(e) => setOptions({ ...options, quality: parseFloat(e.target.value) })}
-                  className="w-full"
-                />
-                <div className="flex justify-between text-xs text-muted-foreground">
-                  <span>10%</span>
-                  <span>100%</span>
-                </div>
+            <div className="space-y-2">
+              <Label>{t('tools.imageCompressor.quality', { quality: Math.round(options.quality * 100) })}</Label>
+              <input
+                type="range"
+                min="0.1"
+                max="1"
+                step="0.05"
+                value={options.quality}
+                onChange={(e) => setOptions({ ...options, quality: parseFloat(e.target.value) })}
+                className="w-full"
+              />
+              <div className="flex justify-between text-xs text-muted-foreground">
+                <span>10%</span>
+                <span>100%</span>
               </div>
+            </div>
 
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={options.useWebWorker}
-                  onChange={(e) => setOptions({ ...options, useWebWorker: e.target.checked })}
-                  className="h-4 w-4"
-                />
-                <span className="text-sm">{t('tools.imageCompressor.useWebWorker')}</span>
-              </label>
-            </CardContent>
-          </Card>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={options.useWebWorker}
+                onChange={(e) => setOptions({ ...options, useWebWorker: e.target.checked })}
+                className="h-4 w-4"
+              />
+              <span className="text-sm">{t('tools.imageCompressor.useWebWorker')}</span>
+            </label>
+          </ToolSection>
 
           {/* Error Display */}
           {error && (
@@ -209,82 +198,81 @@ export default function ImageCompressorPage() {
           {result && !isCompressing && (
             <div className="space-y-4">
               {/* Stats */}
-              <Card className="border-2 border-green-500/20 bg-green-50/50 dark:bg-green-950/20">
-                <CardContent className="pt-6">
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-                    <div>
-                      <div className="text-sm text-muted-foreground mb-1">{t('tools.imageCompressor.originalSize')}</div>
-                      <div className="text-xl font-bold">{formatFileSize(result.originalSize)}</div>
-                    </div>
-                    <div>
-                      <div className="text-sm text-muted-foreground mb-1">{t('tools.imageCompressor.compressedSize')}</div>
-                      <div className="text-xl font-bold text-green-600">{formatFileSize(result.compressedSize)}</div>
-                    </div>
-                    <div>
-                      <div className="text-sm text-muted-foreground mb-1">{t('tools.imageCompressor.saved')}</div>
-                      <div className="text-xl font-bold text-green-600">
-                        {formatFileSize(result.originalSize - result.compressedSize)}
-                      </div>
-                    </div>
-                    <div>
-                      <div className="text-sm text-muted-foreground mb-1">{t('tools.imageCompressor.compression')}</div>
-                      <div className="text-xl font-bold text-green-600">
-                        {result.compressionRatio.toFixed(1)}%
-                      </div>
+              <ToolSection
+                className="border-2 border-green-500/20 bg-green-50/50 dark:bg-green-950/20"
+                contentClassName="pt-6"
+              >
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                  <div>
+                    <div className="text-sm text-muted-foreground mb-1">{t('tools.imageCompressor.originalSize')}</div>
+                    <div className="text-xl font-bold">{formatFileSize(result.originalSize)}</div>
+                  </div>
+                  <div>
+                    <div className="text-sm text-muted-foreground mb-1">{t('tools.imageCompressor.compressedSize')}</div>
+                    <div className="text-xl font-bold text-green-600">{formatFileSize(result.compressedSize)}</div>
+                  </div>
+                  <div>
+                    <div className="text-sm text-muted-foreground mb-1">{t('tools.imageCompressor.saved')}</div>
+                    <div className="text-xl font-bold text-green-600">
+                      {formatFileSize(result.originalSize - result.compressedSize)}
                     </div>
                   </div>
-                </CardContent>
-              </Card>
+                  <div>
+                    <div className="text-sm text-muted-foreground mb-1">{t('tools.imageCompressor.compression')}</div>
+                    <div className="text-xl font-bold text-green-600">
+                      {result.compressionRatio.toFixed(1)}%
+                    </div>
+                  </div>
+                </div>
+              </ToolSection>
 
               {/* Image Comparison */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Card>
-                  <CardHeader>
+                <ToolSection
+                  title={
                     <div className="flex items-center justify-between">
-                      <CardTitle className="text-lg">{t('tools.imageCompressor.original')}</CardTitle>
+                      <span>{t('tools.imageCompressor.original')}</span>
                       {originalDimensions && (
                         <Badge variant="outline">
                           {originalDimensions.width} × {originalDimensions.height}
                         </Badge>
                       )}
                     </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="aspect-video bg-muted rounded-md overflow-hidden flex items-center justify-center">
-                      <img
-                        src={result.originalUrl}
-                        alt="Original"
-                        className="max-w-full max-h-full object-contain"
-                      />
-                    </div>
-                    <div className="mt-2 text-sm text-muted-foreground text-center">
-                      {formatFileSize(result.originalSize)}
-                    </div>
-                  </CardContent>
-                </Card>
+                  }
+                >
+                  <div className="aspect-video bg-muted rounded-md overflow-hidden flex items-center justify-center">
+                    <img
+                      src={result.originalUrl}
+                      alt="Original"
+                      className="max-w-full max-h-full object-contain"
+                    />
+                  </div>
+                  <div className="mt-2 text-sm text-muted-foreground text-center">
+                    {formatFileSize(result.originalSize)}
+                  </div>
+                </ToolSection>
 
-                <Card>
-                  <CardHeader>
+                <ToolSection
+                  title={
                     <div className="flex items-center justify-between">
-                      <CardTitle className="text-lg">{t('tools.imageCompressor.compressed')}</CardTitle>
+                      <span>{t('tools.imageCompressor.compressed')}</span>
                       <Badge variant="default" className="bg-green-600">
                         -{result.compressionRatio.toFixed(0)}%
                       </Badge>
                     </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="aspect-video bg-muted rounded-md overflow-hidden flex items-center justify-center">
-                      <img
-                        src={result.compressedUrl}
-                        alt="Compressed"
-                        className="max-w-full max-h-full object-contain"
-                      />
-                    </div>
-                    <div className="mt-2 text-sm text-muted-foreground text-center">
-                      {formatFileSize(result.compressedSize)}
-                    </div>
-                  </CardContent>
-                </Card>
+                  }
+                >
+                  <div className="aspect-video bg-muted rounded-md overflow-hidden flex items-center justify-center">
+                    <img
+                      src={result.compressedUrl}
+                      alt="Compressed"
+                      className="max-w-full max-h-full object-contain"
+                    />
+                  </div>
+                  <div className="mt-2 text-sm text-muted-foreground text-center">
+                    {formatFileSize(result.compressedSize)}
+                  </div>
+                </ToolSection>
               </div>
 
               {/* Download Button */}
@@ -295,26 +283,25 @@ export default function ImageCompressorPage() {
             </div>
           )}
 
-          {/* Info Card */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-2">
+          {/* Info Section */}
+          <ToolSection
+            title={
+              <div className="flex items-center gap-2">
                 <Info className="h-5 w-5" />
                 {t('tools.imageCompressor.aboutCompression')}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="text-sm text-muted-foreground space-y-2">
-              <p>{t('tools.imageCompressor.compressionInfo')}</p>
-              <ul className="list-disc list-inside space-y-1">
-                <li>{t('tools.imageCompressor.qualityInfo')}</li>
-                <li>{t('tools.imageCompressor.maxSizeInfo')}</li>
-                <li>{t('tools.imageCompressor.maxDimensionsInfo')}</li>
-                <li><strong>{t('tools.imageCompressor.privacyNote')}</strong></li>
-              </ul>
-            </CardContent>
-          </Card>
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
+              </div>
+            }
+            className="border-border bg-muted/50"
+            contentClassName="text-sm text-muted-foreground space-y-2"
+          >
+            <p>{t('tools.imageCompressor.compressionInfo')}</p>
+            <ul className="list-disc list-inside space-y-1">
+              <li>{t('tools.imageCompressor.qualityInfo')}</li>
+              <li>{t('tools.imageCompressor.maxSizeInfo')}</li>
+              <li>{t('tools.imageCompressor.maxDimensionsInfo')}</li>
+              <li><strong>{t('tools.imageCompressor.privacyNote')}</strong></li>
+            </ul>
+          </ToolSection>
+        </ToolPage>
+      );
+    }

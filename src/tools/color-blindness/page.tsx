@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Upload, Download, Eye, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
   applyColorBlindnessFilter,
@@ -10,6 +10,7 @@ import {
   COLOR_BLINDNESS_FILTERS,
   type ColorBlindnessType,
 } from './logic';
+import { ToolPage, ToolSection } from '@/components/tool-ui';
 
 export default function ColorBlindnessPage() {
   const { t } = useTranslation();
@@ -85,19 +86,10 @@ export default function ColorBlindnessPage() {
   );
 
   return (
-    <div className="container mx-auto p-6 max-w-7xl">
-      <Card>
-        <CardHeader>
-          <div className="flex items-center gap-2">
-            <Eye className="h-6 w-6" />
-            <div>
-              <CardTitle>{t('tools.colorBlindness.title')}</CardTitle>
-              <CardDescription>{t('tools.colorBlindness.description')}</CardDescription>
-            </div>
-          </div>
-        </CardHeader>
-
-        <CardContent className="space-y-6">
+    <ToolPage
+      title={t('tools.colorBlindness.title')}
+      description={t('tools.colorBlindness.description')}
+    >
           {/* Upload Area */}
           <div
             onDragOver={handleDragOver}
@@ -138,58 +130,55 @@ export default function ColorBlindnessPage() {
           {originalUrl && !isProcessing && Object.keys(filteredImages).length > 0 && (
             <div className="space-y-4">
               {/* Filter Type Selector */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">{t('tools.colorBlindness.selectType')}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-                    {filterTypes.map((type) => {
-                      const info = COLOR_BLINDNESS_FILTERS[type];
-                      return (
-                        <Button
-                          key={type}
-                          variant={selectedType === type ? 'default' : 'outline'}
-                          onClick={() => setSelectedType(type)}
-                          className="h-auto flex-col items-start p-3"
-                        >
-                          <div className="font-semibold text-sm">{info.name}</div>
-                          <div className="text-xs text-left opacity-70">{info.prevalence}</div>
-                        </Button>
-                      );
-                    })}
-                  </div>
-                </CardContent>
-              </Card>
+              <ToolSection
+                title={t('tools.colorBlindness.selectType')}
+                contentClassName="space-y-4"
+              >
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                  {filterTypes.map((type) => {
+                    const info = COLOR_BLINDNESS_FILTERS[type];
+                    return (
+                      <Button
+                        key={type}
+                        variant={selectedType === type ? 'default' : 'outline'}
+                        onClick={() => setSelectedType(type)}
+                        className="h-auto flex-col items-start p-3"
+                      >
+                        <div className="font-semibold text-sm">{info.name}</div>
+                        <div className="text-xs text-left opacity-70">{info.prevalence}</div>
+                      </Button>
+                    );
+                  })}
+                </div>
+              </ToolSection>
 
               {/* Comparison View */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Original */}
-                <Card>
-                  <CardHeader>
+                <ToolSection
+                  title={
                     <div className="flex items-center justify-between">
-                      <CardTitle className="text-lg">{t('tools.colorBlindness.normalVision')}</CardTitle>
+                      <span>{t('tools.colorBlindness.normalVision')}</span>
                       <Badge variant="outline">{t('tools.colorBlindness.originalLabel')}</Badge>
                     </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="aspect-video bg-muted rounded-md overflow-hidden flex items-center justify-center">
-                      <img
-                        src={originalUrl}
-                        alt="Original"
-                        className="max-w-full max-h-full object-contain"
-                      />
-                    </div>
-                  </CardContent>
-                </Card>
+                  }
+                >
+                  <div className="aspect-video bg-muted rounded-md overflow-hidden flex items-center justify-center">
+                    <img
+                      src={originalUrl}
+                      alt="Original"
+                      className="max-w-full max-h-full object-contain"
+                    />
+                  </div>
+                </ToolSection>
 
                 {/* Filtered */}
-                <Card>
-                  <CardHeader>
+                <ToolSection
+                  title={
                     <div className="flex items-center justify-between">
-                      <CardTitle className="text-lg">
+                      <span>
                         {COLOR_BLINDNESS_FILTERS[selectedType].name}
-                      </CardTitle>
+                      </span>
                       <Button
                         size="sm"
                         variant="outline"
@@ -199,84 +188,81 @@ export default function ColorBlindnessPage() {
                         {t('common.download')}
                       </Button>
                     </div>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {COLOR_BLINDNESS_FILTERS[selectedType].description}
-                    </p>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="aspect-video bg-muted rounded-md overflow-hidden flex items-center justify-center">
-                      <img
-                        src={filteredImages[selectedType]}
-                        alt={COLOR_BLINDNESS_FILTERS[selectedType].name}
-                        className="max-w-full max-h-full object-contain"
-                      />
-                    </div>
-                  </CardContent>
-                </Card>
+                  }
+                  contentClassName="space-y-2"
+                >
+                  <div className="aspect-video bg-muted rounded-md overflow-hidden flex items-center justify-center">
+                    <img
+                      src={filteredImages[selectedType]}
+                      alt={COLOR_BLINDNESS_FILTERS[selectedType].name}
+                      className="max-w-full max-h-full object-contain"
+                    />
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    {COLOR_BLINDNESS_FILTERS[selectedType].description}
+                  </p>
+                </ToolSection>
               </div>
 
               {/* Grid View of All Types */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">{t('tools.colorBlindness.allTypes')}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    {filterTypes.map((type) => {
-                      const info = COLOR_BLINDNESS_FILTERS[type];
-                      return (
-                        <div
-                          key={type}
-                          className="cursor-pointer"
-                          onClick={() => setSelectedType(type)}
-                        >
-                          <div className="aspect-video bg-muted rounded-md overflow-hidden mb-2 border-2 border-transparent hover:border-primary transition-colors">
-                            <img
-                              src={filteredImages[type]}
-                              alt={info.name}
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-                          <div className="text-sm font-semibold">{info.name}</div>
-                          <div className="text-xs text-muted-foreground">{info.prevalence}</div>
+              <ToolSection
+                title={t('tools.colorBlindness.allTypes')}
+                contentClassName="space-y-4"
+              >
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {filterTypes.map((type) => {
+                    const info = COLOR_BLINDNESS_FILTERS[type];
+                    return (
+                      <div
+                        key={type}
+                        className="cursor-pointer"
+                        onClick={() => setSelectedType(type)}
+                      >
+                        <div className="aspect-video bg-muted rounded-md overflow-hidden mb-2 border-2 border-transparent hover:border-primary transition-colors">
+                          <img
+                            src={filteredImages[type]}
+                            alt={info.name}
+                            className="w-full h-full object-cover"
+                          />
                         </div>
-                      );
-                    })}
-                  </div>
-                </CardContent>
-              </Card>
+                        <div className="text-sm font-semibold">{info.name}</div>
+                        <div className="text-xs text-muted-foreground">{info.prevalence}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </ToolSection>
             </div>
           )}
 
-          {/* Info Card */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-2">
+          {/* Info Section */}
+          <ToolSection
+            title={
+              <div className="flex items-center gap-2">
                 <Info className="h-5 w-5" />
                 {t('tools.colorBlindness.aboutColorBlindness')}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3 text-sm">
-              <div>
-                <strong className="text-foreground">{t('tools.colorBlindness.redGreenTitle')}</strong>
-                <p className="text-muted-foreground">{t('tools.colorBlindness.redGreenDesc')}</p>
               </div>
-              <div>
-                <strong className="text-foreground">{t('tools.colorBlindness.blueYellowTitle')}</strong>
-                <p className="text-muted-foreground">{t('tools.colorBlindness.blueYellowDesc')}</p>
-              </div>
-              <div>
-                <strong className="text-foreground">{t('tools.colorBlindness.totalTitle')}</strong>
-                <p className="text-muted-foreground">{t('tools.colorBlindness.totalDesc')}</p>
-              </div>
-              <div>
-                <strong className="text-foreground">{t('tools.colorBlindness.whyMattersTitle')}</strong>
-                <p className="text-muted-foreground">{t('tools.colorBlindness.whyMattersDesc')}</p>
-              </div>
-            </CardContent>
-          </Card>
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
+            }
+            className="border-border bg-muted/50"
+            contentClassName="space-y-3 text-sm"
+          >
+            <div>
+              <strong className="text-foreground">{t('tools.colorBlindness.redGreenTitle')}</strong>
+              <p className="text-muted-foreground">{t('tools.colorBlindness.redGreenDesc')}</p>
+            </div>
+            <div>
+              <strong className="text-foreground">{t('tools.colorBlindness.blueYellowTitle')}</strong>
+              <p className="text-muted-foreground">{t('tools.colorBlindness.blueYellowDesc')}</p>
+            </div>
+            <div>
+              <strong className="text-foreground">{t('tools.colorBlindness.totalTitle')}</strong>
+              <p className="text-muted-foreground">{t('tools.colorBlindness.totalDesc')}</p>
+            </div>
+            <div>
+              <strong className="text-foreground">{t('tools.colorBlindness.whyMattersTitle')}</strong>
+              <p className="text-muted-foreground">{t('tools.colorBlindness.whyMattersDesc')}</p>
+            </div>
+          </ToolSection>
+        </ToolPage>
+      );
+    }

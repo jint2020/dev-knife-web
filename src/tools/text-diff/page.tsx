@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Copy, Check, FileText, ArrowLeftRight } from 'lucide-react';
+import { FileText, ArrowLeftRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -11,13 +10,14 @@ import {
   generateUnifiedDiff,
   type DiffMode,
 } from './logic';
+import { CopyButton } from '@/components/common/copy-button';
+import { ToolPage, ToolSection } from '@/components/tool-ui';
 
 export default function TextDiffPage() {
   const { t } = useTranslation();
   const [text1, setText1] = useState('');
   const [text2, setText2] = useState('');
   const [mode, setMode] = useState<DiffMode>('lines');
-  const [copied, setCopied] = useState(false);
 
   const diff = text1 || text2 ? compareText(text1, text2, mode) : [];
   const stats = diff.length > 0 ? getDiffStats(diff) : null;
@@ -29,30 +29,12 @@ export default function TextDiffPage() {
     setText2(temp);
   };
 
-  const copyToClipboard = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy:', err);
-    }
-  };
 
   return (
-    <div className="container mx-auto p-6 max-w-7xl">
-      <Card>
-        <CardHeader>
-          <div className="flex items-center gap-2">
-            <FileText className="h-6 w-6" />
-            <div>
-              <CardTitle>{t('tools.textDiff.title')}</CardTitle>
-              <CardDescription>{t('tools.textDiff.description')}</CardDescription>
-            </div>
-          </div>
-        </CardHeader>
-
-        <CardContent className="space-y-4">
+    <ToolPage
+      title={t('tools.textDiff.title')}
+      description={t('tools.textDiff.description')}
+    >
           {/* Mode Selection */}
           <div className="flex items-center gap-2">
             <Label>{t('tools.textDiff.compareBy')}</Label>
@@ -114,28 +96,29 @@ export default function TextDiffPage() {
 
           {/* Stats */}
           {stats && (
-            <Card className="border-2">
-              <CardContent className="pt-6">
-                <div className="grid grid-cols-4 gap-4 text-center">
-                  <div>
-                    <div className="text-2xl font-bold">{stats.total}</div>
-                    <div className="text-sm text-muted-foreground">Total {mode}</div>
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold text-green-600">{stats.added}</div>
-                    <div className="text-sm text-muted-foreground">{t('tools.textDiff.additions')}</div>
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold text-red-600">{stats.removed}</div>
-                    <div className="text-sm text-muted-foreground">{t('tools.textDiff.deletions')}</div>
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold text-muted-foreground">{stats.unchanged}</div>
-                    <div className="text-sm text-muted-foreground">{t('tools.textDiff.unchanged')}</div>
-                  </div>
+            <ToolSection
+              className="border-2"
+              contentClassName="pt-6"
+            >
+              <div className="grid grid-cols-4 gap-4 text-center">
+                <div>
+                  <div className="text-2xl font-bold">{stats.total}</div>
+                  <div className="text-sm text-muted-foreground">Total {mode}</div>
                 </div>
-              </CardContent>
-            </Card>
+                <div>
+                  <div className="text-2xl font-bold text-green-600">{stats.added}</div>
+                  <div className="text-sm text-muted-foreground">{t('tools.textDiff.additions')}</div>
+                </div>
+                <div>
+                  <div className="text-2xl font-bold text-red-600">{stats.removed}</div>
+                  <div className="text-sm text-muted-foreground">{t('tools.textDiff.deletions')}</div>
+                </div>
+                <div>
+                  <div className="text-2xl font-bold text-muted-foreground">{stats.unchanged}</div>
+                  <div className="text-sm text-muted-foreground">{t('tools.textDiff.unchanged')}</div>
+                </div>
+              </div>
+            </ToolSection>
           )}
 
           {/* Diff Display */}
@@ -178,24 +161,20 @@ export default function TextDiffPage() {
 
           {/* Unified Diff Format */}
           {unifiedDiff && diff.length > 0 && (
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label>{t('tools.textDiff.unifiedDiff')}</Label>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => copyToClipboard(unifiedDiff)}
-                >
-                  {copied ? <Check className="h-4 w-4 mr-2" /> : <Copy className="h-4 w-4 mr-2" />}
-                  {t('common.copy')}
-                </Button>
-              </div>
+            <ToolSection
+              title={
+                <div className="flex items-center justify-between w-full">
+                  <span>{t('tools.textDiff.unifiedDiff')}</span>
+                  <CopyButton value={unifiedDiff} variant="outline" size="sm" />
+                </div>
+              }
+            >
               <textarea
                 value={unifiedDiff}
                 readOnly
                 className="w-full min-h-[200px] p-3 rounded-md border border-border bg-muted text-foreground font-mono text-xs resize-none focus:outline-none"
               />
-            </div>
+            </ToolSection>
           )}
 
           {!text1 && !text2 && (
@@ -204,8 +183,6 @@ export default function TextDiffPage() {
               <p>{t('tools.textDiff.emptyState')}</p>
             </div>
           )}
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
+        </ToolPage>
+      );
+    }

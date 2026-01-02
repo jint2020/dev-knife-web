@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Copy, Check, RefreshCw, Key, Shield } from 'lucide-react';
+import { RefreshCw, Key, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -13,14 +12,15 @@ import {
   calculateStrength,
   type PasswordOptions,
 } from './logic';
+import { CopyButton } from '@/components/common/copy-button';
+import { ToolPage, ToolSection } from '@/components/tool-ui';
 
 export default function PasswordGeneratorPage() {
   const { t } = useTranslation();
   const [password, setPassword] = useState('');
   const [passwords, setPasswords] = useState<string[]>([]);
   const [passphrase, setPassphrase] = useState('');
-  const [copied, setCopied] = useState('');
-  
+
   const [options, setOptions] = useState<PasswordOptions>({
     length: 16,
     includeUppercase: true,
@@ -70,15 +70,6 @@ export default function PasswordGeneratorPage() {
     setPassphrase(newPassphrase);
   };
 
-  const copyToClipboard = async (text: string, id: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopied(id);
-      setTimeout(() => setCopied(''), 2000);
-    } catch (err) {
-      console.error('Failed to copy:', err);
-    }
-  };
 
   const getStrengthColor = (score: number) => {
     if (score >= 4) return 'bg-green-500';
@@ -89,20 +80,11 @@ export default function PasswordGeneratorPage() {
   };
 
   return (
-    <div className="container mx-auto p-6 max-w-4xl">
-      <Card>
-        <CardHeader>
-          <div className="flex items-center gap-2">
-            <Key className="h-6 w-6" />
-            <div>
-              <CardTitle>{t('tools.passwordGenerator.title')}</CardTitle>
-              <CardDescription>{t('tools.passwordGenerator.description')}</CardDescription>
-            </div>
-          </div>
-        </CardHeader>
-
-        <CardContent>
-          <Tabs defaultValue="single">
+    <ToolPage
+      title={t('tools.passwordGenerator.title')}
+      description={t('tools.passwordGenerator.description')}
+    >
+      <Tabs defaultValue="single">
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="single">{t('tools.passwordGenerator.singlePassword')}</TabsTrigger>
               <TabsTrigger value="multiple">{t('tools.passwordGenerator.multiplePasswords')}</TabsTrigger>
@@ -122,14 +104,13 @@ export default function PasswordGeneratorPage() {
                       readOnly
                       className="w-full h-12 pl-3 pr-12 rounded-md border border-border bg-background text-foreground font-mono text-lg focus:outline-none"
                     />
-                    <Button
-                      size="sm"
+                    <CopyButton
+                      value={password}
+                      mode="icon-only"
                       variant="ghost"
-                      onClick={() => copyToClipboard(password, 'single')}
+                      size="sm"
                       className="absolute right-1 top-1/2 -translate-y-1/2 h-9 w-9 p-0"
-                    >
-                      {copied === 'single' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                    </Button>
+                    />
                   </div>
                   <Button onClick={handleGenerate}>
                     <RefreshCw className="h-4 w-4 mr-2" />
@@ -140,38 +121,39 @@ export default function PasswordGeneratorPage() {
 
               {/* Strength Indicator */}
               {strength && (
-                <Card className="border-2">
-                  <CardContent className="pt-6 space-y-3">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Shield className="h-5 w-5" />
-                        <span className="font-semibold">{t('tools.passwordGenerator.passwordStrength')}:</span>
-                      </div>
-                      <Badge variant="outline" className={`${getStrengthColor(strength.score)} text-white`}>
-                        {strength.label}
-                      </Badge>
+                <ToolSection
+                  className="border-2"
+                  contentClassName="pt-6 space-y-3"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Shield className="h-5 w-5" />
+                      <span className="font-semibold">{t('tools.passwordGenerator.passwordStrength')}:</span>
                     </div>
-                    
-                    <div className="flex gap-1 h-2">
-                      {[0, 1, 2, 3, 4].map((i) => (
-                        <div
-                          key={i}
-                          className={`flex-1 rounded-full ${
-                            i < strength.score ? getStrengthColor(strength.score) : 'bg-muted'
-                          }`}
-                        />
-                      ))}
-                    </div>
+                    <Badge variant="outline" className={`${getStrengthColor(strength.score)} text-white`}>
+                      {strength.label}
+                    </Badge>
+                  </div>
 
-                    {strength.feedback.length > 0 && (
-                      <ul className="text-sm text-muted-foreground space-y-1">
-                        {strength.feedback.map((tip, i) => (
-                          <li key={i}>• {tip}</li>
-                        ))}
-                      </ul>
-                    )}
-                  </CardContent>
-                </Card>
+                  <div className="flex gap-1 h-2">
+                    {[0, 1, 2, 3, 4].map((i) => (
+                      <div
+                        key={i}
+                        className={`flex-1 rounded-full ${
+                          i < strength.score ? getStrengthColor(strength.score) : 'bg-muted'
+                        }`}
+                      />
+                    ))}
+                  </div>
+
+                  {strength.feedback.length > 0 && (
+                    <ul className="text-sm text-muted-foreground space-y-1">
+                      {strength.feedback.map((tip, i) => (
+                        <li key={i}>• {tip}</li>
+                      ))}
+                    </ul>
+                  )}
+                </ToolSection>
               )}
 
               {/* Options */}
@@ -277,17 +259,12 @@ export default function PasswordGeneratorPage() {
                     {passwords.map((pwd, index) => (
                       <div key={index} className="flex items-center gap-2 p-2 rounded-md bg-muted font-mono text-sm">
                         <span className="flex-1 break-all">{pwd}</span>
-                        <Button
-                          size="sm"
+                        <CopyButton
+                          value={pwd}
+                          mode="icon-only"
                           variant="ghost"
-                          onClick={() => copyToClipboard(pwd, `pwd-${index}`)}
-                        >
-                          {copied === `pwd-${index}` ? (
-                            <Check className="h-4 w-4" />
-                          ) : (
-                            <Copy className="h-4 w-4" />
-                          )}
-                        </Button>
+                          size="sm"
+                        />
                       </div>
                     ))}
                   </div>
@@ -365,15 +342,14 @@ export default function PasswordGeneratorPage() {
                       placeholder={t('tools.passwordGenerator.passphraseplaceholder')}
                       className="w-full h-12 pl-3 pr-12 rounded-md border border-border bg-background text-foreground font-mono text-lg focus:outline-none"
                     />
-                    <Button
-                      size="sm"
+                    <CopyButton
+                      value={passphrase}
+                      mode="icon-only"
                       variant="ghost"
-                      onClick={() => copyToClipboard(passphrase, 'passphrase')}
+                      size="sm"
                       disabled={!passphrase}
                       className="absolute right-1 top-1/2 -translate-y-1/2 h-9 w-9 p-0"
-                    >
-                      {copied === 'passphrase' ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                    </Button>
+                    />
                   </div>
                   <Button onClick={handleGeneratePassphrase}>
                     <RefreshCw className="h-4 w-4 mr-2" />
@@ -416,16 +392,17 @@ export default function PasswordGeneratorPage() {
                 </div>
               </div>
 
-              <div className="p-3 rounded-md bg-muted text-sm">
+              <ToolSection
+                className="border-border bg-muted/50"
+                contentClassName="text-sm"
+              >
                 <p className="font-semibold mb-1">{t('tools.passwordGenerator.aboutPassphrases')}:</p>
                 <p className="text-muted-foreground">
                   {t('tools.passwordGenerator.passphraseInfo')}
                 </p>
-              </div>
+              </ToolSection>
             </TabsContent>
           </Tabs>
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
+        </ToolPage>
+      );
+    }
