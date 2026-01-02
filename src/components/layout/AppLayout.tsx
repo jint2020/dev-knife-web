@@ -33,6 +33,10 @@ export function AppLayout() {
   useEffect(() => {
     if (!isResizing) return;
 
+    // Add global styles during resize
+    document.body.style.userSelect = 'none';
+    document.body.style.cursor = 'col-resize';
+
     const handleMouseMove = (e: MouseEvent) => {
       if (sidebarRef.current) {
         const containerRect = sidebarRef.current.parentElement?.getBoundingClientRect();
@@ -45,6 +49,9 @@ export function AppLayout() {
 
     const handleMouseUp = () => {
       setIsResizing(false);
+      // Remove global styles
+      document.body.style.userSelect = '';
+      document.body.style.cursor = '';
     };
 
     document.addEventListener('mousemove', handleMouseMove);
@@ -53,6 +60,11 @@ export function AppLayout() {
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
+      // Ensure styles are reset if component unmounts during resize
+      if (isResizing) {
+        document.body.style.userSelect = '';
+        document.body.style.cursor = '';
+      }
     };
   }, [isResizing, setSidebarWidth]);
 
@@ -74,10 +86,10 @@ export function AppLayout() {
         <aside
           ref={sidebarRef}
           className={`flex-shrink-0 hidden lg:block transition-all duration-300 ease-in-out ${
-            isSidebarCollapsed ? 'w-16' : 'w-[--sidebar-width]'
+            isSidebarCollapsed ? 'w-16' : ''
           }`}
           style={{
-            '--sidebar-width': isSidebarCollapsed ? undefined : `${sidebarWidth}px`,
+            width: isSidebarCollapsed ? undefined : `${sidebarWidth}px`,
           } as React.CSSProperties}
         >
           <Sidebar />
@@ -87,10 +99,19 @@ export function AppLayout() {
         {!isSidebarCollapsed && (
           <div
             ref={resizeHandleRef}
-            className="hidden lg:block w-1 bg-border cursor-col-resize hover:bg-primary/20 transition-colors -ml-px z-10"
+            className="hidden lg:block w-3 bg-transparent hover:bg-primary/30 cursor-col-resize transition-colors -ml-1.5 z-10 relative group"
             onMouseDown={() => setIsResizing(true)}
             style={{ height: 'calc(100vh - 3.5rem)' }} // Account for header height (h-14 = 3.5rem)
-          />
+          >
+            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-3 h-full rounded-full bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <div className="w-1 h-full bg-primary rounded-full flex flex-col justify-center">
+                <div className="w-1 h-0.5 bg-primary mx-auto mb-0.5 rounded-full"></div>
+                <div className="w-1 h-0.5 bg-primary mx-auto mb-0.5 rounded-full"></div>
+                <div className="w-1 h-0.5 bg-primary mx-auto mb-0.5 rounded-full"></div>
+                <div className="w-1 h-0.5 bg-primary mx-auto rounded-full"></div>
+              </div>
+            </div>
+          </div>
         )}
 
         {/* Main Content - Right Panel */}
