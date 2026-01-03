@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-DevKnife Web is an offline-first, modular developer toolbox built with React 18, TypeScript, and Vite. All tools run entirely in the browser with no data leaving the device. The application features a multi-tab interface with Keep-Alive state preservation and is PWA-ready for desktop/mobile installation.
+DevKnife Web is an offline-first, modular developer toolbox built with **React 19**, TypeScript, and Vite. All tools run entirely in the browser with no data leaving the device. The application features a multi-tab interface with Keep-Alive state preservation and is PWA-ready for desktop/mobile installation.
 
 ## Development Commands
 
@@ -24,9 +24,9 @@ pnpm run lint         # Run ESLint on entire codebase
 
 ### Multi-Tab Layout with Keep-Alive
 
-The application uses a unique multi-tab architecture ([App.tsx:1-111](src/App.tsx#L1-L111)):
+The application uses a unique multi-tab architecture ([App.tsx:1-49](src/App.tsx#L1-L49)):
 
-- **Sidebar** (left): Logo + Navigation (fixed width: `w-64`)
+- **Sidebar** (left): Logo + Navigation (resizable width, default `w-64`)
 - **Main Area** (right): Header (`h-14`) + TabBar (`h-10`) + Content Area (flexible)
 - **Keep-Alive Strategy**: ALL opened tabs render simultaneously but only the active tab is visible (`display: block` vs `display: none`). This preserves component state (form inputs, scroll position, etc.) across tab switches
 - **Trade-off**: Memory usage scales with open tabs, which is acceptable for developer tool applications
@@ -35,7 +35,7 @@ Height alignment: Sidebar Logo (h-24 = 96px) = Header (h-14 = 56px) + TabBar (h-
 
 ### Tool Registry System
 
-Tools are registered centrally in [src/tools/registry.ts](src/tools/registry.ts) using a singleton `ToolRegistry` class ([src/types/tool.ts:52-101](src/types/tool.ts#L52-L101)):
+Tools are registered centrally in [src/tools/registry.ts](src/tools/registry.ts) using a singleton `ToolRegistry` class:
 
 - **Lazy Loading**: Tool components are lazy-loaded using dynamic imports with `@vite-ignore` comment
 - **Registry Methods**: `register()`, `getAll()`, `getById()`, `getByCategory()`, `search()`
@@ -43,11 +43,22 @@ Tools are registered centrally in [src/tools/registry.ts](src/tools/registry.ts)
 
 ### State Management
 
-**Zustand** store at [src/hooks/useAppStore.ts](src/hooks/useAppStore.ts):
-- **Theme**: `light`/`dark` with persistence (synced to `localStorage`)
-- **Tabs**: Array of opened tools with `activeTabId` tracking
+**Zustand** store at [src/store/index.ts](src/store/index.ts) using slice pattern:
+
+- **Theme** (`themeSlice`): `light`/`dark` with persistence (synced to `localStorage`)
+- **Sidebar** (`sidebarSlice`): Collapsed state, expanded categories, resizable width (`minSidebarWidth`, `maxSidebarWidth`)
+- **Tabs** (`tabSlice`): Array of opened tools with `activeTabId` tracking
+- **Tool** (`toolSlice`): Tool-specific state preservation via `toolStates` record
 - **Tab Operations**: `openTool()`, `closeTool()`, `closeAllTabs()`, `setActiveTab()`
-- **Persistence Strategy**: Only theme persists across sessions; tabs intentionally reset on page reload
+- **Storage Quota Management**: Custom storage wrapper handles `QuotaExceededError` by clearing tool states while preserving theme/UI preferences
+- **Persistence Strategy**: Theme, sidebar state, and tool states persist; tabs intentionally NOT persisted (contain non-serializable icon components)
+
+Slice files located in [src/store/slices/](src/store/slices/):
+
+- `themeSlice.ts` - Theme management
+- `sidebarSlice.ts` - Sidebar state and width
+- `tabSlice.ts` - Tab management
+- `toolSlice.ts` - Tool state persistence
 
 ### Theming with Tweakcn
 

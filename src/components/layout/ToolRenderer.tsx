@@ -15,7 +15,7 @@
  */
 
 import { Suspense, type ComponentType } from 'react';
-import { toolRegistry } from '@/tools/registry';
+import { useToolById } from '@/hooks/useToolById';
 import { cn } from '@/lib/utils';
 import { ErrorBoundary } from '@/components/common/error-boundary';
 import { ErrorState } from '@/components/ui/error-state';
@@ -26,8 +26,8 @@ interface ToolRendererProps {
 }
 
 export function ToolRenderer({ toolId, isActive }: ToolRendererProps) {
-  // Get tool component from registry
-  const tool = toolRegistry.getAll().find((t) => t.id === toolId);
+  // Get tool from service via hook
+  const tool = useToolById(toolId);
 
   if (!tool) {
     return (

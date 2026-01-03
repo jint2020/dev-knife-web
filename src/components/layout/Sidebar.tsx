@@ -21,7 +21,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { toolRegistry } from "@/tools/registry";
+import { useToolDiscovery } from '@/hooks/useToolDiscovery';
 import {
   ChevronDown,
   PanelLeftClose,
@@ -168,8 +168,7 @@ function ExpandedCategoryMenu({
 
 export function Sidebar() {
   const { t } = useTranslation();
-  const tools = toolRegistry.getAll();
-  const categories = Array.from(new Set(tools.map((t) => t.category)));
+  const { tools, categories, getToolsByCategory } = useToolDiscovery();
 
   // Store state
   const activeTabId = useAppStore((state) => state.activeTabId);
@@ -205,7 +204,7 @@ export function Sidebar() {
               // Collapsed mode: icon-only with tooltip submenus
               <div className="flex flex-col items-center space-y-2">
                 {categories.map((category) => {
-                  const categoryTools = toolRegistry.getByCategory(category);
+                  const categoryTools = getToolsByCategory(category);
                   if (categoryTools.length === 0) return null;
 
                   return (
@@ -223,7 +222,7 @@ export function Sidebar() {
               // Expanded mode: collapsible category groups
               <div className="space-y-2">
                 {categories.map((category) => {
-                  const categoryTools = toolRegistry.getByCategory(category);
+                  const categoryTools = getToolsByCategory(category);
                   if (categoryTools.length === 0) return null;
 
                   return (

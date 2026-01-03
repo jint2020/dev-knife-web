@@ -21,10 +21,15 @@ import { TooltipProvider } from './components/ui/tooltip';
 import { AppRouter } from './router';
 import { registerTools } from './tools/registry';
 import { useAppStore } from './store';
+import { ToolServiceProvider } from './services/tool/ToolServiceContext';
+import { RegistryToolDiscoveryService } from './services/tool/RegistryToolDiscoveryService';
 import './styles/globals.css';
 
 // Register all tools on app initialization
 registerTools();
+
+// Create service instance
+const toolDiscoveryService = new RegistryToolDiscoveryService();
 
 function App() {
   const theme = useAppStore((state) => state.theme);
@@ -38,7 +43,9 @@ function App() {
 
   return (
     <TooltipProvider>
-      <AppRouter />
+      <ToolServiceProvider service={toolDiscoveryService}>
+        <AppRouter />
+      </ToolServiceProvider>
     </TooltipProvider>
   );
 }

@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { Search } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+import { useState } from "react";
+import { Search } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import {
   CommandDialog,
   CommandEmpty,
@@ -8,31 +8,32 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from '@/components/ui/command';
-import { Button } from '@/components/ui/button';
-import { toolRegistry } from '@/tools/registry';
-import { useEffect } from 'react';
-import { useAppStore } from '@/store';
+} from "@/components/ui/command";
+import { Button } from "@/components/ui/button";
+import { useToolDiscovery } from "@/hooks/useToolDiscovery";
+import { useEffect } from "react";
+import { useAppStore } from "@/store";
 
 export function CommandPalette() {
   const [open, setOpen] = useState(false);
   const openTool = useAppStore((state) => state.openTool);
   const { t } = useTranslation();
+  const { categories, getToolsByCategory, getToolById } = useToolDiscovery();
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
-      if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
+      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
         setOpen((open) => !open);
       }
     };
 
-    document.addEventListener('keydown', down);
-    return () => document.removeEventListener('keydown', down);
+    document.addEventListener("keydown", down);
+    return () => document.removeEventListener("keydown", down);
   }, []);
 
   const handleSelect = (toolId: string) => {
-    const tool = toolRegistry.getAll().find((t) => t.id === toolId);
+    const tool = getToolById(toolId);
     if (tool) {
       openTool({
         id: tool.id,
@@ -45,9 +46,6 @@ export function CommandPalette() {
     }
   };
 
-  const tools = toolRegistry.getAll();
-  const categories = Array.from(new Set(tools.map((t) => t.category)));
-
   return (
     <>
       <Button
@@ -56,19 +54,19 @@ export function CommandPalette() {
         onClick={() => setOpen(true)}
       >
         <Search className="mr-2 h-4 w-4" />
-        <span className="hidden lg:inline-flex">{t('nav.search')}</span>
-        <span className="inline-flex lg:hidden">{t('nav.search')}</span>
+        <span className="hidden lg:inline-flex">{t("nav.search")}</span>
+        <span className="inline-flex lg:hidden">{t("nav.search")}</span>
         <kbd className="pointer-events-none absolute right-1.5 top-1.5 hidden h-6 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
           <span className="text-xs">⌘</span>K
         </kbd>
       </Button>
 
       <CommandDialog open={open} onOpenChange={setOpen}>
-        <CommandInput placeholder={t('nav.searchPlaceholder')} />
+        <CommandInput placeholder={t("nav.searchPlaceholder")} />
         <CommandList>
-          <CommandEmpty>{t('nav.noResults')}</CommandEmpty>
+          <CommandEmpty>{t("nav.noResults")}</CommandEmpty>
           {categories.map((category) => {
-            const categoryTools = toolRegistry.getByCategory(category);
+            const categoryTools = getToolsByCategory(category);
             if (categoryTools.length === 0) return null;
 
             return (
