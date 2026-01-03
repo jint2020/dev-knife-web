@@ -1,3 +1,11 @@
+/*
+ * @Author: jint jintang23@outlook.com
+ * @Date: 2026-01-03 18:34:45
+ * @LastEditors: jint jintang23@outlook.com
+ * @LastEditTime: 2026-01-03 18:40:48
+ * @FilePath: \dev-knife-web\src\components\layout\Header.tsx
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 /**
  * Header Component (Top Header)
  * 
@@ -14,7 +22,7 @@ import { useTranslation } from 'react-i18next';
 import { Logo } from './Logo';
 import { CommandPalette } from './CommandPalette';
 import { ThemeToggle } from './ThemeToggle';
-import { LanguageSwitcher } from './LanguageSwitcher';
+import { SettingsDialog } from './SettingsDialog';
 import { Button } from '@/components/ui/button';
 
 export function Header() {
@@ -29,16 +37,13 @@ export function Header() {
           <Logo />
         </div>
 
-        {/* Search - Center/Left */}
-        <div className="flex-shrink-0">
-          <CommandPalette />
-        </div>
-
         {/* Spacer to push actions to the right */}
         <div className="flex-1" />
 
         {/* Actions - Right Side */}
         <div className="flex items-center gap-2">
+          <CommandPalette />
+          <SettingsDialog />
           <Button
             variant="ghost"
             size="icon"
@@ -53,7 +58,6 @@ export function Header() {
               <Github className="h-5 w-5" />
             </a>
           </Button>
-          <LanguageSwitcher />
           <ThemeToggle />
         </div>
       </div>

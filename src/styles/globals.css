@@ -187,6 +187,36 @@
 }
 
 /* ============================================
+ * COLOR WEAK MODE
+ * ============================================
+ * Enhances visibility for users with color vision deficiencies
+ * Applied via .color-weak class on <html> element
+ */
+@layer base {
+  .color-weak {
+    /* Increase overall contrast and saturation */
+    filter: contrast(1.1) saturate(1.15);
+  }
+
+  /* Dark mode adjustments for color weak mode */
+  .dark.color-weak {
+    /* Higher contrast in dark mode for better visibility */
+    filter: contrast(1.15) saturate(1.2);
+  }
+
+  /* Ensure text readability with subtle text shadow */
+  .color-weak body,
+  .color-weak * {
+    text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);
+  }
+
+  .dark.color-weak body,
+  .dark.color-weak * {
+    text-shadow: 0 0 1px rgba(255, 255, 255, 0.15);
+  }
+}
+
+/* ============================================
  * CUSTOM UTILITIES
  * ============================================
  * Add any custom utility classes here

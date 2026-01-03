@@ -1,3 +1,11 @@
+/*
+ * @Author: jint jintang23@outlook.com
+ * @Date: 2026-01-01 18:56:20
+ * @LastEditors: jint jintang23@outlook.com
+ * @LastEditTime: 2026-01-03 18:40:17
+ * @FilePath: \dev-knife-web\src\components\layout\LanguageSwitcher.tsx
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 /**
  * Language Switcher Component
  * 

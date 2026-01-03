@@ -5,6 +5,7 @@ import { createThemeSlice } from './slices/themeSlice';
 import { createSidebarSlice } from './slices/sidebarSlice';
 import { createTabSlice } from './slices/tabSlice';
 import { createToolSlice } from './slices/toolSlice';
+import { createAccessibilitySlice } from './slices/accessibilitySlice';
 
 /**
  * Size-aware storage wrapper that handles QuotaExceededError
@@ -44,6 +45,7 @@ const createSizeAwareStorage = () => {
                   isSidebarCollapsed: parsed.state?.isSidebarCollapsed,
                   expandedCategories: parsed.state?.expandedCategories,
                   sidebarWidth: parsed.state?.sidebarWidth,
+                  colorWeakMode: parsed.state?.colorWeakMode ?? false,
                   toolStates: {}, // Clear all tool states to free space
                 },
                 version: parsed.version,
@@ -77,6 +79,7 @@ export const useAppStore = create<AppState>()(
       ...createSidebarSlice(...a),
       ...createTabSlice(...a),
       ...createToolSlice(...a),
+      ...createAccessibilitySlice(...a),
     }),
     {
       name: 'devknife-storage',
@@ -86,6 +89,7 @@ export const useAppStore = create<AppState>()(
         isSidebarCollapsed: state.isSidebarCollapsed,
         expandedCategories: state.expandedCategories,
         sidebarWidth: state.sidebarWidth,
+        colorWeakMode: state.colorWeakMode,
         // Don't persist tabs - they contain non-serializable icon components
         // tabs: state.tabs,
         // activeTabId: state.activeTabId,

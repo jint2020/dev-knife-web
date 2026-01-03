@@ -21,6 +21,7 @@ import { TooltipProvider } from './components/ui/tooltip';
 import { AppRouter } from './router';
 import { registerTools } from './tools/registry';
 import { useAppStore } from './store';
+import { useColorWeakMode } from './hooks/useColorWeakMode';
 import { ToolServiceProvider } from './services/tool/ToolServiceContext';
 import { RegistryToolDiscoveryService } from './services/tool/RegistryToolDiscoveryService';
 import './styles/globals.css';
@@ -40,6 +41,9 @@ function App() {
     root.classList.remove('light', 'dark');
     root.classList.add(theme);
   }, [theme]);
+
+  // Initialize color weak mode
+  useColorWeakMode();
 
   return (
     <TooltipProvider>

@@ -45,5 +45,11 @@ export interface ToolSlice {
   clearToolState: (toolId: string) => void;
 }
 
-export type AppState = ThemeSlice & SidebarSlice & TabSlice & ToolSlice;
+export interface AccessibilitySlice {
+  colorWeakMode: boolean;
+  setColorWeakMode: (enabled: boolean) => void;
+  toggleColorWeakMode: () => void;
+}
+
+export type AppState = ThemeSlice & SidebarSlice & TabSlice & ToolSlice & AccessibilitySlice;
 export type AppSlice<T> = StateCreator<AppState, [['zustand/persist', unknown]], [], T>;
