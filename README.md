@@ -31,16 +31,16 @@
 
 ### Prerequisites
 
-- Node.js 18+ and npm
+- Node.js 18+ and pnpm
 
 ### Installation
 
 ```bash
 # Install dependencies
-npm install
+pnpm install
 
 # Start development server
-npm run dev
+pnpm run dev
 ```
 
 Visit `http://localhost:5173` to see the app.
@@ -48,8 +48,8 @@ Visit `http://localhost:5173` to see the app.
 ### Build for Production
 
 ```bash
-npm run build
-npm run preview
+pnpm run build
+pnpm run preview
 ```
 
 ## 🎨 Customizing with Tweakcn

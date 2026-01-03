@@ -10,14 +10,14 @@ DevKnife Web is an offline-first, modular developer toolbox built with React 18,
 
 ```bash
 # Development
-npm run dev          # Start Vite dev server at http://localhost:5173
+pnpm run dev          # Start Vite dev server at http://localhost:5173
 
 # Build & Preview
-npm run build        # TypeScript compilation + Vite production build
-npm run preview      # Preview production build locally
+pnpm run build        # TypeScript compilation + Vite production build
+pnpm run preview      # Preview production build locally
 
 # Code Quality
-npm run lint         # Run ESLint on entire codebase
+pnpm run lint         # Run ESLint on entire codebase
 ```
 
 ## Architecture Overview
