@@ -17,6 +17,10 @@ export interface CopyButtonProps {
    * Button size
    */
   size?: ButtonProps['size'];
+  /*
+  disabled
+   */
+  disabled?: boolean;
   /**
    * Additional CSS classes
    */
@@ -55,6 +59,7 @@ export function CopyButton({
   value,
   variant = 'outline',
   size = 'sm',
+  disabled = false,
   className,
   mode = 'with-label',
   successDuration = 2000,
@@ -85,6 +90,7 @@ export function CopyButton({
       <Button
         variant={variant}
         size={size}
+        disabled={disabled}
         onClick={handleCopy}
         className={className}
         title={copied ? t('common.copied') : t('common.copy')}
