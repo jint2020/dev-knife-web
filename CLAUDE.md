@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 DevKnife Web is an offline-first, modular developer toolbox built with **React 19**, TypeScript, and Vite. All tools run entirely in the browser with no data leaving the device. The application features a multi-tab interface with Keep-Alive state preservation and is PWA-ready for desktop/mobile installation.
 
+> **Note**: README.md incorrectly states React 18 - this codebase uses React 19.
+
 ## Development Commands
 
 ```bash
@@ -49,6 +51,7 @@ Tools are registered centrally in [src/tools/registry.ts](src/tools/registry.ts)
 - **Sidebar** (`sidebarSlice`): Collapsed state, expanded categories, resizable width (`minSidebarWidth`, `maxSidebarWidth`)
 - **Tabs** (`tabSlice`): Array of opened tools with `activeTabId` tracking
 - **Tool** (`toolSlice`): Tool-specific state preservation via `toolStates` record
+- **Accessibility** (`accessibilitySlice`): Color weak mode support
 - **Tab Operations**: `openTool()`, `closeTool()`, `closeAllTabs()`, `setActiveTab()`
 - **Storage Quota Management**: Custom storage wrapper handles `QuotaExceededError` by clearing tool states while preserving theme/UI preferences
 - **Persistence Strategy**: Theme, sidebar state, and tool states persist; tabs intentionally NOT persisted (contain non-serializable icon components)
@@ -59,14 +62,27 @@ Slice files located in [src/store/slices/](src/store/slices/):
 - `sidebarSlice.ts` - Sidebar state and width
 - `tabSlice.ts` - Tab management
 - `toolSlice.ts` - Tool state persistence
+- `accessibilitySlice.ts` - Accessibility features (color weak mode)
 
 ### Theming with Tweakcn
 
 The app uses CSS variables compatible with [Tweakcn](https://tweakcn.com/) for theme customization:
+
 - **Location**: [src/styles/globals.css](src/styles/globals.css)
 - **Structure**: `:root` for light mode, `.dark` for dark mode
 - **Integration**: Paste Tweakcn exports directly into marked sections
 - **Theme Application**: Tailwind references these via `hsl(var(--background))` pattern
+
+### Service Layer Pattern
+
+The app uses a service layer pattern for tool discovery to enable dependency injection and testing:
+
+- **Interface**: [IToolDiscoveryService](src/services/tool/IToolDiscoveryService.ts) - Defines the contract for tool data access
+- **Implementation**: [RegistryToolDiscoveryService](src/services/tool/RegistryToolDiscoveryService.ts) - Wraps the ToolRegistry
+- **Context**: [ToolServiceContext](src/services/tool/ToolServiceContext.tsx) - React context for dependency injection
+- **Usage**: Components use `useToolService()` hook to access tool data
+
+This pattern allows swapping implementations (e.g., for testing or plugins) without modifying components.
 
 ## Adding a New Tool
 
@@ -84,7 +100,7 @@ Each tool follows a three-file structure in `src/tools/<tool-name>/`:
      description: 'Brief desc',  // Shown in sidebar/search (fallback)
      icon: IconName,             // Lucide icon component
      path: '/tools/my-tool',     // URL path
-     category: 'generators',     // For filtering (crypto|converters|formatters|generators|image|text)
+     category: 'generators',     // For filtering (ai|crypto|converters|formatters|generators|image|text)
      keywords: ['keyword1'],     // For search
    };
    ```
@@ -132,8 +148,6 @@ Each tool follows a three-file structure in `src/tools/<tool-name>/`:
    - `<ToolSection>`: Content sections (replaces Card)
    - `<CopyButton>`: Copy-to-clipboard with automatic feedback
 
-   See [REFACTORING_GUIDE.md](REFACTORING_GUIDE.md) for detailed usage patterns.
-
 4. **Register in [src/tools/registry.ts](src/tools/registry.ts)**:
    ```typescript
    import { myToolMeta } from './my-tool/meta';
@@ -149,15 +163,32 @@ The tool automatically appears in sidebar and search without additional routing 
 ## Important Patterns
 
 ### Path Aliasing
+
 - Use `@/` prefix for imports: `import { Button } from '@/components/ui/button'`
 - Configured in [vite.config.ts:55-57](vite.config.ts#L55-L57)
 
 ### UI Components
+
 - Built with **Shadcn UI** (Radix UI primitives + Tailwind)
 - Components located in `src/components/ui/`
 - Use existing components for consistency
 
+### Service Layer Usage
+
+When components need to access tool data (e.g., for search, sidebar navigation):
+
+```typescript
+import { useToolService } from '@/services/tool/ToolServiceContext';
+
+function MyComponent() {
+  const toolService = useToolService();
+  const tools = toolService.getAllTools();
+  // ...
+}
+```
+
 ### Offline-First Requirement
+
 - **NO external API calls** - all processing must be client-side
 - Use Web Crypto API, FileReader, Canvas API, etc. for functionality
 - PWA configured via [vite.config.ts:10-52](vite.config.ts#L10-L52)
