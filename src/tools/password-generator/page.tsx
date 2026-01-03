@@ -4,6 +4,8 @@ import { RefreshCw, Key, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Slider } from '@/components/ui/slider';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   generatePassword,
@@ -160,12 +162,12 @@ export default function PasswordGeneratorPage() {
               <div className="space-y-4 p-4 rounded-md border border-border">
                 <div className="space-y-2">
                   <Label>{t('tools.passwordGenerator.length')}: {options.length}</Label>
-                  <input
-                    type="range"
-                    min="4"
-                    max="128"
-                    value={options.length}
-                    onChange={(e) => setOptions({ ...options, length: parseInt(e.target.value) })}
+                  <Slider
+                    value={[options.length]}
+                    onValueChange={(value) => setOptions({ ...options, length: value[0] })}
+                    min={4}
+                    max={128}
+                    step={1}
                     className="w-full"
                   />
                   <div className="flex justify-between text-xs text-muted-foreground">
@@ -175,65 +177,71 @@ export default function PasswordGeneratorPage() {
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
+                  <div className="flex items-center gap-2 cursor-pointer">
+                    <Checkbox
+                      id="include-uppercase"
                       checked={options.includeUppercase}
-                      onChange={(e) => setOptions({ ...options, includeUppercase: e.target.checked })}
-                      className="h-4 w-4"
+                      onCheckedChange={(checked) => setOptions({ ...options, includeUppercase: checked === true })}
                     />
-                    <span className="text-sm">{t('tools.passwordGenerator.uppercase')}</span>
-                  </label>
+                    <Label htmlFor="include-uppercase" className="text-sm cursor-pointer">
+                      {t('tools.passwordGenerator.uppercase')}
+                    </Label>
+                  </div>
 
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
+                  <div className="flex items-center gap-2 cursor-pointer">
+                    <Checkbox
+                      id="include-lowercase"
                       checked={options.includeLowercase}
-                      onChange={(e) => setOptions({ ...options, includeLowercase: e.target.checked })}
-                      className="h-4 w-4"
+                      onCheckedChange={(checked) => setOptions({ ...options, includeLowercase: checked === true })}
                     />
-                    <span className="text-sm">{t('tools.passwordGenerator.lowercase')}</span>
-                  </label>
+                    <Label htmlFor="include-lowercase" className="text-sm cursor-pointer">
+                      {t('tools.passwordGenerator.lowercase')}
+                    </Label>
+                  </div>
 
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
+                  <div className="flex items-center gap-2 cursor-pointer">
+                    <Checkbox
+                      id="include-numbers"
                       checked={options.includeNumbers}
-                      onChange={(e) => setOptions({ ...options, includeNumbers: e.target.checked })}
-                      className="h-4 w-4"
+                      onCheckedChange={(checked) => setOptions({ ...options, includeNumbers: checked === true })}
                     />
-                    <span className="text-sm">{t('tools.passwordGenerator.numbers')}</span>
-                  </label>
+                    <Label htmlFor="include-numbers" className="text-sm cursor-pointer">
+                      {t('tools.passwordGenerator.numbers')}
+                    </Label>
+                  </div>
 
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
+                  <div className="flex items-center gap-2 cursor-pointer">
+                    <Checkbox
+                      id="include-symbols"
                       checked={options.includeSymbols}
-                      onChange={(e) => setOptions({ ...options, includeSymbols: e.target.checked })}
-                      className="h-4 w-4"
+                      onCheckedChange={(checked) => setOptions({ ...options, includeSymbols: checked === true })}
                     />
-                    <span className="text-sm">{t('tools.passwordGenerator.symbols')}</span>
-                  </label>
+                    <Label htmlFor="include-symbols" className="text-sm cursor-pointer">
+                      {t('tools.passwordGenerator.symbols')}
+                    </Label>
+                  </div>
 
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
+                  <div className="flex items-center gap-2 cursor-pointer">
+                    <Checkbox
+                      id="exclude-similar"
                       checked={options.excludeSimilar}
-                      onChange={(e) => setOptions({ ...options, excludeSimilar: e.target.checked })}
-                      className="h-4 w-4"
+                      onCheckedChange={(checked) => setOptions({ ...options, excludeSimilar: checked === true })}
                     />
-                    <span className="text-sm">{t('tools.passwordGenerator.excludeSimilar')}</span>
-                  </label>
+                    <Label htmlFor="exclude-similar" className="text-sm cursor-pointer">
+                      {t('tools.passwordGenerator.excludeSimilar')}
+                    </Label>
+                  </div>
 
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
+                  <div className="flex items-center gap-2 cursor-pointer">
+                    <Checkbox
+                      id="exclude-ambiguous"
                       checked={options.excludeAmbiguous}
-                      onChange={(e) => setOptions({ ...options, excludeAmbiguous: e.target.checked })}
-                      className="h-4 w-4"
+                      onCheckedChange={(checked) => setOptions({ ...options, excludeAmbiguous: checked === true })}
                     />
-                    <span className="text-sm">{t('tools.passwordGenerator.excludeAmbiguous')}</span>
-                  </label>
+                    <Label htmlFor="exclude-ambiguous" className="text-sm cursor-pointer">
+                      {t('tools.passwordGenerator.excludeAmbiguous')}
+                    </Label>
+                  </div>
                 </div>
               </div>
             </TabsContent>
@@ -275,56 +283,60 @@ export default function PasswordGeneratorPage() {
               <div className="space-y-4 p-4 rounded-md border border-border">
                 <div className="space-y-2">
                   <Label>{t('tools.passwordGenerator.length')}: {options.length}</Label>
-                  <input
-                    type="range"
-                    min="4"
-                    max="128"
-                    value={options.length}
-                    onChange={(e) => setOptions({ ...options, length: parseInt(e.target.value) })}
+                  <Slider
+                    value={[options.length]}
+                    onValueChange={(value) => setOptions({ ...options, length: value[0] })}
+                    min={4}
+                    max={128}
+                    step={1}
                     className="w-full"
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
+                  <div className="flex items-center gap-2 cursor-pointer">
+                    <Checkbox
+                      id="include-uppercase-multiple"
                       checked={options.includeUppercase}
-                      onChange={(e) => setOptions({ ...options, includeUppercase: e.target.checked })}
-                      className="h-4 w-4"
+                      onCheckedChange={(checked) => setOptions({ ...options, includeUppercase: checked === true })}
                     />
-                    <span className="text-sm">{t('tools.passwordGenerator.uppercase')}</span>
-                  </label>
+                    <Label htmlFor="include-uppercase-multiple" className="text-sm cursor-pointer">
+                      {t('tools.passwordGenerator.uppercase')}
+                    </Label>
+                  </div>
 
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
+                  <div className="flex items-center gap-2 cursor-pointer">
+                    <Checkbox
+                      id="include-lowercase-multiple"
                       checked={options.includeLowercase}
-                      onChange={(e) => setOptions({ ...options, includeLowercase: e.target.checked })}
-                      className="h-4 w-4"
+                      onCheckedChange={(checked) => setOptions({ ...options, includeLowercase: checked === true })}
                     />
-                    <span className="text-sm">{t('tools.passwordGenerator.lowercase')}</span>
-                  </label>
+                    <Label htmlFor="include-lowercase-multiple" className="text-sm cursor-pointer">
+                      {t('tools.passwordGenerator.lowercase')}
+                    </Label>
+                  </div>
 
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
+                  <div className="flex items-center gap-2 cursor-pointer">
+                    <Checkbox
+                      id="include-numbers-multiple"
                       checked={options.includeNumbers}
-                      onChange={(e) => setOptions({ ...options, includeNumbers: e.target.checked })}
-                      className="h-4 w-4"
+                      onCheckedChange={(checked) => setOptions({ ...options, includeNumbers: checked === true })}
                     />
-                    <span className="text-sm">{t('tools.passwordGenerator.numbers')}</span>
-                  </label>
+                    <Label htmlFor="include-numbers-multiple" className="text-sm cursor-pointer">
+                      {t('tools.passwordGenerator.numbers')}
+                    </Label>
+                  </div>
 
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
+                  <div className="flex items-center gap-2 cursor-pointer">
+                    <Checkbox
+                      id="include-symbols-multiple"
                       checked={options.includeSymbols}
-                      onChange={(e) => setOptions({ ...options, includeSymbols: e.target.checked })}
-                      className="h-4 w-4"
+                      onCheckedChange={(checked) => setOptions({ ...options, includeSymbols: checked === true })}
                     />
-                    <span className="text-sm">{t('tools.passwordGenerator.symbols')}</span>
-                  </label>
+                    <Label htmlFor="include-symbols-multiple" className="text-sm cursor-pointer">
+                      {t('tools.passwordGenerator.symbols')}
+                    </Label>
+                  </div>
                 </div>
               </div>
             </TabsContent>
@@ -361,12 +373,12 @@ export default function PasswordGeneratorPage() {
               <div className="space-y-4 p-4 rounded-md border border-border">
                 <div className="space-y-2">
                   <Label>{t('tools.passwordGenerator.numberOfWords')}: {passphraseOptions.wordCount}</Label>
-                  <input
-                    type="range"
-                    min="2"
-                    max="8"
-                    value={passphraseOptions.wordCount}
-                    onChange={(e) => setPassphraseOptions({ ...passphraseOptions, wordCount: parseInt(e.target.value) })}
+                  <Slider
+                    value={[passphraseOptions.wordCount]}
+                    onValueChange={(value) => setPassphraseOptions({ ...passphraseOptions, wordCount: value[0] })}
+                    min={2}
+                    max={8}
+                    step={1}
                     className="w-full"
                   />
                   <div className="flex justify-between text-xs text-muted-foreground">

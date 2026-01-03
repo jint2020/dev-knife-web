@@ -4,6 +4,7 @@ import { Upload, Download, FileCode, Code, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   compressSVG,
@@ -194,17 +195,19 @@ export default function SVGCompressorPage() {
             contentClassName="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 max-h-[400px] overflow-y-auto"
           >
             {(Object.keys(options) as Array<keyof CompressionOptions>).map((key) => (
-              <label key={key} className="flex items-center gap-2 cursor-pointer text-sm">
-                <input
-                  type="checkbox"
+              <div key={key} className="flex items-center gap-2 cursor-pointer text-sm">
+                <Checkbox
+                  id={`option-${key}`}
                   checked={options[key]}
-                  onChange={(e) => setOptions({ ...options, [key]: e.target.checked })}
-                  className="h-4 w-4"
+                  onCheckedChange={(checked) => setOptions({ ...options, [key]: checked === true })}
                 />
-                <span className="text-xs">
+                <Label
+                  htmlFor={`option-${key}`}
+                  className="text-xs cursor-pointer"
+                >
                   {key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase())}
-                </span>
-              </label>
+                </Label>
+              </div>
             ))}
           </ToolSection>
 

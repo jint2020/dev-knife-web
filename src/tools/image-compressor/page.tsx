@@ -4,6 +4,8 @@ import { Upload, Download, ImageDown, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Slider } from '@/components/ui/slider';
 import {
   compressImage,
   formatFileSize,
@@ -117,13 +119,12 @@ export default function ImageCompressorPage() {
           >
             <div className="space-y-2">
               <Label>{t('tools.imageCompressor.maxSizeMB', { size: options.maxSizeMB })}</Label>
-              <input
-                type="range"
-                min="0.1"
-                max="10"
-                step="0.1"
-                value={options.maxSizeMB}
-                onChange={(e) => setOptions({ ...options, maxSizeMB: parseFloat(e.target.value) })}
+              <Slider
+                value={[options.maxSizeMB]}
+                onValueChange={(value) => setOptions({ ...options, maxSizeMB: value[0] })}
+                min={0.1}
+                max={10}
+                step={0.1}
                 className="w-full"
               />
               <div className="flex justify-between text-xs text-muted-foreground">
@@ -134,13 +135,12 @@ export default function ImageCompressorPage() {
 
             <div className="space-y-2">
               <Label>{t('tools.imageCompressor.maxWidthHeight', { size: options.maxWidthOrHeight })}</Label>
-              <input
-                type="range"
-                min="640"
-                max="4096"
-                step="128"
-                value={options.maxWidthOrHeight}
-                onChange={(e) => setOptions({ ...options, maxWidthOrHeight: parseInt(e.target.value) })}
+              <Slider
+                value={[options.maxWidthOrHeight]}
+                onValueChange={(value) => setOptions({ ...options, maxWidthOrHeight: value[0] })}
+                min={640}
+                max={4096}
+                step={128}
                 className="w-full"
               />
               <div className="flex justify-between text-xs text-muted-foreground">
@@ -151,13 +151,12 @@ export default function ImageCompressorPage() {
 
             <div className="space-y-2">
               <Label>{t('tools.imageCompressor.quality', { quality: Math.round(options.quality * 100) })}</Label>
-              <input
-                type="range"
-                min="0.1"
-                max="1"
-                step="0.05"
-                value={options.quality}
-                onChange={(e) => setOptions({ ...options, quality: parseFloat(e.target.value) })}
+              <Slider
+                value={[options.quality]}
+                onValueChange={(value) => setOptions({ ...options, quality: value[0] })}
+                min={0.1}
+                max={1}
+                step={0.05}
                 className="w-full"
               />
               <div className="flex justify-between text-xs text-muted-foreground">
@@ -166,15 +165,16 @@ export default function ImageCompressorPage() {
               </div>
             </div>
 
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="checkbox"
+            <div className="flex items-center gap-2 cursor-pointer">
+              <Checkbox
+                id="use-web-worker"
                 checked={options.useWebWorker}
-                onChange={(e) => setOptions({ ...options, useWebWorker: e.target.checked })}
-                className="h-4 w-4"
+                onCheckedChange={(checked) => setOptions({ ...options, useWebWorker: checked === true })}
               />
-              <span className="text-sm">{t('tools.imageCompressor.useWebWorker')}</span>
-            </label>
+              <Label htmlFor="use-web-worker" className="text-sm cursor-pointer">
+                {t('tools.imageCompressor.useWebWorker')}
+              </Label>
+            </div>
           </ToolSection>
 
           {/* Error Display */}

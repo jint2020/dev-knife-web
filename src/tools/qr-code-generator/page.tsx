@@ -4,6 +4,7 @@ import { Download, QrCode as QrCodeIcon, Smartphone, Link as LinkIcon } from 'lu
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
+import { Slider } from '@/components/ui/slider';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   generateQRCode,
@@ -176,13 +177,12 @@ export default function QRCodeGeneratorPage() {
                 {/* Size */}
                 <div className="space-y-2">
                   <Label>{t('tools.qrGenerator.sizePx', { size: options.width })}</Label>
-                  <input
-                    type="range"
-                    min="128"
-                    max="1024"
-                    step="32"
-                    value={options.width}
-                    onChange={(e) => setOptions({ ...options, width: parseInt(e.target.value) })}
+                  <Slider
+                    value={[options.width]}
+                    onValueChange={(value) => setOptions({ ...options, width: value[0] })}
+                    min={128}
+                    max={1024}
+                    step={32}
                     className="w-full"
                   />
                   <div className="flex justify-between text-xs text-muted-foreground">
@@ -194,12 +194,12 @@ export default function QRCodeGeneratorPage() {
                 {/* Margin */}
                 <div className="space-y-2">
                   <Label>{t('tools.qrGenerator.marginValue', { margin: options.margin })}</Label>
-                  <input
-                    type="range"
-                    min="0"
-                    max="10"
-                    value={options.margin}
-                    onChange={(e) => setOptions({ ...options, margin: parseInt(e.target.value) })}
+                  <Slider
+                    value={[options.margin]}
+                    onValueChange={(value) => setOptions({ ...options, margin: value[0] })}
+                    min={0}
+                    max={10}
+                    step={1}
                     className="w-full"
                   />
                 </div>

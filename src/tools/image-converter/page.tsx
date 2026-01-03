@@ -4,6 +4,7 @@ import { Upload, Download, Image as ImageIcon, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
+import { Slider } from '@/components/ui/slider';
 import {
   convertImage,
   formatFileSize,
@@ -135,13 +136,12 @@ export default function ImageConverterPage() {
 
             <div className="space-y-2">
               <Label>{t('tools.imageConverter.quality')}: {Math.round(quality * 100)}%</Label>
-              <input
-                type="range"
-                min="0.1"
-                max="1"
-                step="0.01"
-                value={quality}
-                onChange={(e) => setQuality(parseFloat(e.target.value))}
+              <Slider
+                value={[quality]}
+                onValueChange={(value) => setQuality(value[0])}
+                min={0.1}
+                max={1}
+                step={0.01}
                 className="w-full"
                 disabled={targetFormat === 'image/png'}
               />

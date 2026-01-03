@@ -4,6 +4,8 @@ import { RefreshCw, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Slider } from "@/components/ui/slider";
 import {
   generateLorem,
   getWordCount,
@@ -91,12 +93,12 @@ export default function LoremIpsumPage() {
 
             <div className="space-y-2">
               <Label>{t('common.count')}: {count}</Label>
-              <input
-                type="range"
-                min="1"
+              <Slider
+                value={[count]}
+                onValueChange={(value) => setCount(value[0])}
+                min={1}
                 max={type === "words" ? 500 : type === "sentences" ? 50 : 20}
-                value={count}
-                onChange={(e) => setCount(parseInt(e.target.value))}
+                step={1}
                 className="w-full"
               />
               <div className="flex justify-between text-xs text-muted-foreground">
@@ -107,17 +109,19 @@ export default function LoremIpsumPage() {
               </div>
             </div>
 
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="checkbox"
+            <div className="flex items-center gap-2 cursor-pointer">
+              <Checkbox
+                id="start-with-lorem"
                 checked={startWithLorem}
-                onChange={(e) => setStartWithLorem(e.target.checked)}
-                className="h-4 w-4"
+                onCheckedChange={(checked) => setStartWithLorem(checked === true)}
               />
-              <span className="text-sm">
+              <Label
+                htmlFor="start-with-lorem"
+                className="text-sm cursor-pointer"
+              >
                 {t("tools.loremGenerator.startWithLorem")}
-              </span>
-            </label>
+              </Label>
+            </div>
 
             <Button onClick={handleGenerate} className="w-full">
               <RefreshCw className="h-4 w-4 mr-2" />
