@@ -6,8 +6,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 DevKnife Web is an offline-first, modular developer toolbox built with **React 19**, TypeScript, and Vite. All tools run entirely in the browser with no data leaving the device. The application features a multi-tab interface with Keep-Alive state preservation and is PWA-ready for desktop/mobile installation.
 
-> **Note**: README.md incorrectly states React 18 - this codebase uses React 19.
-
 ## Development Commands
 
 ```bash

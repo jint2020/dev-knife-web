@@ -3,7 +3,16 @@
     "allow": [
       "Bash(npm install:*)",
       "Bash(npm uninstall:*)",
-      "Bash(pnpm add:*)"
+      "Bash(pnpm add:*)",
+      "Bash(bash *)",
+      "Bash(node *)",
+      "Bash(npm view *)",
+      "Bash(command -v omc)",
+      "Bash(omc --version)",
+      "Bash(command -v bd)",
+      "Bash(bd --version)",
+      "Bash(br --version)",
+      "Bash(jq -e '.env.CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS' ~/.claude/settings.json)"
     ]
   }
 }
