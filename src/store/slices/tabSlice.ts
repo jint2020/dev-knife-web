@@ -3,73 +3,114 @@ import type { AppSlice, TabSlice } from '../types';
 export const createTabSlice: AppSlice<TabSlice> = (set, get) => ({
   tabs: [],
   activeTabId: null,
+  windowStates: {},
+  zOrder: [],
 
-  /**
-   * Open Tool - Add tab if doesn't exist, set as active
-   */
   openTool: (tool) => {
-    const { tabs } = get();
+    const { tabs, zOrder } = get();
     const existingTab = tabs.find((t) => t.id === tool.id);
 
     if (existingTab) {
-      // Tool already open, just activate it
-      set({ activeTabId: tool.id });
+      set({
+        activeTabId: tool.id,
+        windowStates: {
+          ...get().windowStates,
+          [tool.id]: { ...get().windowStates[tool.id], isMinimized: false },
+        },
+      });
     } else {
-      // Add new tab and activate it
+      const newZOrder = [...zOrder, tool.id];
       set({
         tabs: [...tabs, tool],
         activeTabId: tool.id,
+        zOrder: newZOrder,
+        windowStates: {
+          ...get().windowStates,
+          [tool.id]: { isMinimized: false, isMaximized: false },
+        },
       });
     }
   },
 
-  /**
-   * Close Tool - Remove tab and smart switch to adjacent
-   */
   closeTool: (toolId: string) => {
-    const { tabs, activeTabId } = get();
+    const { tabs, activeTabId, zOrder, windowStates } = get();
     const tabIndex = tabs.findIndex((t) => t.id === toolId);
-
-    if (tabIndex === -1) return; // Tab not found
+    if (tabIndex === -1) return;
 
     const newTabs = tabs.filter((t) => t.id !== toolId);
+    const newZOrder = zOrder.filter((id) => id !== toolId);
+    const { [toolId]: _, ...newWindowStates } = windowStates;
 
-    // If closing the active tab, switch to adjacent
     let newActiveTabId = activeTabId;
     if (activeTabId === toolId) {
       if (newTabs.length > 0) {
-        // Prefer next tab, fallback to previous
         const adjacentIndex = tabIndex < newTabs.length ? tabIndex : tabIndex - 1;
         newActiveTabId = newTabs[adjacentIndex].id;
       } else {
-        newActiveTabId = null; // No tabs left
+        newActiveTabId = null;
       }
     }
 
     set({
       tabs: newTabs,
       activeTabId: newActiveTabId,
+      zOrder: newZOrder,
+      windowStates: newWindowStates,
     });
   },
 
-  /**
-   * Close All Tabs
-   */
   closeAllTabs: () => {
     set({
       tabs: [],
       activeTabId: null,
+      zOrder: [],
+      windowStates: {},
     });
   },
 
-  /**
-   * Set Active Tab
-   */
   setActiveTab: (toolId: string) => {
     const { tabs } = get();
     const tab = tabs.find((t) => t.id === toolId);
     if (tab) {
       set({ activeTabId: toolId });
     }
+  },
+
+  minimizeTool: (toolId: string) => {
+    const { windowStates } = get();
+    set({
+      windowStates: {
+        ...windowStates,
+        [toolId]: { isMinimized: true, isMaximized: false },
+      },
+    });
+  },
+
+  maximizeTool: (toolId: string) => {
+    const { windowStates } = get();
+    set({
+      windowStates: {
+        ...windowStates,
+        [toolId]: { isMaximized: true, isMinimized: false },
+      },
+    });
+  },
+
+  restoreTool: (toolId: string) => {
+    const { windowStates } = get();
+    set({
+      windowStates: {
+        ...windowStates,
+        [toolId]: { isMinimized: false, isMaximized: false },
+      },
+      activeTabId: toolId,
+    });
+  },
+
+  focusTool: (toolId: string) => {
+    const { zOrder } = get();
+    const newZOrder = zOrder.filter((id) => id !== toolId);
+    newZOrder.push(toolId);
+    set({ zOrder: newZOrder, activeTabId: toolId });
   },
 });

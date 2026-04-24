@@ -6,18 +6,16 @@ import {
   Bot,
   Braces,
   FileJson2,
-  FolderOpen,
   Github,
   Image,
   KeyRound,
   Sparkles,
-  X,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useToolDiscovery } from '@/hooks/useToolDiscovery';
 import { useAppStore } from '@/store';
 import { Logo } from './Logo';
-import { TabBar } from './TabBar';
+import { ToolWindow } from './ToolWindow';
 import { ToolRenderer } from './ToolRenderer';
 import { ThemeToggle } from './ThemeToggle';
 import { SettingsDialog } from './SettingsDialog';
@@ -73,9 +71,9 @@ function DesktopFolder({
   const CategoryIcon = category.icon;
 
   return (
-    <div className="group rounded-2xl border border-white/60 bg-white/55 p-3 shadow-[0_8px_24px_rgba(0,0,0,0.1)] backdrop-blur-md transition hover:-translate-y-0.5 hover:bg-white/70">
-      <div className="mb-3 flex items-center gap-2 text-[#1d1d1f]">
-        <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#0071e3] text-white">
+    <div className="group rounded-lg bg-card p-3 shadow-md">
+      <div className="mb-3 flex items-center gap-2 text-foreground">
+        <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary text-primary-foreground">
           <CategoryIcon className="h-4 w-4" />
         </div>
         <h3 className="text-[15px] font-semibold tracking-[-0.2px]">{category.label}</h3>
@@ -87,9 +85,9 @@ function DesktopFolder({
             <button
               key={tool.id}
               onClick={() => onOpen(tool)}
-              className="flex w-full items-center gap-2 rounded-xl px-2 py-1.5 text-left text-sm text-[#1d1d1f] transition hover:bg-black/5"
+              className="flex w-full items-center gap-2 rounded-xl px-2 py-1.5 text-left text-sm text-foreground transition hover:bg-accent"
             >
-              <ToolIcon className="h-4 w-4 text-[#0071e3]" />
+              <ToolIcon className="h-4 w-4 text-primary" />
               <span className="truncate">{tool.title}</span>
             </button>
           );
@@ -105,8 +103,14 @@ export function AppLayout() {
 
   const tabs = useAppStore((state) => state.tabs);
   const activeTabId = useAppStore((state) => state.activeTabId);
+  const windowStates = useAppStore((state) => state.windowStates);
+  const zOrder = useAppStore((state) => state.zOrder);
   const openTool = useAppStore((state) => state.openTool);
-  const closeAllTabs = useAppStore((state) => state.closeAllTabs);
+  const closeTool = useAppStore((state) => state.closeTool);
+  const minimizeTool = useAppStore((state) => state.minimizeTool);
+  const maximizeTool = useAppStore((state) => state.maximizeTool);
+  const restoreTool = useAppStore((state) => state.restoreTool);
+  const focusTool = useAppStore((state) => state.focusTool);
 
   const [timeLabel, setTimeLabel] = useState(() => formatNow(new Date()));
 
@@ -132,11 +136,8 @@ export function AppLayout() {
   };
 
   return (
-    <div className="relative flex h-screen flex-col overflow-hidden bg-[#f5f5f7] text-[#1d1d1f]">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,#ffffff_0%,#f5f5f7_42%,#e8e8ec_100%)]" />
-      <div className="pointer-events-none absolute inset-0 opacity-45 [background-image:linear-gradient(rgba(0,0,0,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.05)_1px,transparent_1px)] [background-size:140px_140px]" />
-
-      <header className="relative z-20 mx-3 mt-3 flex h-12 items-center justify-between rounded-2xl border border-white/70 bg-black/70 px-4 text-white shadow-[0_10px_34px_rgba(0,0,0,0.3)] backdrop-blur-xl">
+    <div className="relative flex h-screen flex-col overflow-hidden bg-background text-foreground">
+      <header className="relative z-20 mx-3 mt-3 flex h-12 items-center justify-between apple-nav-glass-dark rounded-lg px-4 text-white shadow-md">
         <div className="flex items-center gap-4">
           <div className="hidden items-center gap-1 lg:flex">
             <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]" />
@@ -167,10 +168,10 @@ export function AppLayout() {
 
       <main className="relative z-10 flex-1 px-4 pb-24 pt-4">
         <div className="mx-auto flex h-full w-full max-w-6xl flex-col gap-4">
-          <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-black/5 bg-white/80 px-4 py-2 text-xs text-[#1d1d1f]/80 backdrop-blur-md">
-            <Bell className="h-3.5 w-3.5 text-[#0071e3]" />
+          <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-border bg-card/80 px-4 py-2 text-xs text-foreground/80 backdrop-blur-md">
+            <Bell className="h-3.5 w-3.5 text-primary" />
             不知道从哪里开始？查看指南了解主要功能
-            <BookOpen className="h-3.5 w-3.5 text-[#1d1d1f]/70" />
+            <BookOpen className="h-3.5 w-3.5 text-muted-foreground" />
           </div>
 
           <section className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -184,44 +185,57 @@ export function AppLayout() {
             ))}
           </section>
 
-          {tabs.length > 0 && (
-            <section className="min-h-0 flex-1 rounded-[22px] border border-black/5 bg-white/80 shadow-[0_14px_40px_rgba(0,0,0,0.12)] backdrop-blur-xl">
-              <div className="flex h-10 items-center justify-between border-b border-black/10 px-3">
-                <div className="flex items-center gap-2 text-xs text-black/65">
-                  <FolderOpen className="h-3.5 w-3.5 text-[#0071e3]" />
-                  当前工作区
-                </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-7 px-2 text-xs text-black/60 hover:bg-black/5 hover:text-black"
-                  onClick={closeAllTabs}
+          <section className="relative min-h-0 flex-1">
+            {tabs.map((tab) => {
+              const ws = windowStates[tab.id] ?? { isMinimized: false, isMaximized: false };
+              const zIdx = zOrder.indexOf(tab.id);
+              return (
+                <ToolWindow
+                  key={tab.id}
+                  tab={tab}
+                  isActive={tab.id === activeTabId}
+                  isMinimized={ws.isMinimized}
+                  isMaximized={ws.isMaximized}
+                  zIndex={zIdx >= 0 ? zIdx + 10 : 10}
+                  onClose={() => closeTool(tab.id)}
+                  onMinimize={() => minimizeTool(tab.id)}
+                  onMaximize={() => maximizeTool(tab.id)}
+                  onRestore={() => restoreTool(tab.id)}
+                  onFocus={() => focusTool(tab.id)}
                 >
-                  <X className="mr-1 h-3.5 w-3.5" />
-                  关闭全部
-                </Button>
+                  <ToolRenderer toolId={tab.id} isActive={true} />
+                </ToolWindow>
+              );
+            })}
+            {tabs.length === 0 && (
+              <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
+                {t('common.noToolsOpen')}
               </div>
-              <div className="flex h-[calc(100%-2.5rem)] min-h-0 flex-col overflow-hidden rounded-b-[22px]">
-                <TabBar />
-                <div className="relative flex-1 overflow-hidden bg-white/65">
-                  {tabs.map((tab) => (
-                    <div
-                      key={tab.id}
-                      className="absolute inset-0 overflow-y-auto"
-                      style={{ display: tab.id === activeTabId ? 'block' : 'none' }}
-                    >
-                      <ToolRenderer toolId={tab.id} isActive={tab.id === activeTabId} />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </section>
-          )}
+            )}
+          </section>
         </div>
       </main>
 
       <footer className="pointer-events-none absolute bottom-4 left-1/2 z-30 -translate-x-1/2">
-        <div className="pointer-events-auto flex items-end gap-2 rounded-[24px] border border-white/80 bg-white/70 px-3 py-2 shadow-[0_16px_38px_rgba(0,0,0,0.2)] backdrop-blur-xl">
+        <div className="pointer-events-auto flex items-end gap-2 rounded-xl bg-card/85 px-3 py-2 shadow-md">
+          {tabs
+            .filter((tab) => windowStates[tab.id]?.isMinimized)
+            .map((tab) => {
+              const Icon = tab.icon;
+              return (
+                <button
+                  key={`min-${tab.id}`}
+                  onClick={() => restoreTool(tab.id)}
+                  title={t(`tools.${tab.locales}.title`)}
+                  className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                >
+                  <Icon className="h-5 w-5" />
+                </button>
+              );
+            })}
+          {tabs.filter((tab) => windowStates[tab.id]?.isMinimized).length > 0 && quickTools.length > 0 && (
+            <div className="mx-0.5 h-8 w-px bg-border" />
+          )}
           {quickTools.map((tool) => {
             const Icon = tool.icon;
             return (
@@ -229,9 +243,9 @@ export function AppLayout() {
                 key={tool.id}
                 onClick={() => handleOpenTool(tool)}
                 title={t(`tools.${tool.locales}.title`)}
-                className="group relative flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#0071e3] to-[#2997ff] text-white transition duration-200 hover:-translate-y-1.5"
+                className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground transition-colors hover:bg-primary/90"
               >
-                <Icon className="h-5 w-5 drop-shadow" />
+                <Icon className="h-4 w-4" />
               </button>
             );
           })}

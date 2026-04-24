@@ -29,13 +29,24 @@ export interface Tab {
   path: string;
 }
 
+export interface WindowState {
+  isMinimized: boolean;
+  isMaximized: boolean;
+}
+
 export interface TabSlice {
   tabs: Tab[];
   activeTabId: string | null;
+  windowStates: Record<string, WindowState>;
+  zOrder: string[];
   openTool: (tool: Tab) => void;
   closeTool: (toolId: string) => void;
   closeAllTabs: () => void;
   setActiveTab: (toolId: string) => void;
+  minimizeTool: (toolId: string) => void;
+  maximizeTool: (toolId: string) => void;
+  restoreTool: (toolId: string) => void;
+  focusTool: (toolId: string) => void;
 }
 
 export interface ToolSlice {

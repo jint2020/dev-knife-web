@@ -45,6 +45,7 @@ export const zh = {
       error: '错误',
       success: '成功',
       clickToUpload: '点击上传或拖拽文件',
+      noToolsOpen: '尚未打开工具 — 从上方文件夹或下方 Dock 启动工具',
       viewOnGithub: '在 GitHub 上查看',
       count: '数量',
       characters: '字符',

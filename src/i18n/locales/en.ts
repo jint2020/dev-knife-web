@@ -59,6 +59,7 @@ export const en = {
       error: 'Error',
       success: 'Success',
       clickToUpload: 'Click to upload or drag and drop',
+      noToolsOpen: 'No tools open — launch a tool from the folders above or the dock below',
       viewOnGithub: 'View on GitHub',
       count: 'Count',
       characters: 'Characters',
